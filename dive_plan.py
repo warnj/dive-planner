@@ -7,6 +7,7 @@ import urllib.request, json
 
 TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
 TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
+DATEFMT = '%Y-%m-%d'  # example 2019-01-18
 
 class Slack:
     time = None
@@ -139,22 +140,26 @@ def getSlackData(lines, indexes, sunrise, sunset):
     return slacks
 
 
-# Returns a list of slacks from given mobilegeographics url on the given day. Includes night slacks if daylight=False
-def getSlacks(day, baseUrl, daylight=True):
+# Returns list of current data lines from given mobilegeographics url on the given day.
+def getWebLines(day, baseUrl):
     url = baseUrl + "?y={}&m={}&d={}".format(day.year, day.month, day.day)
     with urllib.request.urlopen(url) as response:
         html = response.read()
         soup = BeautifulSoup(html, 'html.parser')
         predictions = soup.find("pre", {"class": "predictions-table"})
         lines = predictions.text.splitlines()[3:]
+        return lines
 
+
+# Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
+def getSlacks(webData, daylight=True):
         sunrise = None
         sunset = None
         if daylight:
-            slackIndexes, sunrise, sunset = getDaySlacks(lines)
+            slackIndexes, sunrise, sunset = getDaySlacks(webData)
         else:
-            slackIndexes = getAllSlacks(lines)
-        return getSlackData(lines, slackIndexes, sunrise, sunset)  # populate Slack objects
+            slackIndexes = getAllSlacks(webData)
+        return getSlackData(webData, slackIndexes, sunrise, sunset)  # populate Slack objects
 
 
 # Returns [mincurrenttime, markerbuoyentrytime, myentrytime] for the given slack at the given site
@@ -195,7 +200,7 @@ def printDive(s, site):
         print('\tDiveable: ' + str(s))
         print('\t\tMinCurrentTime = {}, Duration = {}, SurfaceSwim = {}'
                 .format(dt.strftime(minCurrentTime, TIMEPRINTFMT), site["dive_duration"], site["surface_swim_time"]))
-        print('\t\tEntrytime: ' + dt.strftime(entryTime, TIMEPRINTFMT))
+        print('\t\tEntry Time: ' + dt.strftime(entryTime, TIMEPRINTFMT))  # Time to get in the water.
         print('\t\tMarker Buoy Entrytime (60min dive, no surface swim):', dt.strftime(markerBuoyEntryTime, TIMEPRINTFMT))
 
 
@@ -221,9 +226,9 @@ def printDiveDay(slacks, site):
 
 
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
-# START = dt.now()
-START = dt(2019, 1, 16)  # date to begin considering diveable conditions
-DAYS_IN_FUTURE = 2  # number of days after START to consider
+START = dt.now()
+START = dt(2019, 3, 16)  # date to begin considering diveable conditions
+DAYS_IN_FUTURE = 0  # number of days after START to consider
 
 SITES = None  # Consider all sites
 # createOrAppend("Salt Creek")
@@ -236,14 +241,14 @@ SITES = None  # Consider all sites
 # createOrAppend("Three Tree North")
 # createOrAppend("Alki Pipeline or Junkyard")
 # createOrAppend("Saltwater State Park")
-createOrAppend("Day Island Wall")
+# createOrAppend("Day Island Wall")
 # createOrAppend("Sunrise Beach")
 # createOrAppend("Fox Island Bridge")
 # createOrAppend("Fox Island East Wall")
 # createOrAppend("Titlow")
 
 
-filterNonWorkDays = False  # only consider diving on weekends and holidays
+filterNonWorkDays = True  # only consider diving on weekends and holidays
 filterDaylight = True  # TODO: fix unimportant bug with this filter if first slack of the day (well before sunrise) doesn't have a previous Max before it, loops around to future with negative index
 
 PRINTINFO = True  # print non-diveable days and reason why not diveable
@@ -275,8 +280,22 @@ def main():
         if SITES and siteData["name"] not in SITES:
             continue
         print(siteData["name"])
+
+        webLines = None
+        reuse = False
         for day in possibleDiveDays:
-            slacks = getSlacks(day, siteData["data"], daylight=filterDaylight)
+            # Check previous website data if it has the info for day and can be re-used
+            if webLines:
+                dayStr = dt.strftime(day, DATEFMT)
+                reuse = False
+                for j, line in enumerate(webLines):
+                    if dayStr in line and not reuse:
+                        webLines = webLines[j:]
+                        reuse = True
+                        break
+            if not reuse:
+                webLines = getWebLines(day, siteData["data"])
+            slacks = getSlacks(webLines, daylight=filterDaylight)
             printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
 
 
