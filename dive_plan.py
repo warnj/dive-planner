@@ -40,6 +40,13 @@ def createOrAppend(str):
         SITES = {str}
 
 
+def getStationName(stations, dataUrl):
+    for station in stations:
+        if station['url'] == dataUrl:
+            return station['name'], station['coords']
+    return 'Error, no matching current station found for url {}'.format(dataUrl)
+
+
 # returns a list of datetime days that are weekends and holiday that occur between start (today by default) and
 # futureDays in the future
 def getNonWorkDays(futureDays, start=dt.now()):
@@ -239,7 +246,7 @@ SITES = None  # Consider all sites
 # createOrAppend("Mukilteo")
 # createOrAppend("Edmonds Underwater Park")
 # createOrAppend("Three Tree North")
-# createOrAppend("Alki Pipeline or Junkyard")
+# createOrAppend("Alki Pipeline")
 # createOrAppend("Saltwater State Park")
 # createOrAppend("Day Island Wall")
 # createOrAppend("Sunrise Beach")
@@ -272,14 +279,14 @@ def main():
         else:
             possibleDiveDays = getAllDays(DAYS_IN_FUTURE, START)
 
-    json_data = open(absName('dive_sites.json')).read()
-    data = json.loads(json_data)
+    data = json.loads(open(absName('dive_sites.json')).read())
 
     for i in range(len(data["sites"])):
         siteData = data["sites"][i]
         if SITES and siteData["name"] not in SITES:
             continue
-        print(siteData["name"])
+        stationName, stationCoords = getStationName(data["stations"], siteData["data"])
+        print("{} - {}\n{} - {}".format(siteData["name"], stationName, siteData["data"], stationCoords))
 
         webLines = None
         reuse = False
