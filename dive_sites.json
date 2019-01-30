@@ -6,56 +6,51 @@
       "url": "https://tides.mobilegeographics.com/index.html"
     },
     {
-      "name": "South end (midstream), The Narrows, Puget Sound, Washington Current",
-      "coords": "47.2608° N, 122.5583° W",
-      "url": "http://tides.mobilegeographics.com/locations/7353.html"
-    },
-    {
-      "name": "Rosario Strait, Washington Current",
-      "coords": "48.4583° N, 122.7833° W",
-      "url": "http://tides.mobilegeographics.com/locations/6632.html"
-    },
-    {
       "name": "Admiralty Head, 0.5 mile west of, Admiralty Inlet, Washington Current",
       "coords": "48.1500° N, 122.7000° W",
-      "url": "http://tides.mobilegeographics.com/locations/63.html"
-    },
-    {
-      "name": "Deception Pass (narrows), Washington Current",
-      "coords": "48.4062° N, 122.6430° W",
-      "url": "https://tides.mobilegeographics.com/locations/1894.html"
-    },
-    {
-      "name": "The Narrows, north end (midstream), Washington Current",
-      "coords": "47.3062° N, 122.5497° W",
-      "url": "http://tides.mobilegeographics.com/locations/7882.html"
-    },
-    {
-      "name": "Juan De Fuca Strait (East), British Columbia Current",
-      "coords": "48.2317° N, 123.5300° W",
-      "url": "http://tides.mobilegeographics.com/locations/3638.html"
+      "url": "http://tides.mobilegeographics.com/locations/67.html"
     },
     {
       "name": "Admiralty Inlet (off Bush Point), Washington Current",
       "coords": "48.0333° N, 122.6333° W",
-      "url": "http://tides.mobilegeographics.com/locations/65.html"
+      "url": "http://tides.mobilegeographics.com/locations/69.html"
     },
     {
       "name": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "coords": "47.5755° N, 122.4280° W",
-      "url": "http://tides.mobilegeographics.com/locations/149.html"
+      "url": "http://tides.mobilegeographics.com/locations/153.html"
+    },
+    {
+      "name": "Deception Pass (narrows), Washington Current",
+      "coords": "48.4062° N, 122.6430° W",
+      "url": "https://tides.mobilegeographics.com/locations/1955.html"
+    },
+    {
+      "name": "Juan De Fuca Strait (East), British Columbia Current",
+      "coords": "48.2317° N, 123.5300° W",
+      "url": "http://tides.mobilegeographics.com/locations/3775.html"
     },
     {
       "name": "Rosario Strait, Washington Current",
       "coords": "48.4583° N, 122.7833° W",
-      "url": "http://tides.mobilegeographics.com/locations/6632.html"
+      "url": "http://tides.mobilegeographics.com/locations/6882.html"
+    },
+    {
+      "name": "South end (midstream), The Narrows, Puget Sound, Washington Current",
+      "coords": "47.2608° N, 122.5583° W",
+      "url": "http://tides.mobilegeographics.com/locations/7626.html"
+    },
+    {
+      "name": "The Narrows, north end (midstream), Washington Current",
+      "coords": "47.3062° N, 122.5497° W",
+      "url": "http://tides.mobilegeographics.com/locations/8176.html"
     }
   ],
 
   "sites": [
     {
       "name": "Day Island Wall",
-      "data": "http://tides.mobilegeographics.com/locations/7353.html",
+      "data": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "slack_before_flood": -30,
       "slack_before_ebb": -60,
       "max_flood": 3.2,
@@ -69,7 +64,7 @@
     },
     {
       "name": "Skyline Wall",
-      "data": "http://tides.mobilegeographics.com/locations/6632.html",
+      "data": "Rosario Strait, Washington Current",
       "slack_before_ebb": -32,
       "max_flood": 2.3,
       "max_ebb": 2.3,
@@ -82,7 +77,7 @@
     },
     {
       "name": "Keystone Jetty",
-      "data": "http://tides.mobilegeographics.com/locations/63.html",
+      "data": "Admiralty Head, 0.5 mile west of, Admiralty Inlet, Washington Current",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
       "max_flood": 3.5,
@@ -98,7 +93,7 @@
     },
     {
       "name": "Deception Pass",
-      "data": "https://tides.mobilegeographics.com/locations/1894.html",
+      "data": "Deception Pass (narrows), Washington Current",
       "slack_before_ebb": 0,
       "COMMENT": "Marker Buoy seems to have max_flood = 4.1 and max_ebb = 5.9, however NW Dive Club dives with either flood or ebb max about 5.9 and sum of the two less than 11 kts",
       "max_flood": 4.1,
@@ -112,7 +107,7 @@
     },
     {
       "name": "Fox Island Bridge",
-      "data": "http://tides.mobilegeographics.com/locations/7882.html",
+      "data": "The Narrows, north end (midstream), Washington Current",
       "slack_before_flood": -80,
       "slack_before_ebb": -140,
       "COMMENT": "Boydski says -105 before ebb correction. Marker Buoy (Justin M) does -45 to -80 before flood. NW Shore Dives: -XX before flood, -140 before ebb.",
@@ -128,7 +123,7 @@
     },
     {
       "name": "Fox Island East Wall",
-      "data": "http://tides.mobilegeographics.com/locations/7353.html",
+      "data": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "slack_before_flood": -120,
       "slack_before_ebb": -65,
       "COMMENT": "Slack before flood in book = -56, which agrees with Marker Buoy. Many reports of hitting slack late & I hit late 12/20/18. Needs to be earlier, estimating -120, though max speeds could perhaps be adjusted",
@@ -143,7 +138,7 @@
     },
     {
       "name": "Sunrise Beach",
-      "data": "http://tides.mobilegeographics.com/locations/7882.html",
+      "data": "The Narrows, north end (midstream), Washington Current",
       "slack_before_flood": -70,
       "slack_before_ebb": -25,
       "COMMENT": "Slack before ebb of -25 aligns with Marker Buoy & NW Shore Dives. seaotter.com says -65 is better.",
@@ -159,7 +154,7 @@
     },
     {
       "name": "Salt Creek",
-      "data": "http://tides.mobilegeographics.com/locations/3638.html",
+      "data": "Juan De Fuca Strait (East), British Columbia Current",
       "slack_before_flood": 82,
       "COMMENT": "Preferred to dive on lee side of Tongue Point. These parameters will allow diving continuously without timing entry - the only way the drive is worth it!",
       "slack_before_ebb": -32,
@@ -174,7 +169,7 @@
     },
     {
       "name": "Possession Point",
-      "data": "http://tides.mobilegeographics.com/locations/65.html",
+      "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "slack_before_flood": 44,
       "slack_before_ebb": 13,
       "max_flood": 3,
@@ -192,7 +187,7 @@
 
     {
       "name": "Saltwater State Park",
-      "data": "http://tides.mobilegeographics.com/locations/7353.html",
+      "data": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "COMMENT": "consider moving this to admiralty inlet station",
       "slack_before_flood": -20,
       "slack_before_ebb": -35,
@@ -209,7 +204,7 @@
     },
     {
       "name": "Titlow",
-      "data": "http://tides.mobilegeographics.com/locations/7353.html",
+      "data": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "slack_before_flood": -5,
       "slack_before_ebb": 33,
       "COMMENT": "Marker buoy splash 1hr before slack before ebb at narrows south. ",
@@ -224,7 +219,7 @@
     },
     {
       "name": "Mukilteo",
-      "data": "http://tides.mobilegeographics.com/locations/65.html",
+      "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "slack_before_flood": 44,
       "slack_before_ebb": 13,
       "max_flood": 3.5,
@@ -240,7 +235,7 @@
     },
     {
       "name": "Alki Pipeline",
-      "data": "http://tides.mobilegeographics.com/locations/149.html",
+      "data": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
       "max_flood": 0.4,
@@ -258,7 +253,7 @@
 
     {
       "name": "Fox Island West Wall",
-      "data": "http://tides.mobilegeographics.com/locations/7353.html",
+      "data": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "slack_before_flood": 28,
       "slack_before_ebb": 8,
       "COMMENT": "Not current sensitive, good as 2nd dive after East Wall or Bridge",
@@ -275,7 +270,7 @@
     },
     {
       "name": "Three Tree North",
-      "data": "http://tides.mobilegeographics.com/locations/149.html",
+      "data": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "slack_before_flood": -36,
       "slack_before_ebb": -13,
       "max_flood": 1.1,
@@ -291,7 +286,7 @@
     },
     {
       "name": "Edmonds Underwater Park",
-      "data": "http://tides.mobilegeographics.com/locations/65.html",
+      "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "slack_before_flood": 44,
       "slack_before_ebb": 13,
       "max_flood": 4,
@@ -307,7 +302,7 @@
     },
     {
       "name": "Sund Rock",
-      "data": "http://tides.mobilegeographics.com/locations/65.html",
+      "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "slack_before_flood": 0,
       "slack_before_ebb": -15,
       "max_flood": 4,
@@ -323,7 +318,7 @@
     },
     {
       "name": "Alki Junkyard",
-      "data": "http://tides.mobilegeographics.com/locations/149.html",
+      "data": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
       "max_flood": 0.4,
@@ -337,7 +332,7 @@
     },
     {
       "name": "Redondo",
-      "data": "http://tides.mobilegeographics.com/locations/7882.html",
+      "data": "The Narrows, north end (midstream), Washington Current",
       "COMMENT": "consider moving to admiralty inlet station",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,

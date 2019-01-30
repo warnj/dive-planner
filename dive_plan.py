@@ -40,11 +40,12 @@ def createOrAppend(str):
         SITES = {str}
 
 
-def getStationName(stations, dataUrl):
+def getStation(stations, name):
     for station in stations:
-        if station['url'] == dataUrl:
-            return station['name'], station['coords']
-    return 'Error, no matching current station found for url {}'.format(dataUrl)
+        if station['name'] == name:
+            return station
+    print('Error, no matching current station found for url {}'.format(name))
+    return None
 
 
 # returns a list of datetime days that are weekends and holiday that occur between start (today by default) and
@@ -88,15 +89,15 @@ def getDaySlacks(lines):
     sunrise = None
     slacks = []
     for i, line in enumerate(lines):
-        if sunrise and "Slack" in line:
+        if sunrise and 'Slack' in line:
             slacks.append(i)
-        elif "Sunrise" in line:
+        elif 'Sunrise' in line:
             tokens = line.split()
-            dayTimeStr = tokens[0] + " " + tokens[1] + tokens[2]  # ex: 2018-11-17 1:15PM
+            dayTimeStr = tokens[0] + ' ' + tokens[1] + tokens[2]  # ex: 2018-11-17 1:15PM
             sunrise = dt.strptime(dayTimeStr, TIMEPARSEFMT)
-        elif "Sunset" in line:
+        elif 'Sunset' in line:
             tokens = line.split()
-            dayTimeStr = tokens[0] + " " + tokens[1] + tokens[2]  # ex: 2018-11-17 1:15PM
+            dayTimeStr = tokens[0] + ' ' + tokens[1] + tokens[2]  # ex: 2018-11-17 1:15PM
             sunset = dt.strptime(dayTimeStr, TIMEPARSEFMT)
             return slacks, sunrise, sunset
     return slacks, sunrise, None
@@ -109,7 +110,7 @@ def getAllSlacks(lines):
     for i, line in enumerate(lines):
         if line.split()[1] != weekday:
             return slacks
-        elif "Slack" in line:
+        elif 'Slack' in line:
             slacks.append(i)
     return slacks
 
@@ -123,13 +124,13 @@ def getSlackData(lines, indexes, sunrise, sunset):
         s.sunsetTime = sunset
 
         pre = i - 1
-        while "Ebb" not in lines[pre] and "Flood" not in lines[pre]:
+        while 'Ebb' not in lines[pre] and 'Flood' not in lines[pre]:
             pre -= 1
-        s.slackBeforeEbb = "Flood" in lines[pre]
+        s.slackBeforeEbb = 'Flood' in lines[pre]
         tokens1 = lines[pre].split()
 
         post = i + 1
-        while "Ebb" not in lines[post] and "Flood" not in lines[post]:
+        while 'Ebb' not in lines[post] and 'Flood' not in lines[post]:
             post += 1
         tokens2 = lines[post].split()
 
@@ -141,19 +142,21 @@ def getSlackData(lines, indexes, sunrise, sunset):
             s.floodSpeed = float(tokens2[4])
 
         tokens = lines[i].split()
-        dayTimeStr = tokens[0] + " " + tokens[1] + tokens[2]  # ex: 2018-11-17 1:15PM
+        dayTimeStr = tokens[0] + ' ' + tokens[1] + tokens[2]  # ex: 2018-11-17 1:15PM
         s.time = dt.strptime(dayTimeStr, TIMEPARSEFMT)
         slacks.append(s)
     return slacks
 
+# Returns url for the given day from the given base url
+def getDayUrl(day, baseUrl):
+    return baseUrl + '?y={}&m={}&d={}'.format(day.year, day.month, day.day)
 
-# Returns list of current data lines from given mobilegeographics url on the given day.
-def getWebLines(day, baseUrl):
-    url = baseUrl + "?y={}&m={}&d={}".format(day.year, day.month, day.day)
+# Returns list of current data lines from given mobilegeographics url
+def getWebLines(url):
     with urllib.request.urlopen(url) as response:
         html = response.read()
         soup = BeautifulSoup(html, 'html.parser')
-        predictions = soup.find("pre", {"class": "predictions-table"})
+        predictions = soup.find('pre', {'class': 'predictions-table'})
         lines = predictions.text.splitlines()[3:]
         return lines
 
@@ -176,11 +179,11 @@ def getSlacks(webData, daylight=True):
 def getEntryTimes(s, site):
     try:
         if s.slackBeforeEbb:
-            delta = td(minutes=site["slack_before_ebb"])
+            delta = td(minutes=site['slack_before_ebb'])
         else:
-            delta = td(minutes=site["slack_before_flood"])
+            delta = td(minutes=site['slack_before_flood'])
         minCurrentTime = s.time + delta
-        entryTime = minCurrentTime - td(minutes=site["dive_duration"] / 2) - td(minutes=site["surface_swim_time"])
+        entryTime = minCurrentTime - td(minutes=site['dive_duration'] / 2) - td(minutes=site['surface_swim_time'])
         markerBuoyEntryTime = minCurrentTime - td(minutes=30)
         return minCurrentTime, markerBuoyEntryTime, entryTime
     except KeyError:
@@ -195,7 +198,7 @@ def printDive(s, site):
     else:
         minCurrentTime, markerBuoyEntryTime, entryTime = times
         if s.sunriseTime:
-            warning = ""
+            warning = ''
             if entryTime < s.sunriseTime:
                 warning = 'BEFORE'
             elif entryTime - td(minutes=30) < s.sunriseTime:
@@ -206,7 +209,7 @@ def printDive(s, site):
 
         print('\tDiveable: ' + str(s))
         print('\t\tMinCurrentTime = {}, Duration = {}, SurfaceSwim = {}'
-                .format(dt.strftime(minCurrentTime, TIMEPRINTFMT), site["dive_duration"], site["surface_swim_time"]))
+                .format(dt.strftime(minCurrentTime, TIMEPRINTFMT), site['dive_duration'], site['surface_swim_time']))
         print('\t\tEntry Time: ' + dt.strftime(entryTime, TIMEPRINTFMT))  # Time to get in the water.
         print('\t\tMarker Buoy Entrytime (60min dive, no surface swim):', dt.strftime(markerBuoyEntryTime, TIMEPRINTFMT))
 
@@ -217,16 +220,16 @@ def printDiveDay(slacks, site):
         assert s.ebbSpeed <= 0.0
         assert s.floodSpeed >= 0.0
         # Check if diveable or not
-        if s.slackBeforeEbb and not site["diveable_before_ebb"]:
+        if s.slackBeforeEbb and not site['diveable_before_ebb']:
             printinfo('\t' + str(s) + '\t Not diveable before ebb')
-        elif not s.slackBeforeEbb and not site["diveable_before_flood"]:
+        elif not s.slackBeforeEbb and not site['diveable_before_flood']:
             printinfo('\t' + str(s) + '\t Not diveable before flood')
-        elif site["diveable_off_slack"] and \
-                (s.floodSpeed < site["max_diveable_flood"] or abs(s.ebbSpeed) < site["max_diveable_ebb"]):
+        elif site['diveable_off_slack'] and \
+                (s.floodSpeed < site['max_diveable_flood'] or abs(s.ebbSpeed) < site['max_diveable_ebb']):
             print('\t' + str(s) + '\t Diveable off slack')
             printDive(s, site)
-        elif s.floodSpeed > site["max_flood"] or abs(s.ebbSpeed) > abs(site["max_ebb"]) or \
-                s.floodSpeed + abs(s.ebbSpeed) > site["max_total_speed"]:
+        elif s.floodSpeed > site['max_flood'] or abs(s.ebbSpeed) > abs(site['max_ebb']) or \
+                s.floodSpeed + abs(s.ebbSpeed) > site['max_total_speed']:
             printinfo('\t' + str(s) + '\t Current too strong')
         else:
             printDive(s, site)
@@ -234,25 +237,25 @@ def printDiveDay(slacks, site):
 
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
 START = dt.now()
-START = dt(2019, 3, 16)  # date to begin considering diveable conditions
+START = dt(2019, 2, 2)  # date to begin considering diveable conditions
 DAYS_IN_FUTURE = 0  # number of days after START to consider
 
 SITES = None  # Consider all sites
-# createOrAppend("Salt Creek")
-# createOrAppend("Deception Pass")
-# createOrAppend("Skyline Wall")
-# createOrAppend("Keystone Jetty")
-# createOrAppend("Possession Point")
-# createOrAppend("Mukilteo")
-# createOrAppend("Edmonds Underwater Park")
-# createOrAppend("Three Tree North")
-# createOrAppend("Alki Pipeline")
-# createOrAppend("Saltwater State Park")
-# createOrAppend("Day Island Wall")
-# createOrAppend("Sunrise Beach")
-# createOrAppend("Fox Island Bridge")
-# createOrAppend("Fox Island East Wall")
-# createOrAppend("Titlow")
+# createOrAppend('Salt Creek')
+# createOrAppend('Deception Pass')
+# createOrAppend('Skyline Wall')
+# createOrAppend('Keystone Jetty')
+# createOrAppend('Possession Point')
+# createOrAppend('Mukilteo')
+# createOrAppend('Edmonds Underwater Park')
+# createOrAppend('Three Tree North')
+# createOrAppend('Alki Pipeline')
+# createOrAppend('Saltwater State Park')
+# createOrAppend('Day Island Wall')
+# createOrAppend('Sunrise Beach')
+# createOrAppend('Fox Island Bridge')
+# createOrAppend('Fox Island East Wall')
+# createOrAppend('Titlow')
 
 
 filterNonWorkDays = True  # only consider diving on weekends and holidays
@@ -281,12 +284,12 @@ def main():
 
     data = json.loads(open(absName('dive_sites.json')).read())
 
-    for i in range(len(data["sites"])):
-        siteData = data["sites"][i]
-        if SITES and siteData["name"] not in SITES:
+    for i in range(len(data['sites'])):
+        siteData = data['sites'][i]
+        if SITES and siteData['name'] not in SITES:
             continue
-        stationName, stationCoords = getStationName(data["stations"], siteData["data"])
-        print("{} - {}\n{} - {}".format(siteData["name"], stationName, siteData["data"], stationCoords))
+        station = getStation(data['stations'], siteData['data'])
+        print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], getDayUrl(possibleDiveDays[0], station['url']), station['coords']))
 
         webLines = None
         reuse = False
@@ -301,10 +304,10 @@ def main():
                         reuse = True
                         break
             if not reuse:
-                webLines = getWebLines(day, siteData["data"])
+                webLines = getWebLines(getDayUrl(day, station['url']))
             slacks = getSlacks(webLines, daylight=filterDaylight)
             printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
