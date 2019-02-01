@@ -252,7 +252,7 @@ SITES = None  # Consider all sites
 # createOrAppend('Alki Pipeline')
 # createOrAppend('Saltwater State Park')
 # createOrAppend('Day Island Wall')
-# createOrAppend('Sunrise Beach')
+createOrAppend('Sunrise Beach')
 # createOrAppend('Fox Island Bridge')
 # createOrAppend('Fox Island East Wall')
 # createOrAppend('Titlow')

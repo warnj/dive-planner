@@ -1,5 +1,4 @@
-from dive_plan import getSlacks
-from dive_plan import getEntryTimes
+from dive_plan import *
 from collect_data import absName
 from datetime import datetime as dt
 from datetime import timedelta as td
@@ -104,7 +103,7 @@ def refineDives(dives):
 FILENAME = 'dive_meetup_data_old_format_with_urls.csv'
 SITES = None  # show data for all sites
 # createOrAppend("Salt Creek")
-# createOrAppend("Deception Pass")
+createOrAppend("Deception Pass")
 # createOrAppend("Skyline Wall")
 # createOrAppend("Keystone Jetty")
 # createOrAppend("Possession Point")
@@ -117,7 +116,7 @@ SITES = None  # show data for all sites
 # createOrAppend("Sunrise Beach")
 # createOrAppend("Fox Island Bridge")
 # createOrAppend("Fox Island East Wall")
-createOrAppend("Titlow")
+# createOrAppend("Titlow")
 
 
 def main():
@@ -146,22 +145,24 @@ def main():
     for site, sitedives in results.items():
         if SITES and site not in SITES:
             continue
-        locationJson = None
+        siteData = None
         # find corresponding site in dive_sites.json
         for location in data["sites"]:
             if location['name'].lower() == site.lower():
-                locationJson = location
+                siteData = location
                 break
-        if locationJson == None:
+        if siteData == None:
             print('ERROR: no location in dive_sites.json matched site:', site)
             continue
         # for each dive at this location, find the slack that was dove
-        print(site)
+        station = getStation(data['stations'], siteData['data'])
+        print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], station['url'], station['coords']))
         for dive in sitedives:
-            slacks = getSlacks(dive.date, locationJson['data'], daylight=True)  # TODO: ideally, this would not be limited to daylight
+            webLines = getWebLines(getDayUrl(dive.date, station['url']))
+            slacks = getSlacks(webLines, daylight=True)  # TODO: ideally, this would not be limited to daylight
             estMeetupTimes = {}  # estimated meetup time for the slack -> slack
             for slack in slacks:
-                times = getEntryTimes(slack, locationJson)
+                times = getEntryTimes(slack, siteData)
                 if not times:
                     continue
                 estMeetupTimes[times[1] - td(minutes=45)] = slack  # takes ~45min to meet and gear up
@@ -175,7 +176,7 @@ def main():
             dive.slack = slackDove
             print('\t', dive)
             print('\t\t', slackDove)
-            minCurrentTime, markerBuoyEntryTime, entryTime = getEntryTimes(dive.slack, locationJson)
+            minCurrentTime, markerBuoyEntryTime, entryTime = getEntryTimes(dive.slack, siteData)
             minCurrentTime = dt.strftime(minCurrentTime, MEETUP_TIME_FORMAT)
             markerBuoyEntryTime = dt.strftime(markerBuoyEntryTime, MEETUP_TIME_FORMAT)
             entryTime = dt.strftime(entryTime, MEETUP_TIME_FORMAT)
