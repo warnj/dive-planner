@@ -3,6 +3,7 @@ from collect_data import absName
 from datetime import datetime as dt
 from datetime import timedelta as td
 import json, csv
+import numpy as np
 
 MEETUP_TIME_FORMAT = '%a, %b %d, %Y, %I:%M %p'
 SITE_MAP = {  # dive site -> tokens that the listing must contain
@@ -62,6 +63,17 @@ def appendMap(map, key, value):
     else:
         map[key] = [value]
 
+# returns the json data for the given site from the given json data
+def getSiteData(siteName, data):
+    if SITES and siteName not in SITES:
+        return None
+    # find corresponding site in dive_sites.json
+    for location in data["sites"]:
+        if location['name'].lower() == siteName.lower():
+            return location
+    print('ERROR: no location in dive_sites.json matched site:', siteName)
+    return None
+
 # Compares given str with the SITE_MAP tags for each site. Returns the name of the site if one is found
 # and None if the given str doesn't match all the tags for any site.
 def compareLocationTags(str, dive):
@@ -98,12 +110,60 @@ def refineDives(dives):
                 appendMap(results, site, dive)
     return results
 
+# For the site with the given data and the given mobilegeographics current url, returns the
+# Slack object with corrected time closest to the given meetup time.
+def getSlackForDive(meetTime, siteData, url):
+    webLines = getWebLines(getDayUrl(meetTime, url))
+    slacks = getSlacks(webLines, daylight=True)  # TODO: ideally, this would not be limited to daylight
+    estMeetupTimes = {}  # estimated meetup time for the slack -> slack
+    for slack in slacks:
+        times = getEntryTimes(slack, siteData)
+        if not times:
+            continue
+        estMeetupTimes[times[1] - td(minutes=45)] = slack  # takes ~45min to meet and gear up
+    # find the estMeetupTime closest to the actual meetup time. This gives the slack the dive was planned for.
+    minDelta, slackDove = td(hours=99999).total_seconds(), None
+    for estTime, slack in estMeetupTimes.items():
+        diff = abs((meetTime - estTime).total_seconds())
+        if diff < minDelta:
+            minDelta, slackDove = diff, slack
+    return slackDove
+
+# Prints statistics on the slacks in the given list of dives
+def printSlackMetrics(dives):
+    beforeFloodFloodSpeeds, beforeFloodEbbSpeeds = [], []
+    beforeEbbFloodSpeeds, beforeEbbEbbSpeeds = [], []
+    speedSums = []
+    for dive in dives:
+        s = dive.slack
+        speedSums.append(abs(s.ebbSpeed) + abs(s.floodSpeed))
+        if s.slackBeforeEbb:
+            beforeEbbFloodSpeeds.append(s.floodSpeed)
+            beforeEbbEbbSpeeds.append(s.ebbSpeed)
+        else:
+            beforeFloodFloodSpeeds.append(s.floodSpeed)
+            beforeFloodEbbSpeeds.append(s.ebbSpeed)
+    beforeFloodFloodSpeeds = np.array(beforeFloodFloodSpeeds)
+    beforeFloodEbbSpeeds = np.array(beforeFloodEbbSpeeds)
+    beforeEbbFloodSpeeds = np.array(beforeEbbFloodSpeeds)
+    beforeEbbEbbSpeeds = np.array(beforeEbbEbbSpeeds)
+    speedSums = np.array(speedSums)
+    assert len(beforeEbbFloodSpeeds) == len(beforeEbbEbbSpeeds)
+    assert len(beforeFloodFloodSpeeds) == len(beforeFloodEbbSpeeds)
+    assert len(beforeFloodFloodSpeeds) + len(beforeFloodEbbSpeeds) == len(speedSums)
+    print("{} dives before Ebb".format(len(beforeEbbFloodSpeeds)))
+    print("\t{:.2f} avg Flood speed, {} max Flood speed".format(np.average(beforeEbbFloodSpeeds), np.max(beforeEbbFloodSpeeds)))
+    print("\t{:.2f} avg Ebb speed,   {} max Ebb speed".format(np.average(beforeEbbEbbSpeeds), np.min(beforeEbbEbbSpeeds)))
+    print("{} dives before Flood".format(len(beforeFloodFloodSpeeds)))
+    print("\t{:.2f} avg Ebb speed,   {} max Ebb speed".format(np.average(beforeFloodEbbSpeeds), np.min(beforeFloodEbbSpeeds)))
+    print("\t{:.2f} avg Flood speed, {} max Flood speed".format(np.average(beforeFloodFloodSpeeds), np.max(beforeFloodFloodSpeeds)))
+    print("{:.2f} avg sum speed, {} max sum speed".format(np.average(speedSums), np.max(speedSums)))
 
 
 FILENAME = 'dive_meetup_data_old_format_with_urls.csv'
 SITES = None  # show data for all sites
 # createOrAppend("Salt Creek")
-createOrAppend("Deception Pass")
+# createOrAppend("Deception Pass")
 # createOrAppend("Skyline Wall")
 # createOrAppend("Keystone Jetty")
 # createOrAppend("Possession Point")
@@ -143,44 +203,24 @@ def main():
     json_data = open(absName('dive_sites.json')).read()
     data = json.loads(json_data)
     for site, sitedives in results.items():
-        if SITES and site not in SITES:
-            continue
-        siteData = None
-        # find corresponding site in dive_sites.json
-        for location in data["sites"]:
-            if location['name'].lower() == site.lower():
-                siteData = location
-                break
+        siteData = getSiteData(site, data)
         if siteData == None:
-            print('ERROR: no location in dive_sites.json matched site:', site)
             continue
+
         # for each dive at this location, find the slack that was dove
         station = getStation(data['stations'], siteData['data'])
         print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], station['url'], station['coords']))
         for dive in sitedives:
-            webLines = getWebLines(getDayUrl(dive.date, station['url']))
-            slacks = getSlacks(webLines, daylight=True)  # TODO: ideally, this would not be limited to daylight
-            estMeetupTimes = {}  # estimated meetup time for the slack -> slack
-            for slack in slacks:
-                times = getEntryTimes(slack, siteData)
-                if not times:
-                    continue
-                estMeetupTimes[times[1] - td(minutes=45)] = slack  # takes ~45min to meet and gear up
-            # find the estMeetupTime closest to the actual meetup time. This gives the slack the dive was planned for.
-            minDelta, slackDove = td(hours=99999).total_seconds(), None
-            for estTime, slack in estMeetupTimes.items():
-                diff = abs((dive.date - estTime).total_seconds())
-                if diff < minDelta:
-                    minDelta, slackDove = diff, slack
-
-            dive.slack = slackDove
+            dive.slack = getSlackForDive(dive.date, siteData, station['url'])
             print('\t', dive)
-            print('\t\t', slackDove)
+            print('\t\t', dive.slack)
             minCurrentTime, markerBuoyEntryTime, entryTime = getEntryTimes(dive.slack, siteData)
             minCurrentTime = dt.strftime(minCurrentTime, MEETUP_TIME_FORMAT)
             markerBuoyEntryTime = dt.strftime(markerBuoyEntryTime, MEETUP_TIME_FORMAT)
             entryTime = dt.strftime(entryTime, MEETUP_TIME_FORMAT)
             print('\t\tMarkerBuoyEntryTime = {} MyEntryTime = {} MinCurrentTime = {}'.format(markerBuoyEntryTime, entryTime, minCurrentTime))
+
+        printSlackMetrics(sitedives)
 
     # filename = getDataFileName()
     # print('Writing slacks to file', filename)
