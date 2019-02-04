@@ -150,21 +150,23 @@ def printSlackMetrics(dives):
     speedSums = np.array(speedSums)
     assert len(beforeEbbFloodSpeeds) == len(beforeEbbEbbSpeeds)
     assert len(beforeFloodFloodSpeeds) == len(beforeFloodEbbSpeeds)
-    assert len(beforeFloodFloodSpeeds) + len(beforeFloodEbbSpeeds) == len(speedSums)
+    assert len(beforeFloodFloodSpeeds) + len(beforeEbbFloodSpeeds) == len(speedSums)
     print("{} dives before Ebb".format(len(beforeEbbFloodSpeeds)))
-    print("\t{:.2f} avg Flood speed, {} max Flood speed".format(np.average(beforeEbbFloodSpeeds), np.max(beforeEbbFloodSpeeds)))
-    print("\t{:.2f} avg Ebb speed,   {} max Ebb speed".format(np.average(beforeEbbEbbSpeeds), np.min(beforeEbbEbbSpeeds)))
+    if len(beforeEbbFloodSpeeds) > 0:
+        print("\t{:.2f} avg Flood speed, {} max Flood speed".format(np.average(beforeEbbFloodSpeeds), np.max(beforeEbbFloodSpeeds)))
+        print("\t{:.2f} avg Ebb speed,   {} max Ebb speed".format(np.average(beforeEbbEbbSpeeds), np.min(beforeEbbEbbSpeeds)))
     print("{} dives before Flood".format(len(beforeFloodFloodSpeeds)))
-    print("\t{:.2f} avg Ebb speed,   {} max Ebb speed".format(np.average(beforeFloodEbbSpeeds), np.min(beforeFloodEbbSpeeds)))
-    print("\t{:.2f} avg Flood speed, {} max Flood speed".format(np.average(beforeFloodFloodSpeeds), np.max(beforeFloodFloodSpeeds)))
-    print("{:.2f} avg sum speed, {} max sum speed".format(np.average(speedSums), np.max(speedSums)))
+    if len(beforeFloodFloodSpeeds) > 0:
+        print("\t{:.2f} avg Ebb speed,   {} max Ebb speed".format(np.average(beforeFloodEbbSpeeds), np.min(beforeFloodEbbSpeeds)))
+        print("\t{:.2f} avg Flood speed, {} max Flood speed".format(np.average(beforeFloodFloodSpeeds), np.max(beforeFloodFloodSpeeds)))
+    print("{:.2f} avg sum speed, {:.2f} max sum speed".format(np.average(speedSums), np.max(speedSums)))
 
 
 FILENAME = 'dive_meetup_data_old_format_with_urls.csv'
 SITES = None  # show data for all sites
 # createOrAppend("Salt Creek")
 # createOrAppend("Deception Pass")
-# createOrAppend("Skyline Wall")
+createOrAppend("Skyline Wall")
 # createOrAppend("Keystone Jetty")
 # createOrAppend("Possession Point")
 # createOrAppend("Mukilteo")
