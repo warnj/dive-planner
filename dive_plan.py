@@ -105,10 +105,10 @@ def getDaySlacks(lines):
 
 # returns list with indexes of the slack currents in the first 24hrs of the given list of data lines
 def getAllSlacks(lines):
-    weekday = lines[0].split()[1]
+    day = lines[0].split()[0]
     slacks = []
     for i, line in enumerate(lines):
-        if line.split()[1] != weekday:
+        if line.split()[0] != day:
             return slacks
         elif 'Slack' in line:
             slacks.append(i)
@@ -157,8 +157,15 @@ def getWebLines(url):
         html = response.read()
         soup = BeautifulSoup(html, 'html.parser')
         predictions = soup.find('pre', {'class': 'predictions-table'})
-        lines = predictions.text.splitlines()[3:]
-        return lines
+        lines = predictions.text.splitlines()
+        # ignore the non-current speed data at the top, like current direction and gps coords
+        start = 0
+        for line in lines:
+            if "knots" not in line:
+                start += 1
+            else:
+                break
+        return predictions.text.splitlines()[start:]
 
 
 # Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
@@ -237,7 +244,7 @@ def printDiveDay(slacks, site):
 
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
 START = dt.now()
-START = dt(2019, 2, 2)  # date to begin considering diveable conditions
+# START = dt(2019, 2, 2)  # date to begin considering diveable conditions
 DAYS_IN_FUTURE = 0  # number of days after START to consider
 
 SITES = None  # Consider all sites
@@ -252,7 +259,7 @@ SITES = None  # Consider all sites
 # createOrAppend('Alki Pipeline')
 # createOrAppend('Saltwater State Park')
 # createOrAppend('Day Island Wall')
-createOrAppend('Sunrise Beach')
+# createOrAppend('Sunrise Beach')
 # createOrAppend('Fox Island Bridge')
 # createOrAppend('Fox Island East Wall')
 # createOrAppend('Titlow')

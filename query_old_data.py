@@ -114,7 +114,7 @@ def refineDives(dives):
 # Slack object with corrected time closest to the given meetup time.
 def getSlackForDive(meetTime, siteData, url):
     webLines = getWebLines(getDayUrl(meetTime, url))
-    slacks = getSlacks(webLines, daylight=True)  # TODO: ideally, this would not be limited to daylight
+    slacks = getSlacks(webLines, daylight=False)
     estMeetupTimes = {}  # estimated meetup time for the slack -> slack
     for slack in slacks:
         times = getEntryTimes(slack, siteData)
@@ -166,13 +166,13 @@ FILENAME = 'dive_meetup_data_old_format_with_urls.csv'
 SITES = None  # show data for all sites
 # createOrAppend("Salt Creek")
 # createOrAppend("Deception Pass")
-createOrAppend("Skyline Wall")
+# createOrAppend("Skyline Wall")
 # createOrAppend("Keystone Jetty")
 # createOrAppend("Possession Point")
 # createOrAppend("Mukilteo")
 # createOrAppend("Edmonds Underwater Park")
 # createOrAppend("Three Tree North")
-# createOrAppend("Alki Pipeline or Junkyard")
+# createOrAppend("Alki Pipeline")
 # createOrAppend("Saltwater State Park")
 # createOrAppend("Day Island Wall")
 # createOrAppend("Sunrise Beach")
@@ -220,7 +220,7 @@ def main():
             minCurrentTime = dt.strftime(minCurrentTime, MEETUP_TIME_FORMAT)
             markerBuoyEntryTime = dt.strftime(markerBuoyEntryTime, MEETUP_TIME_FORMAT)
             entryTime = dt.strftime(entryTime, MEETUP_TIME_FORMAT)
-            print('\t\tMarkerBuoyEntryTime = {} MyEntryTime = {} MinCurrentTime = {}'.format(markerBuoyEntryTime, entryTime, minCurrentTime))
+            print('\t\tMarkerBuoyEntryTime = {}   MyEntryTime = {}   MinCurrentTime = {}'.format(markerBuoyEntryTime, entryTime, minCurrentTime))
 
         printSlackMetrics(sitedives)
 
