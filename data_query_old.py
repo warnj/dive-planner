@@ -1,7 +1,11 @@
+'''
+This program is used to identify current trends and metrics from past Marker Buoy club dives as saved
+in dive_meetup_data_old_format_with_slacks.csv.
+'''
+
 from dive_plan import *
-from collect_data import absName
+from data_collect import absName
 from datetime import datetime as dt
-from datetime import timedelta as td
 import json, csv
 import numpy as np
 
@@ -50,6 +54,47 @@ class Dive:
     def __repr__(self):
         return self.__str__()
 
+# returns list of Dive objects parsed from given csv file and if the dives contains Slacks from the file or not
+def getDives(file):
+    dives = []
+    slacks = False
+    with open(absName(file), 'r', encoding='utf-8', newline='\n') as f:
+        reader = csv.reader(f, delimiter=',')
+        for line in reader:
+            dive = Dive()
+            assert len(line) >= 6
+            assert len(line) <= 7
+            if len(line) == 6 or len(line) == 7 and not line[6]:
+                dive.date, dive.title, dive.location, dive.address, dive.descr, dive.url = \
+                    dt.strptime(line[0], MEETUP_TIME_FORMAT), line[1], line[2], line[3], line[4], line[5]
+            else:
+                dive.date, dive.title, dive.location, dive.address, dive.descr, dive.url, dive.slack = \
+                    dt.strptime(line[0], MEETUP_TIME_FORMAT), line[1], line[2], line[3], line[4], line[5], parseSlack(line[6])
+                slacks = True
+            dives.append(dive)
+    return dives, slacks
+
+def parseSlack(s):
+    slack = Slack()
+    arrow = " -> "
+    n = len(arrow)
+    first = s.index(arrow)
+    last = s.rindex(arrow)
+
+    a = float(s[:first])
+    date = s[first+n:last]
+    b = float(s[last+n:])
+
+    slack.time = dt.strptime(date, TIMEPRINTFMT)
+    slack.slackBeforeEbb = b <= 0
+    if slack.slackBeforeEbb:
+        slack.floodSpeed = a
+        slack.ebbSpeed = b
+    else:
+        slack.floodSpeed = b
+        slack.ebbSpeed = a
+    return slack
+
 def createOrAppend(str):
     global SITES
     if SITES:
@@ -64,7 +109,7 @@ def appendMap(map, key, value):
         map[key] = [value]
 
 # returns the json data for the given site from the given json data
-def getSiteData(siteName, data):
+def getSiteData(SITES, siteName, data):
     if SITES and siteName not in SITES:
         return None
     # find corresponding site in dive_sites.json
@@ -95,7 +140,7 @@ def refineDives(dives):
         skip = False
         for str in SKIP:
             if str in dive.title or str in dive.location:
-                appendMap(results, "Unclassified", dive)
+                appendMap(results, "Skip", dive)
                 skip = True
                 break
         if not skip:
@@ -109,25 +154,6 @@ def refineDives(dives):
             else:
                 appendMap(results, site, dive)
     return results
-
-# For the site with the given data and the given mobilegeographics current url, returns the
-# Slack object with corrected time closest to the given meetup time.
-def getSlackForDive(meetTime, siteData, url):
-    webLines = getWebLines(getDayUrl(meetTime, url))
-    slacks = getSlacks(webLines, daylight=False)
-    estMeetupTimes = {}  # estimated meetup time for the slack -> slack
-    for slack in slacks:
-        times = getEntryTimes(slack, siteData)
-        if not times:
-            continue
-        estMeetupTimes[times[1] - td(minutes=45)] = slack  # takes ~45min to meet and gear up
-    # find the estMeetupTime closest to the actual meetup time. This gives the slack the dive was planned for.
-    minDelta, slackDove = td(hours=99999).total_seconds(), None
-    for estTime, slack in estMeetupTimes.items():
-        diff = abs((meetTime - estTime).total_seconds())
-        if diff < minDelta:
-            minDelta, slackDove = diff, slack
-    return slackDove
 
 # Prints statistics on the slacks in the given list of dives
 def printSlackMetrics(dives):
@@ -162,7 +188,7 @@ def printSlackMetrics(dives):
     print("{:.2f} avg sum speed, {:.2f} max sum speed".format(np.average(speedSums), np.max(speedSums)))
 
 
-FILENAME = 'dive_meetup_data_old_format_with_urls.csv'
+FILENAME = 'dive_meetup_data_old_format_with_urls_with_slacks.csv'
 SITES = None  # show data for all sites
 # createOrAppend("Salt Creek")
 # createOrAppend("Deception Pass")
@@ -182,56 +208,47 @@ SITES = None  # show data for all sites
 
 
 def main():
+    PRINT_LOCATION_CLASSIFICATION = False
+    PRINT_DIVE_DETAILS = True
+
     print('Extracting dives from data file', FILENAME)
-    dives = []
-    with open(absName(FILENAME), 'r', encoding='utf-8', newline='\n') as f:
-        reader = csv.reader(f, delimiter=',')
-        for line in reader:
-            dive = Dive()
-            dive.date, dive.title, dive.location, dive.address, dive.descr, dive.url = \
-                dt.strptime(line[0], MEETUP_TIME_FORMAT), line[1], line[2], line[3], line[4], line[5]
-            dives.append(dive)
+    dives, slacks = getDives(FILENAME)
+
+    if not slacks:
+        print('No slacks in {}, make sure to run data_add_slacks.py first. Exiting.'.format(FILENAME))
+        exit(0)
 
     print('Classifying dive sites')
     results = refineDives(dives)
 
     # Print how the dives were classified into locations
-    # for site, vals in results.items():
-    #     print(site)
-    #     for dive in vals:
-    #         print('\t', dive)
+    if PRINT_LOCATION_CLASSIFICATION:
+        for site, vals in results.items():
+            print(site)
+            for dive in vals:
+                print('\t', dive)
 
-    print('Identifying the nearest period of slack current for each dive')
-    json_data = open(absName('dive_sites.json')).read()
-    data = json.loads(json_data)
+    print('Getting slack metrics for each dive site')
+    data = json.loads(open(absName('dive_sites.json')).read())
     for site, sitedives in results.items():
-        siteData = getSiteData(site, data)
+        siteData = getSiteData(SITES, site, data)
         if siteData == None:
             continue
-
-        # for each dive at this location, find the slack that was dove
         station = getStation(data['stations'], siteData['data'])
         print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], station['url'], station['coords']))
-        for dive in sitedives:
-            dive.slack = getSlackForDive(dive.date, siteData, station['url'])
-            print('\t', dive)
-            print('\t\t', dive.slack)
-            minCurrentTime, markerBuoyEntryTime, entryTime = getEntryTimes(dive.slack, siteData)
-            minCurrentTime = dt.strftime(minCurrentTime, MEETUP_TIME_FORMAT)
-            markerBuoyEntryTime = dt.strftime(markerBuoyEntryTime, MEETUP_TIME_FORMAT)
-            entryTime = dt.strftime(entryTime, MEETUP_TIME_FORMAT)
-            print('\t\tMarkerBuoyEntryTime = {}   MyEntryTime = {}   MinCurrentTime = {}'.format(markerBuoyEntryTime, entryTime, minCurrentTime))
+
+        # Print each dive, its corresponding slack, and predicted entry time
+        if PRINT_DIVE_DETAILS:
+            for dive in sitedives:
+                print('\t', dive)
+                print('\t\t', dive.slack)
+                minCurrentTime, markerBuoyEntryTime, entryTime = getEntryTimes(dive.slack, siteData)
+                minCurrentTime = dt.strftime(minCurrentTime, MEETUP_TIME_FORMAT)
+                markerBuoyEntryTime = dt.strftime(markerBuoyEntryTime, MEETUP_TIME_FORMAT)
+                entryTime = dt.strftime(entryTime, MEETUP_TIME_FORMAT)
+                print('\t\tMarkerBuoyEntryTime = {}   MyEntryTime = {}   MinCurrentTime = {}'.format(markerBuoyEntryTime, entryTime, minCurrentTime))
 
         printSlackMetrics(sitedives)
-
-    # filename = getDataFileName()
-    # print('Writing slacks to file', filename)
-    # with open(absName(filename), 'w', encoding='utf-8', newline='\n') as f:
-    #     w = csv.writer(f, delimiter=',')
-    #     for dive in dives:
-    #         w.writerow([dt.strftime(dive.date, MEETUP_TIME_FORMAT), dive.title, dive.location, dive.address, dive.descr, dive.url, dive.slack])
-    # print('Done writing to file', filename)
-
 
 
 if __name__ == "__main__":

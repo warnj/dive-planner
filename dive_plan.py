@@ -1,4 +1,9 @@
-from collect_data import absName
+'''
+This program is used to identify if days in the future (or past) are considered diveable for a subset of dive sites
+specified by dive_sites.json
+'''
+
+from data_collect import absName
 from pandas.tseries.holiday import USFederalHolidayCalendar
 from bs4 import BeautifulSoup
 from datetime import datetime as dt
@@ -14,8 +19,8 @@ class Slack:
     sunriseTime = None
     sunsetTime = None  # this is never used, but might be interesting to print it sometimes
     slackBeforeEbb = False
-    ebbSpeed = 0.0
-    floodSpeed = 0.0
+    ebbSpeed = 0.0  # negative number
+    floodSpeed = 0.0  # positive number
 
     def __str__(self):
         if self.slackBeforeEbb:
@@ -265,7 +270,7 @@ SITES = None  # Consider all sites
 # createOrAppend('Titlow')
 
 
-filterNonWorkDays = True  # only consider diving on weekends and holidays
+filterNonWorkDays = False  # only consider diving on weekends and holidays
 filterDaylight = True  # TODO: fix unimportant bug with this filter if first slack of the day (well before sunrise) doesn't have a previous Max before it, loops around to future with negative index
 
 PRINTINFO = True  # print non-diveable days and reason why not diveable

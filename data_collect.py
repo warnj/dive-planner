@@ -1,3 +1,7 @@
+'''
+This program is used to collect past dives from the Marker Buoy dive club meetup page and save them to a .csv file.
+'''
+
 from selenium import webdriver
 from datetime import timedelta as td
 import pickle, time, datetime, os, csv
