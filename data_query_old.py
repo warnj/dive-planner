@@ -44,7 +44,7 @@ class Dive:
     url = ""
 
     # interpreted data
-    splash = ""  # if able to get splash time, put it here
+    splash = None  # if able to get splash time, put it here
     site = ""
     slack = None  # Slack object
 
@@ -63,14 +63,14 @@ def getDives(file):
         for line in reader:
             dive = Dive()
             assert len(line) >= 6
-            assert len(line) <= 7
-            if len(line) == 6 or len(line) == 7 and not line[6]:
-                dive.date, dive.title, dive.location, dive.address, dive.descr, dive.url = \
-                    dt.strptime(line[0], MEETUP_TIME_FORMAT), line[1], line[2], line[3], line[4], line[5]
-            else:
-                dive.date, dive.title, dive.location, dive.address, dive.descr, dive.url, dive.slack = \
-                    dt.strptime(line[0], MEETUP_TIME_FORMAT), line[1], line[2], line[3], line[4], line[5], parseSlack(line[6])
+            assert len(line) <= 8
+            dive.date, dive.title, dive.location, dive.address, dive.descr, dive.url = \
+                dt.strptime(line[0], MEETUP_TIME_FORMAT), line[1], line[2], line[3], line[4], line[5]
+            if len(line) >= 7 and line[6]:
+                dive.slack = parseSlack(line[6])
                 slacks = True
+            if len(line) == 8 and line[7]:
+                dive.splash = dt.strptime(line[7], MEETUP_TIME_FORMAT)
             dives.append(dive)
     return dives, slacks
 
@@ -188,7 +188,7 @@ def printSlackMetrics(dives):
     print("{:.2f} avg sum speed, {:.2f} max sum speed".format(np.average(speedSums), np.max(speedSums)))
 
 
-FILENAME = 'dive_meetup_data_old_format_with_urls_with_slacks.csv'
+FILENAME = 'dive_meetup_data_old_format_with_slacks.csv'
 SITES = None  # show data for all sites
 # createOrAppend("Salt Creek")
 # createOrAppend("Deception Pass")
