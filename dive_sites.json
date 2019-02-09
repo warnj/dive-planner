@@ -111,7 +111,7 @@
       "slack_before_flood": -80,
       "slack_before_ebb": -140,
       "COMMENT": "Boydski says -105 before ebb correction. Marker Buoy (Justin M) does -45 to -80 before flood. NW Shore Dives: -XX before flood, -140 before ebb.",
-	  "COMMENT2": "check out http://tides.mobilegeographics.com/locations/2363.html for Hale Passage - 0 correction before flood and -140 before ebb compared to Narrows North",
+	  "COMMENT2": "check out https://tides.mobilegeographics.com/locations/3053.html for Hale Passage - 0 correction before flood and -140 before ebb compared to Narrows North",
       "max_flood": 2.2,
       "max_ebb": 2.2,
       "max_total_speed": 4.2,

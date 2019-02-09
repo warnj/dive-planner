@@ -87,6 +87,10 @@ def getAllDays(futureDays, start=dt.now()):
         d += delta
     return days
 
+# returns the datetime object parsed from the given data line from MobileGeographics website
+def parseMobileGeographicsTime(tokens):
+    dayTimeStr = tokens[0] + ' ' + tokens[2] + tokens[3]  # ex: 2018-11-17 1:15PM
+    return dt.strptime(dayTimeStr, TIMEPARSEFMT)
 
 # Returns list with indexes of the daytime slack currents in the given list of data lines. Also returns sunrise time
 # and sunset time.
@@ -97,13 +101,9 @@ def getDaySlacks(lines):
         if sunrise and 'Slack' in line:
             slacks.append(i)
         elif 'Sunrise' in line:
-            tokens = line.split()
-            dayTimeStr = tokens[0] + ' ' + tokens[1] + tokens[2]  # ex: 2018-11-17 1:15PM
-            sunrise = dt.strptime(dayTimeStr, TIMEPARSEFMT)
+            sunrise = parseMobileGeographicsTime(line.split())
         elif 'Sunset' in line:
-            tokens = line.split()
-            dayTimeStr = tokens[0] + ' ' + tokens[1] + tokens[2]  # ex: 2018-11-17 1:15PM
-            sunset = dt.strptime(dayTimeStr, TIMEPARSEFMT)
+            sunset = parseMobileGeographicsTime(line.split())
             return slacks, sunrise, sunset
     return slacks, sunrise, None
 
@@ -140,15 +140,13 @@ def getSlackData(lines, indexes, sunrise, sunset):
         tokens2 = lines[post].split()
 
         if s.slackBeforeEbb:
-            s.floodSpeed = float(tokens1[4])
-            s.ebbSpeed = float(tokens2[4])
+            s.floodSpeed = float(tokens1[5])
+            s.ebbSpeed = float(tokens2[5])
         else:
-            s.ebbSpeed = float(tokens1[4])
-            s.floodSpeed = float(tokens2[4])
+            s.ebbSpeed = float(tokens1[5])
+            s.floodSpeed = float(tokens2[5])
 
-        tokens = lines[i].split()
-        dayTimeStr = tokens[0] + ' ' + tokens[1] + tokens[2]  # ex: 2018-11-17 1:15PM
-        s.time = dt.strptime(dayTimeStr, TIMEPARSEFMT)
+        s.time = parseMobileGeographicsTime(lines[i].split())
         slacks.append(s)
     return slacks
 
@@ -247,9 +245,10 @@ def printDiveDay(slacks, site):
             printDive(s, site)
 
 
+# TODO: add support for NOAA sites. i.e. https://tidesandcurrents.noaa.gov/noaacurrents/Predictions?id=PUG1528_17&d=2019-02-16
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
 START = dt.now()
-# START = dt(2019, 2, 2)  # date to begin considering diveable conditions
+START = dt(2019, 2, 16)  # date to begin considering diveable conditions
 DAYS_IN_FUTURE = 0  # number of days after START to consider
 
 SITES = None  # Consider all sites
