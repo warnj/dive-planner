@@ -120,6 +120,28 @@ def getAllSlacks(lines):
     return slacks
 
 
+def getBeforeMaxSpeedLine(i, lines):
+    pre = i - 1
+    if pre < 0:
+        return None
+    while 'Ebb' not in lines[pre] and 'Flood' not in lines[pre]:
+        pre -= 1
+        if pre < 0:
+            return None
+    return lines[pre]
+
+
+def getAfterMaxSpeedLine(i, lines):
+    post = i + 1
+    if post >= len(lines):
+        return None
+    while 'Ebb' not in lines[post] and 'Flood' not in lines[post]:
+        post += 1
+        if post >= len(lines):
+            return None
+    return lines[post]
+
+
 # returns a list of Slack objects corresponding to the slack indexes within the list of data lines
 def getSlackData(lines, indexes, sunrise, sunset):
     slacks = []
@@ -128,16 +150,19 @@ def getSlackData(lines, indexes, sunrise, sunset):
         s.sunriseTime = sunrise
         s.sunsetTime = sunset
 
-        pre = i - 1
-        while 'Ebb' not in lines[pre] and 'Flood' not in lines[pre]:
-            pre -= 1
-        s.slackBeforeEbb = 'Flood' in lines[pre]
-        tokens1 = lines[pre].split()
+        preMax = getBeforeMaxSpeedLine(i, lines)
+        if not preMax:
+            print("skipping slack index {} since no speed data before it".format(i))
+            continue
+        tokens1 = preMax.split()
 
-        post = i + 1
-        while 'Ebb' not in lines[post] and 'Flood' not in lines[post]:
-            post += 1
-        tokens2 = lines[post].split()
+        s.slackBeforeEbb = 'Flood' in preMax
+
+        postMax = getAfterMaxSpeedLine(i, lines)
+        if not postMax:
+            print("skipping slack index {} since no speed data after it".format(i))
+            continue
+        tokens2 = postMax.split()
 
         if s.slackBeforeEbb:
             s.floodSpeed = float(tokens1[5])
@@ -173,13 +198,13 @@ def getWebLines(url):
 
 # Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
 def getSlacks(webData, daylight=True):
-        sunrise = None
-        sunset = None
-        if daylight:
-            slackIndexes, sunrise, sunset = getDaySlacks(webData)
-        else:
-            slackIndexes = getAllSlacks(webData)
-        return getSlackData(webData, slackIndexes, sunrise, sunset)  # populate Slack objects
+    sunrise = None
+    sunset = None
+    if daylight:
+        slackIndexes, sunrise, sunset = getDaySlacks(webData)
+    else:
+        slackIndexes = getAllSlacks(webData)
+    return getSlackData(webData, slackIndexes, sunrise, sunset)  # populate Slack objects
 
 
 # Returns [mincurrenttime, markerbuoyentrytime, myentrytime] for the given slack at the given site
