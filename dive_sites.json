@@ -44,6 +44,11 @@
       "name": "The Narrows, north end (midstream), Washington Current",
       "coords": "47.3062 N, 122.5497 W",
       "url": "http://tides.mobilegeographics.com/locations/8176.html"
+    },
+    {
+      "name": "West end, Rich Passage, Puget Sound, Washington Current",
+      "coords": "47.5900 N, 122.5622 W",
+      "url": "http://tides.mobilegeographics.com/locations/8807.html"
     }
   ],
 
@@ -177,6 +182,20 @@
       "max_total_speed": 5,
       "dive_duration": 90,
       "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Waterman Wall",
+      "data": "West end, Rich Passage, Puget Sound, Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2.2,
+      "max_ebb": 2.2,
+      "max_total_speed": 3.2,
+      "dive_duration": 90,
+      "surface_swim_time": 5,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false

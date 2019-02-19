@@ -25,10 +25,12 @@ def main():
     START = dt.now()
 
     # STATION1 = "http://tides.mobilegeographics.com/locations/67.html"  # Admiralty Head
-    STATION1 = "http://tides.mobilegeographics.com/locations/8176.html"  # Narrows North
+    # STATION1 = "http://tides.mobilegeographics.com/locations/8176.html"  # Narrows North
+    STATION1 = "http://tides.mobilegeographics.com/locations/153.html"  # Alki Point
 
     STATION2 = "http://tides.mobilegeographics.com/locations/69.html"  # Admiralty Inlet
     # STATION2 = "https://tides.mobilegeographics.com/locations/3053.html"  # Hale Passage
+    # STATION2 = "http://tides.mobilegeographics.com/locations/7626.html"  # Narrows South
 
 
     day = dt(START.year, START.month, START.day)

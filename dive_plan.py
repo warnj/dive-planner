@@ -273,7 +273,7 @@ def printDiveDay(slacks, site):
 # TODO: add support for NOAA sites. i.e. https://tidesandcurrents.noaa.gov/noaacurrents/Predictions?id=PUG1528_17&d=2019-02-16
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
 START = dt.now()
-START = dt(2019, 2, 16)  # date to begin considering diveable conditions
+# START = dt(2019, 2, 16)  # date to begin considering diveable conditions
 DAYS_IN_FUTURE = 0  # number of days after START to consider
 
 SITES = None  # Consider all sites
@@ -292,7 +292,7 @@ SITES = None  # Consider all sites
 # createOrAppend('Fox Island Bridge')
 # createOrAppend('Fox Island East Wall')
 # createOrAppend('Titlow')
-
+# createOrAppend('Waterman Wall')
 
 filterNonWorkDays = False  # only consider diving on weekends and holidays
 filterDaylight = True  # TODO: fix unimportant bug with this filter if first slack of the day (well before sunrise) doesn't have a previous Max before it, loops around to future with negative index
