@@ -79,7 +79,7 @@ def main():
 
     inputFile = 'dive_meetup_data_old_format_with_slacks_with_splash.csv'
     outputFile = 'dive_meetup_data_old_format_with_slacks_with_splash.csv'
-    sites = ["Day Island Wall"]
+    sites = ["Skyline Wall"]
 
 
     print('Extracting dives from data file', inputFile)

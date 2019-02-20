@@ -273,14 +273,14 @@ def printDiveDay(slacks, site):
 # TODO: add support for NOAA sites. i.e. https://tidesandcurrents.noaa.gov/noaacurrents/Predictions?id=PUG1528_17&d=2019-02-16
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
 START = dt.now()
-START = dt(2019, 2, 16)  # date to begin considering diveable conditions
+START = dt(2019, 1, 15)  # date to begin considering diveable conditions
 DAYS_IN_FUTURE = 0  # number of days after START to consider
 
 SITES = None  # Consider all sites
 # createOrAppend('Salt Creek')
 # createOrAppend('Deception Pass')
 # createOrAppend('Skyline Wall')
-# createOrAppend('Keystone Jetty')
+createOrAppend('Keystone Jetty')
 # createOrAppend('Possession Point')
 # createOrAppend('Mukilteo')
 # createOrAppend('Edmonds Underwater Park')
