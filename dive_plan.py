@@ -280,7 +280,7 @@ SITES = None  # Consider all sites
 # createOrAppend('Salt Creek')
 # createOrAppend('Deception Pass')
 # createOrAppend('Skyline Wall')
-# createOrAppend('Keystone Jetty')
+createOrAppend('Keystone Jetty')
 # createOrAppend('Possession Point')
 # createOrAppend('Mukilteo')
 # createOrAppend('Edmonds Underwater Park')

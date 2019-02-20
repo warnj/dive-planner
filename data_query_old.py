@@ -32,7 +32,7 @@ SITE_MAP = {  # dive site -> tokens that the listing must contain
     'Sund Rock': ['sund', 'rock'],
 }
 # tags that indicate non-dive activities to ignore
-SKIP = ['friends of', 'club meet', 'sunset hill', 'lujac', 'boat', 'charter', 'long island', 'davidson rock', 'forum']
+SKIP = ['friends of', 'club meet', 'sunset hill', 'lujac', 'boat', 'charter', 'long island', 'davidson rock', 'forum', 'liveaboard', 'dive deception pass']
 
 class Dive:
     # website data
@@ -192,7 +192,7 @@ FILENAME = 'dive_meetup_data_old_format_with_slacks.csv'
 SITES = None  # show data for all sites
 # createOrAppend("Salt Creek")
 # createOrAppend("Deception Pass")
-# createOrAppend("Skyline Wall")
+createOrAppend("Skyline Wall")
 # createOrAppend("Keystone Jetty")
 # createOrAppend("Possession Point")
 # createOrAppend("Mukilteo")
