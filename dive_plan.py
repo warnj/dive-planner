@@ -14,6 +14,146 @@ TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
 TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
 DATEFMT = '%Y-%m-%d'  # example 2019-01-18
 
+# Class to retrieve and parse current data from mobilegeographics website
+class MobilegeographicsInterpreter:
+    baseUrl = ''
+
+    _webLines = None
+
+    def __init__(self, baseUrl):
+        self.baseUrl = baseUrl
+
+    # Returns the datetime object parsed from the given data line from MobileGeographics website
+    def _parseMobileGeographicsTime(self, tokens):
+        dayTimeStr = tokens[0] + ' ' + tokens[2] + tokens[3]  # ex: 2018-11-17 1:15PM
+        return dt.strptime(dayTimeStr, TIMEPARSEFMT)
+
+    # Returns the day-specific URL for the current base URL
+    def getDayUrl(self, day):
+        return self.baseUrl + '?y={}&m={}&d={}'.format(day.year, day.month, day.day)
+
+    # Returns the mobilegeographics current data from the given url
+    def _getWebLines(self, url):
+        with urllib.request.urlopen(url) as response:
+            html = response.read()
+            soup = BeautifulSoup(html, 'html.parser')
+            predictions = soup.find('pre', {'class': 'predictions-table'})
+            lines = predictions.text.splitlines()
+            # ignore the non-current speed data at the top, like current direction and gps coords
+            start = 0
+            for line in lines:
+                if "knots" not in line:
+                    start += 1
+                else:
+                    break
+            return predictions.text.splitlines()[start:]
+
+    def _getBeforeMaxSpeedLine(self, i, lines):
+        pre = i - 1
+        if pre < 0:
+            return None
+        while 'Ebb' not in lines[pre] and 'Flood' not in lines[pre]:
+            pre -= 1
+            if pre < 0:
+                return None
+        return lines[pre]
+
+    def _getAfterMaxSpeedLine(self, i, lines):
+        post = i + 1
+        if post >= len(lines):
+            return None
+        while 'Ebb' not in lines[post] and 'Flood' not in lines[post]:
+            post += 1
+            if post >= len(lines):
+                return None
+        return lines[post]
+
+    # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
+    def _getSlackData(self, lines, indexes, sunrise, sunset):
+        slacks = []
+        for i in indexes:
+            s = Slack()
+            s.sunriseTime = sunrise
+            s.sunsetTime = sunset
+
+            preMax = self._getBeforeMaxSpeedLine(i, lines)
+            if not preMax:
+                print("skipping slack index {} since no speed data before it".format(i))
+                continue
+            tokens1 = preMax.split()
+
+            s.slackBeforeEbb = 'Flood' in preMax
+
+            postMax = self._getAfterMaxSpeedLine(i, lines)
+            if not postMax:
+                print("skipping slack index {} since no speed data after it".format(i))
+                continue
+            tokens2 = postMax.split()
+
+            if s.slackBeforeEbb:
+                s.floodSpeed = float(tokens1[5])
+                s.ebbSpeed = float(tokens2[5])
+            else:
+                s.ebbSpeed = float(tokens1[5])
+                s.floodSpeed = float(tokens2[5])
+
+            s.time = self._parseMobileGeographicsTime(lines[i].split())
+            slacks.append(s)
+        return slacks
+
+    # Returns list with indexes of the daytime slack currents in the given list of data lines. Also returns sunrise time
+    # and sunset time.
+    def _getDaySlacks(self, webLines):
+        sunrise = None
+        slacksIndexes = []
+        for i, line in enumerate(webLines):
+            if sunrise and 'Slack' in line:
+                slacksIndexes.append(i)
+            elif 'Sunrise' in line:
+                sunrise = self._parseMobileGeographicsTime(line.split())
+            elif 'Sunset' in line:
+                sunset = self._parseMobileGeographicsTime(line.split())
+                return slacksIndexes, sunrise, sunset
+        return slacksIndexes, sunrise, None
+
+    # Returns list with indexes of the slack currents in the first 24hrs of the given list of data lines
+    def _getAllSlacks(self, webLines):
+        day = webLines[0].split()[0]
+        slacksIndexes = []
+        for i, line in enumerate(webLines):
+            if line.split()[0] != day:
+                return slacksIndexes
+            elif 'Slack' in line:
+                slacksIndexes.append(i)
+        return slacksIndexes
+
+    # Returns true if self._webData contains the data for the given day, false otherwise
+    def _canReuseWebData(self, day):
+        if not self._webLines:
+            return False
+        dayStr = dt.strftime(day, DATEFMT)
+        for i, line in enumerate(self._webLines):
+            if dayStr in line:
+                self._webLines = self._webLines[i:]
+                return True
+        return False
+
+    # Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
+    def getSlacks(self, day, daylight):
+        if not self._canReuseWebData(day):
+            url = self.getDayUrl(day)
+            self._webLines = self._getWebLines(url)
+
+        sunrise = None
+        sunset = None
+        if daylight:
+            slackIndexes, sunrise, sunset = self._getDaySlacks(self._webLines)
+        else:
+            slackIndexes = self._getAllSlacks(self._webLines)
+        return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset)  # populate Slack objects
+
+
+
 class Slack:
     time = None
     sunriseTime = None
@@ -87,124 +227,22 @@ def getAllDays(futureDays, start=dt.now()):
         d += delta
     return days
 
-# returns the datetime object parsed from the given data line from MobileGeographics website
-def parseMobileGeographicsTime(tokens):
-    dayTimeStr = tokens[0] + ' ' + tokens[2] + tokens[3]  # ex: 2018-11-17 1:15PM
-    return dt.strptime(dayTimeStr, TIMEPARSEFMT)
-
-# Returns list with indexes of the daytime slack currents in the given list of data lines. Also returns sunrise time
-# and sunset time.
-def getDaySlacks(lines):
-    sunrise = None
-    slacks = []
-    for i, line in enumerate(lines):
-        if sunrise and 'Slack' in line:
-            slacks.append(i)
-        elif 'Sunrise' in line:
-            sunrise = parseMobileGeographicsTime(line.split())
-        elif 'Sunset' in line:
-            sunset = parseMobileGeographicsTime(line.split())
-            return slacks, sunrise, sunset
-    return slacks, sunrise, None
 
 
-# returns list with indexes of the slack currents in the first 24hrs of the given list of data lines
-def getAllSlacks(lines):
-    day = lines[0].split()[0]
-    slacks = []
-    for i, line in enumerate(lines):
-        if line.split()[0] != day:
-            return slacks
-        elif 'Slack' in line:
-            slacks.append(i)
-    return slacks
 
 
-def getBeforeMaxSpeedLine(i, lines):
-    pre = i - 1
-    if pre < 0:
-        return None
-    while 'Ebb' not in lines[pre] and 'Flood' not in lines[pre]:
-        pre -= 1
-        if pre < 0:
-            return None
-    return lines[pre]
 
 
-def getAfterMaxSpeedLine(i, lines):
-    post = i + 1
-    if post >= len(lines):
-        return None
-    while 'Ebb' not in lines[post] and 'Flood' not in lines[post]:
-        post += 1
-        if post >= len(lines):
-            return None
-    return lines[post]
+# # Returns url for the given day from the given base url
+# def getDayUrl(day, baseUrl):
+#     if "mobilegeographics" in baseUrl:
+#         return baseUrl + '?y={}&m={}&d={}'.format(day.year, day.month, day.day)
+#     elif "noaa.gov" in baseUrl:
+#         return baseUrl + dt.strftime(day, DATEFMT)
+#     else:
+#         return ""
 
 
-# returns a list of Slack objects corresponding to the slack indexes within the list of data lines
-def getSlackData(lines, indexes, sunrise, sunset):
-    slacks = []
-    for i in indexes:
-        s = Slack()
-        s.sunriseTime = sunrise
-        s.sunsetTime = sunset
-
-        preMax = getBeforeMaxSpeedLine(i, lines)
-        if not preMax:
-            print("skipping slack index {} since no speed data before it".format(i))
-            continue
-        tokens1 = preMax.split()
-
-        s.slackBeforeEbb = 'Flood' in preMax
-
-        postMax = getAfterMaxSpeedLine(i, lines)
-        if not postMax:
-            print("skipping slack index {} since no speed data after it".format(i))
-            continue
-        tokens2 = postMax.split()
-
-        if s.slackBeforeEbb:
-            s.floodSpeed = float(tokens1[5])
-            s.ebbSpeed = float(tokens2[5])
-        else:
-            s.ebbSpeed = float(tokens1[5])
-            s.floodSpeed = float(tokens2[5])
-
-        s.time = parseMobileGeographicsTime(lines[i].split())
-        slacks.append(s)
-    return slacks
-
-# Returns url for the given day from the given base url
-def getDayUrl(day, baseUrl):
-    return baseUrl + '?y={}&m={}&d={}'.format(day.year, day.month, day.day)
-
-# Returns list of current data lines from given mobilegeographics url
-def getWebLines(url):
-    with urllib.request.urlopen(url) as response:
-        html = response.read()
-        soup = BeautifulSoup(html, 'html.parser')
-        predictions = soup.find('pre', {'class': 'predictions-table'})
-        lines = predictions.text.splitlines()
-        # ignore the non-current speed data at the top, like current direction and gps coords
-        start = 0
-        for line in lines:
-            if "knots" not in line:
-                start += 1
-            else:
-                break
-        return predictions.text.splitlines()[start:]
-
-
-# Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
-def getSlacks(webData, daylight=True):
-    sunrise = None
-    sunset = None
-    if daylight:
-        slackIndexes, sunrise, sunset = getDaySlacks(webData)
-    else:
-        slackIndexes = getAllSlacks(webData)
-    return getSlackData(webData, slackIndexes, sunrise, sunset)  # populate Slack objects
 
 
 # Returns [mincurrenttime, markerbuoyentrytime, myentrytime] for the given slack at the given site
@@ -273,8 +311,8 @@ def printDiveDay(slacks, site):
 # TODO: add support for NOAA sites. i.e. https://tidesandcurrents.noaa.gov/noaacurrents/Predictions?id=PUG1528_17&d=2019-02-16
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
 START = dt.now()
-# START = dt(2019, 2, 16)  # date to begin considering diveable conditions
-DAYS_IN_FUTURE = 0  # number of days after START to consider
+START = dt(2019, 2, 16)  # date to begin considering diveable conditions
+DAYS_IN_FUTURE = 3  # number of days after START to consider
 
 SITES = None  # Consider all sites
 # createOrAppend('Salt Creek')
@@ -287,7 +325,7 @@ SITES = None  # Consider all sites
 # createOrAppend('Three Tree North')
 # createOrAppend('Alki Pipeline')
 # createOrAppend('Saltwater State Park')
-# createOrAppend('Day Island Wall')
+createOrAppend('Day Island Wall')
 # createOrAppend('Sunrise Beach')
 # createOrAppend('Fox Island Bridge')
 # createOrAppend('Fox Island East Wall')
@@ -325,23 +363,12 @@ def main():
         if SITES and siteData['name'] not in SITES:
             continue
         station = getStation(data['stations'], siteData['data'])
-        print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], getDayUrl(possibleDiveDays[0], station['url']), station['coords']))
 
-        webLines = None
-        reuse = False
+        m = MobilegeographicsInterpreter(station['url'])
+        print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], m.baseUrl, station['coords']))
+
         for day in possibleDiveDays:
-            # Check previous website data if it has the info for day and can be re-used
-            if webLines:
-                dayStr = dt.strftime(day, DATEFMT)
-                reuse = False
-                for j, line in enumerate(webLines):
-                    if dayStr in line and not reuse:
-                        webLines = webLines[j:]
-                        reuse = True
-                        break
-            if not reuse:
-                webLines = getWebLines(getDayUrl(day, station['url']))
-            slacks = getSlacks(webLines, daylight=filterDaylight)
+            slacks = m.getSlacks(day, daylight=filterDaylight)
             printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
 
 

@@ -38,7 +38,8 @@
     {
       "name": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "coords": "47.2608 N, 122.5583 W",
-      "url": "http://tides.mobilegeographics.com/locations/7626.html"
+      "url": "http://tides.mobilegeographics.com/locations/7626.html",
+      "url2": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1528_13&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "The Narrows, north end (midstream), Washington Current",
