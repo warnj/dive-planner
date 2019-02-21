@@ -13,8 +13,9 @@ import json, csv
 # For the site with the given data and the given mobilegeographics current url, returns the
 # Slack object with corrected time closest to the given meetup time.
 def getSlackForDive(meetTime, siteData, url):
-    webLines = getWebLines(getDayUrl(meetTime, url))
-    slacks = getSlacks(webLines, daylight=False)
+    m = MobilegeographicsInterpreter(url)
+    slacks = m.getSlacks(meetTime, daylight=False)
+
     estMeetupTimes = {}  # estimated meetup time for the slack -> slack
     for slack in slacks:
         times = getEntryTimes(slack, siteData)
@@ -30,7 +31,7 @@ def getSlackForDive(meetTime, siteData, url):
     return slackDove
 
 def main():
-    inputFile = 'dive_meetup_data_old_format_with_urls.csv'
+    inputFile = 'dive_meetup_data_old_format.csv'
     outputFile = inputFile.replace(".csv", "") + "_with_slacks.csv"
     PRINT_LOCATION_CLASSIFICATION = False
 
