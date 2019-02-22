@@ -11,7 +11,7 @@ import numpy as np
 def allSlackIndexes(lines):
     slacks = []
     for i, line in enumerate(lines):
-        if 'Slack' in line:
+        if 'slack' in line:
             slacks.append(i)
     return slacks
 
@@ -24,22 +24,23 @@ def allSlacks(webData):
 def main():
     START = dt.now()
 
-    # STATION1 = "http://tides.mobilegeographics.com/locations/67.html"  # Admiralty Head
+    STATION1 = "http://tides.mobilegeographics.com/locations/67.html"  # Admiralty Head
     # STATION1 = "http://tides.mobilegeographics.com/locations/8176.html"  # Narrows North
-    STATION1 = "http://tides.mobilegeographics.com/locations/153.html"  # Alki Point
+    # STATION1 = "http://tides.mobilegeographics.com/locations/153.html"  # Alki Point
 
     STATION2 = "http://tides.mobilegeographics.com/locations/69.html"  # Admiralty Inlet
     # STATION2 = "https://tides.mobilegeographics.com/locations/3053.html"  # Hale Passage
     # STATION2 = "http://tides.mobilegeographics.com/locations/7626.html"  # Narrows South
 
+    m1 = MobilegeographicsInterpreter(STATION1)
+    slacks1 = m.getSlacks(day, )
 
-    day = dt(START.year, START.month, START.day)
-    print(getDayUrl(day, STATION1))
+    m2 = MobilegeographicsInterpreter(STATION2)
 
-    webLines = getWebLines(getDayUrl(day, STATION1))
+    webLines = getWebLines(MobilegeographicsInterpreter.getDayUrl(STATION1, day))
     slacks1 = allSlacks(webLines)
 
-    webLines = getWebLines(getDayUrl(day, STATION2))
+    webLines = getWebLines(MobilegeographicsInterpreter.getDayUrl(STATION2, day))
     slacks2 = allSlacks(webLines)
 
     if len(slacks1) != len(slacks2):

@@ -28,9 +28,10 @@ class MobilegeographicsInterpreter:
         dayTimeStr = tokens[0] + ' ' + tokens[2] + tokens[3]  # ex: 2018-11-17 1:15PM
         return dt.strptime(dayTimeStr, TIMEPARSEFMT)
 
-    # Returns the day-specific URL for the current base URL
-    def getDayUrl(self, day):
-        return self.baseUrl + '?y={}&m={}&d={}'.format(day.year, day.month, day.day)
+    # Returns the day-specific URL for the base URL
+    @staticmethod
+    def getDayUrl(baseUrl, day):
+        return baseUrl + '?y={}&m={}&d={}'.format(day.year, day.month, day.day)
 
     # Returns the mobilegeographics current data from the given url
     def _getWebLines(self, url):
@@ -139,7 +140,7 @@ class MobilegeographicsInterpreter:
     # Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
     def getSlacks(self, day, daylight):
         if not self._canReuseWebData(day):
-            url = self.getDayUrl(day)
+            url = self.getDayUrl(self.baseUrl, day)
             self._webLines = self._getWebLines(url)
 
         sunrise = None
@@ -166,8 +167,8 @@ class NoaaInterpreter:
         return dt.strptime(dayTimeStr, TIMEPARSEFMT)
 
     # Returns the day-specific URL for the current base URL
-    def getDayUrl(self, day):
-        return self.baseUrl + dt.strftime(day, DATEFMT)
+    def getDayUrl(self, baseUrl, day):
+        return baseUrl + dt.strftime(day, DATEFMT)
 
     # Returns the noaa current data from the given url
     def _getWebLines(self, url, day):
@@ -264,7 +265,7 @@ class NoaaInterpreter:
 
     def getSlacks(self, day, daylight):
         if not self._canReuseWebData(day):
-            url = self.getDayUrl(day)
+            url = self.getDayUrl(self.baseUrl, day)
             self._webLines = self._getWebLines(url, day)
 
         sunrise = None
@@ -416,10 +417,9 @@ def printDiveDay(slacks, site):
             printDive(s, site)
 
 
-# TODO: add support for NOAA sites. i.e. https://tidesandcurrents.noaa.gov/noaacurrents/Predictions?id=PUG1528_17&d=2019-02-16
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
 # START = dt.now()
-START = dt(2019, 3, 2)  # date to begin considering diveable conditions
+START = dt(2019, 2, 16)  # date to begin considering diveable conditions
 DAYS_IN_FUTURE = 0  # number of days after START to consider
 
 SITES = None  # Consider all sites
@@ -433,7 +433,7 @@ createOrAppend('Keystone Jetty')
 # createOrAppend('Three Tree North')
 # createOrAppend('Alki Pipeline')
 # createOrAppend('Saltwater State Park')
-createOrAppend('Day Island Wall')
+# createOrAppend('Day Island Wall')
 # createOrAppend('Sunrise Beach')
 # createOrAppend('Fox Island Bridge')
 # createOrAppend('Fox Island East Wall')
@@ -443,7 +443,7 @@ createOrAppend('Day Island Wall')
 filterNonWorkDays = False  # only consider diving on weekends and holidays
 filterDaylight = False  # only consider slacks that occur during daylight hours
 
-PRINTINFO = True  # print non-diveable days and reason why not diveable
+PRINTINFO = False  # print non-diveable days and reason why not diveable
 
 possibleDiveDays = None  # Specify dates
 possibleDiveDays = [
@@ -453,6 +453,7 @@ possibleDiveDays = [
     # dt(2019, 1, 19),
     # dt(2018, 12, 27)
 ]
+# TODO: add agate pass site
 # ----------------------------------------------------------------------------------------------------------------------
 
 def main():
@@ -475,7 +476,7 @@ def main():
         m = MobilegeographicsInterpreter(station['url'])
         print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], m.baseUrl, station['coords']))
 
-        m2 = NoaaInterpreter(station['url2'])
+        m2 = NoaaInterpreter(station['url_noaa'])
 
         for day in possibleDiveDays:
             print("Mobile Geographics")
