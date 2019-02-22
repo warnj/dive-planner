@@ -3,8 +3,10 @@ This program is used to identify if days in the future (or past) are considered 
 specified by dive_sites.json
 '''
 
-from data_collect import absName
+import data_collect
+
 from pandas.tseries.holiday import USFederalHolidayCalendar
+from astral import Astral
 from bs4 import BeautifulSoup
 from datetime import datetime as dt
 from datetime import timedelta as td
@@ -14,14 +16,58 @@ TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
 TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
 DATEFMT = '%Y-%m-%d'  # example 2019-01-18
 
-# Class to retrieve and parse current data from mobilegeographics website
-class MobilegeographicsInterpreter:
-    baseUrl = ''
-
-    _webLines = None
+# Base class to download and parse current data from various websites
+class Interpreter:
 
     def __init__(self, baseUrl):
         self.baseUrl = baseUrl
+        self._webLines = None
+
+    def _getBeforeMaxSpeedLine(self, i, lines):
+        pre = i - 1
+        if pre < 0:
+            return None
+        while 'ebb' not in lines[pre] and 'flood' not in lines[pre]:
+            pre -= 1
+            if pre < 0:
+                return None
+        return lines[pre]
+
+    def _getAfterMaxSpeedLine(self, i, lines):
+        post = i + 1
+        if post >= len(lines):
+            return None
+        while 'ebb' not in lines[post] and 'flood' not in lines[post]:
+            post += 1
+            if post >= len(lines):
+                return None
+        return lines[post]
+
+    # Returns list with indexes of the slack currents in the first 24hrs of the given list of data lines.
+    def _getAllSlacks(self, webLines):
+        day = webLines[0].split()[0]
+        slacksIndexes = []
+        for i, line in enumerate(webLines):
+            if line.split()[0] != day:
+                return slacksIndexes
+            elif 'slack' in line:
+                slacksIndexes.append(i)
+        return slacksIndexes
+
+    # Returns true if self._webData contains the data for the given day, false otherwise
+    def _canReuseWebData(self, day):
+        if not self._webLines:
+            return False
+        dayStr = dt.strftime(day, DATEFMT)
+        for i, line in enumerate(self._webLines):
+            if dayStr in line:
+                self._webLines = self._webLines[i:]
+                return True
+        return False
+
+
+# Class to retrieve and parse current data from mobilegeographics website
+class MobilegeographicsInterpreter(Interpreter):
 
     # Returns the datetime object parsed from the given data line from MobileGeographics website
     def _parseTime(self, tokens):
@@ -48,26 +94,6 @@ class MobilegeographicsInterpreter:
                 else:
                     break
             return lines[start:]
-
-    def _getBeforeMaxSpeedLine(self, i, lines):
-        pre = i - 1
-        if pre < 0:
-            return None
-        while 'ebb' not in lines[pre] and 'flood' not in lines[pre]:
-            pre -= 1
-            if pre < 0:
-                return None
-        return lines[pre]
-
-    def _getAfterMaxSpeedLine(self, i, lines):
-        post = i + 1
-        if post >= len(lines):
-            return None
-        while 'ebb' not in lines[post] and 'flood' not in lines[post]:
-            post += 1
-            if post >= len(lines):
-                return None
-        return lines[post]
 
     # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
     def _getSlackData(self, lines, indexes, sunrise, sunset):
@@ -115,28 +141,6 @@ class MobilegeographicsInterpreter:
                 return slacksIndexes, sunrise, sunset
         return slacksIndexes, sunrise, None
 
-    # Returns list with indexes of the slack currents in the first 24hrs of the given list of data lines
-    def _getAllSlacks(self, webLines):
-        day = webLines[0].split()[0]
-        slacksIndexes = []
-        for i, line in enumerate(webLines):
-            if line.split()[0] != day:
-                return slacksIndexes
-            elif 'slack' in line:
-                slacksIndexes.append(i)
-        return slacksIndexes
-
-    # Returns true if self._webData contains the data for the given day, false otherwise
-    def _canReuseWebData(self, day):
-        if not self._webLines:
-            return False
-        dayStr = dt.strftime(day, DATEFMT)
-        for i, line in enumerate(self._webLines):
-            if dayStr in line:
-                self._webLines = self._webLines[i:]
-                return True
-        return False
-
     # Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
     def getSlacks(self, day, daylight):
         if not self._canReuseWebData(day):
@@ -153,13 +157,7 @@ class MobilegeographicsInterpreter:
 
 
 # Class to retrieve and parse current data from Noaa website
-class NoaaInterpreter:
-    baseUrl = ''
-
-    _webLines = None
-
-    def __init__(self, baseUrl):
-        self.baseUrl = baseUrl
+class NoaaInterpreter(Interpreter):
 
     # Returns the datetime object parsed from the given data line from Noaa website
     def _parseTime(self, tokens):
@@ -167,6 +165,7 @@ class NoaaInterpreter:
         return dt.strptime(dayTimeStr, TIMEPARSEFMT)
 
     # Returns the day-specific URL for the current base URL
+    @staticmethod
     def getDayUrl(self, baseUrl, day):
         return baseUrl + dt.strftime(day, DATEFMT)
 
@@ -185,28 +184,6 @@ class NoaaInterpreter:
                 else:
                     break
             return lines[start:]
-
-    # TODO: Straight copy from Mobilegeographics, move to interface or parent class
-    def _getBeforeMaxSpeedLine(self, i, lines):
-        pre = i - 1
-        if pre < 0:
-            return None
-        while 'ebb' not in lines[pre] and 'flood' not in lines[pre]:
-            pre -= 1
-            if pre < 0:
-                return None
-        return lines[pre]
-
-    # TODO: Straight copy from Mobilegeographics, move to interface or parent class
-    def _getAfterMaxSpeedLine(self, i, lines):
-        post = i + 1
-        if post >= len(lines):
-            return None
-        while 'ebb' not in lines[post] and 'flood' not in lines[post]:
-            post += 1
-            if post >= len(lines):
-                return None
-        return lines[post]
 
     # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
     def _getSlackData(self, lines, indexes, sunrise, sunset):
@@ -238,30 +215,6 @@ class NoaaInterpreter:
             s.time = self._parseTime(lines[i].split())
             slacks.append(s)
         return slacks
-
-    # Returns list with indexes of the slack currents in the first 24hrs of the given list of data lines.
-    # TODO: Straight copy from Mobilegeographics, move to interface or parent class
-    def _getAllSlacks(self, webLines):
-        day = webLines[0].split()[0]
-        slacksIndexes = []
-        for i, line in enumerate(webLines):
-            if line.split()[0] != day:
-                return slacksIndexes
-            elif 'slack' in line:
-                slacksIndexes.append(i)
-        return slacksIndexes
-
-    # Returns true if self._webData contains the data for the given day, false otherwise
-    # TODO: Straight copy from Mobilegeographics, move to interface or parent class
-    def _canReuseWebData(self, day):
-        if not self._webLines:
-            return False
-        dayStr = dt.strftime(day, DATEFMT)
-        for i, line in enumerate(self._webLines):
-            if dayStr in line:
-                self._webLines = self._webLines[i:]
-                return True
-        return False
 
     def getSlacks(self, day, daylight):
         if not self._canReuseWebData(day):
@@ -459,13 +412,18 @@ possibleDiveDays = [
 def main():
     global possibleDiveDays
 
+# https://astral.readthedocs.io/en/latest/
+    a = Astral()
+    moon_phase = a.moon_phase(date=dt(2018, 1, 1))
+    print(moon_phase)
+
     if not possibleDiveDays:
         if filterNonWorkDays:
             possibleDiveDays = getNonWorkDays(DAYS_IN_FUTURE, START)
         else:
             possibleDiveDays = getAllDays(DAYS_IN_FUTURE, START)
 
-    data = json.loads(open(absName('dive_sites.json')).read())
+    data = json.loads(open(data_collect.absName('dive_sites.json')).read())
 
     for i in range(len(data['sites'])):
         siteData = data['sites'][i]
