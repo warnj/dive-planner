@@ -2,51 +2,82 @@
 This program is used to
 '''
 
-from dive_plan import *
+import dive_plan, data_collect
+
 from datetime import datetime as dt
 import numpy as np
-
-
-
-def allSlackIndexes(lines):
-    slacks = []
-    for i, line in enumerate(lines):
-        if 'slack' in line:
-            slacks.append(i)
-    return slacks
-
-
-def allSlacks(webData):
-    slackIndexes = allSlackIndexes(webData)
-    return getSlackData(webData, slackIndexes, None, None)  # populate Slack objects
+import json
 
 
 def main():
-    START = dt.now()
+    # START = dt.now()
+    START = dt(2019, 2, 15)
+    TRIM_NOAA = True
 
-    STATION1 = "http://tides.mobilegeographics.com/locations/67.html"  # Admiralty Head
-    # STATION1 = "http://tides.mobilegeographics.com/locations/8176.html"  # Narrows North
-    # STATION1 = "http://tides.mobilegeographics.com/locations/153.html"  # Alki Point
+    # STATION1 = "Strait of Juan de Fuca Entrance, Washington Current"
+    # STATION1 = "Juan De Fuca Strait (East), British Columbia Current"
+    STATION1 = "Rosario Strait, Washington Current"
+    # STATION1 = "Deception Pass (narrows), Washington Current"
+    # STATION1 = "Admiralty Inlet (off Bush Point), Washington Current"
+    # STATION1 = "Alki Point, 0.3 mile west of, Puget Sound, Washington Current"
+    # STATION1 = "West end, Rich Passage, Puget Sound, Washington Current"
+    # STATION1 = "Agate Passage, north end, Puget Sound, Washington Current"
+    # STATION1 = "The Narrows, north end (midstream), Washington Current"
+    # STATION1 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
+    # STATION1 = "Hale Passage, west end, Puget Sound, Washington Current"
 
-    STATION2 = "http://tides.mobilegeographics.com/locations/69.html"  # Admiralty Inlet
-    # STATION2 = "https://tides.mobilegeographics.com/locations/3053.html"  # Hale Passage
-    # STATION2 = "http://tides.mobilegeographics.com/locations/7626.html"  # Narrows South
+    # NOAA1 = True
+    NOAA1 = False
 
-    m1 = MobilegeographicsInterpreter(STATION1)
-    slacks1 = m.getSlacks(day, )
 
-    m2 = MobilegeographicsInterpreter(STATION2)
+    # STATION2 = "Strait of Juan de Fuca Entrance, Washington Current"
+    # STATION2 = "Juan De Fuca Strait (East), British Columbia Current"
+    STATION2 = "Rosario Strait, Washington Current"
+    # STATION2 = "Deception Pass (narrows), Washington Current"
+    # STATION2 = "Admiralty Inlet (off Bush Point), Washington Current"
+    # STATION2 = "Alki Point, 0.3 mile west of, Puget Sound, Washington Current"
+    # STATION2 = "West end, Rich Passage, Puget Sound, Washington Current"
+    # STATION2 = "Agate Passage, north end, Puget Sound, Washington Current"
+    # STATION2 = "The Narrows, north end (midstream), Washington Current"
+    # STATION2 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
+    # STATION2 = "Hale Passage, west end, Puget Sound, Washington Current"
 
-    webLines = getWebLines(MobilegeographicsInterpreter.getDayUrl(STATION1, day))
-    slacks1 = allSlacks(webLines)
+    NOAA2 = True
+    # NOAA2 = False
 
-    webLines = getWebLines(MobilegeographicsInterpreter.getDayUrl(STATION2, day))
-    slacks2 = allSlacks(webLines)
+
+
+    data = json.loads(open(data_collect.absName('dive_sites.json')).read())
+
+    station1 = dive_plan.getStation(data['stations'], STATION1)
+    if NOAA1:
+        m1 = dive_plan.NoaaInterpreter(station1['url_noaa'])
+    else:
+        m1 = dive_plan.MobilegeographicsInterpreter(station1['url'])
+
+    station2 = dive_plan.getStation(data['stations'], STATION2)
+    if NOAA2:
+        m2 = dive_plan.NoaaInterpreter(station2['url_noaa'])
+    else:
+        m2 = dive_plan.MobilegeographicsInterpreter(station2['url'])
+
+    slacks1 = m1.allSlacks(START)
+    slacks2 = m2.allSlacks(START)
+
+    if len(slacks1) != len(slacks2) and (NOAA1 or NOAA2) and TRIM_NOAA:  # one source is NOAA and one is MobileGeographics
+        print("Trimming excess NOAA slacks")
+        if NOAA1:
+            slacks1 = slacks1[:len(slacks2)]
+        elif NOAA2:
+            slacks2 = slacks2[:len(slacks1)]
 
     if len(slacks1) != len(slacks2):
         print("Pick a different day or add some fancy comparison - number of slacks don't match")
+        source = "NOAA" if NOAA1 else "Mobile Geographics"
+        print('{} slacks from {} station for location {}'.format(len(slacks1), source, STATION1))
+        source = "NOAA" if NOAA2 else "Mobile Geographics"
+        print('{} slacks from {} station for location {}'.format(len(slacks2), source, STATION2))
         exit(0)
-
 
     beforeEbbDiffs = []
     beforeFloodDiffs = []

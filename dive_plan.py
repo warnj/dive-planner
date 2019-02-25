@@ -68,8 +68,16 @@ class Interpreter:
                 return None
         return lines[post]
 
-    # Returns list with indexes of the slack currents in the first 24hrs of the given list of data lines.
+    # Returns list with indexes of the slack currents in the given list of data lines.
     def _getAllSlacks(self, webLines):
+        slacks = []
+        for i, line in enumerate(webLines):
+            if 'slack' in line:
+                slacks.append(i)
+        return slacks
+
+    # Returns list with indexes of the slack currents in the first 24hrs of the given list of data lines.
+    def _getAllDaySlacks(self, webLines):
         day = webLines[0].split()[0]
         slacksIndexes = []
         for i, line in enumerate(webLines):
@@ -102,6 +110,12 @@ class Interpreter:
                 self._webLines = self._webLines[i:]
                 return True
         return False
+    
+    def allSlacks(self, startDay):
+        url = self.getDayUrl(self.baseUrl, startDay)
+        lines = self._getWebLines(url, startDay)
+        slackIndexes = self._getAllSlacks(lines)
+        return self._getSlackData(lines, slackIndexes, None, None, -1)
 
     # Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
     def getSlacks(self, day, daylight):
@@ -116,7 +130,7 @@ class Interpreter:
         if daylight:
             slackIndexes = self._getDaySlacks(self._webLines, sunrise, sunset)
         else:
-            slackIndexes = self._getAllSlacks(self._webLines)
+            slackIndexes = self._getAllDaySlacks(self._webLines)
         return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset, self._astral.moon_phase(date=day))
 
 
