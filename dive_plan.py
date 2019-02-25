@@ -22,8 +22,31 @@ class Interpreter:
     def __init__(self, baseUrl):
         self.baseUrl = baseUrl
         self._webLines = None
+        self._astral = Astral()  # https://astral.readthedocs.io/en/latest
+        self._astralCity = self._astral["Seattle"]
 
-    def _getBeforeMaxSpeedLine(self, i, lines):
+    # ----------------------- Stub functions child classes must implement ----------------------------------------------
+    # Returns the datetime object parsed from the given data line
+    def _parseTime(self, tokens):
+        raise NotImplementedError
+
+    # Returns the day-specific URL for the base URL
+    @staticmethod
+    def getDayUrl(baseUrl, day):
+        raise NotImplementedError
+
+    # Returns the current data from the given url
+    def _getWebLines(self, url, day):
+        raise NotImplementedError
+
+    # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
+    def _getSlackData(self, lines, indexes, sunrise, sunset, moonPhase):
+        raise NotImplementedError
+    # ----------------------- end stub functions -----------------------------------------------------------------------
+
+    # Returns the line before index i in lines that contains an ebb or flood current speed prediction. Returns None if
+    # no such prediction exists before index i.
+    def _getCurrentBefore(self, i, lines):
         pre = i - 1
         if pre < 0:
             return None
@@ -33,7 +56,9 @@ class Interpreter:
                 return None
         return lines[pre]
 
-    def _getAfterMaxSpeedLine(self, i, lines):
+    # Returns the line after index i in lines that contains an ebb or flood current speed prediction. Returns None if
+    # no such prediction exists after index i.
+    def _getCurrentAfter(self, i, lines):
         post = i + 1
         if post >= len(lines):
             return None
@@ -54,6 +79,19 @@ class Interpreter:
                 slacksIndexes.append(i)
         return slacksIndexes
 
+    # Returns list with indexes of the daytime (between given sunrise and sunset) slack currents in the given
+    # list of data lines.
+    def _getDaySlacks(self, webLines, sunrise, sunset):
+        slacksIndexes = []
+        for i, line in enumerate(webLines):
+            if 'slack' in line:
+                time = self._parseTime(line.split())
+                if time > sunset:
+                    return slacksIndexes
+                elif time > sunrise:
+                    slacksIndexes.append(i)
+        return None
+
     # Returns true if self._webData contains the data for the given day, false otherwise
     def _canReuseWebData(self, day):
         if not self._webLines:
@@ -64,6 +102,22 @@ class Interpreter:
                 self._webLines = self._webLines[i:]
                 return True
         return False
+
+    # Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
+    def getSlacks(self, day, daylight):
+        if not self._canReuseWebData(day):
+            url = self.getDayUrl(self.baseUrl, day)
+            self._webLines = self._getWebLines(url, day)
+
+        # Note: astral sunrise and sunset times do account for daylight savings
+        sun = self._astralCity.sun(date=day, local=True)
+        sunrise = sun['sunrise'].replace(tzinfo=None)
+        sunset = sun['sunset'].replace(tzinfo=None)
+        if daylight:
+            slackIndexes = self._getDaySlacks(self._webLines, sunrise, sunset)
+        else:
+            slackIndexes = self._getAllSlacks(self._webLines)
+        return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset, self._astral.moon_phase(date=day))
 
 
 # Class to retrieve and parse current data from mobilegeographics website
@@ -80,7 +134,7 @@ class MobilegeographicsInterpreter(Interpreter):
         return baseUrl + '?y={}&m={}&d={}'.format(day.year, day.month, day.day)
 
     # Returns the mobilegeographics current data from the given url
-    def _getWebLines(self, url):
+    def _getWebLines(self, url, day):
         with urllib.request.urlopen(url) as response:
             html = response.read()
             soup = BeautifulSoup(html, 'html.parser')
@@ -96,21 +150,22 @@ class MobilegeographicsInterpreter(Interpreter):
             return lines[start:]
 
     # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
-    def _getSlackData(self, lines, indexes, sunrise, sunset):
+    def _getSlackData(self, lines, indexes, sunrise, sunset, moonPhase):
         slacks = []
         for i in indexes:
             s = Slack()
             s.sunriseTime = sunrise
             s.sunsetTime = sunset
+            s.moonPhase = moonPhase
 
-            preMax = self._getBeforeMaxSpeedLine(i, lines)
+            preMax = self._getCurrentBefore(i, lines)
             if not preMax:
                 continue
             tokens1 = preMax.split()
 
             s.slackBeforeEbb = 'flood' in preMax
 
-            postMax = self._getAfterMaxSpeedLine(i, lines)
+            postMax = self._getCurrentAfter(i, lines)
             if not postMax:
                 continue
             tokens2 = postMax.split()
@@ -126,35 +181,6 @@ class MobilegeographicsInterpreter(Interpreter):
             slacks.append(s)
         return slacks
 
-    # Returns list with indexes of the daytime slack currents in the given list of data lines. Also returns sunrise time
-    # and sunset time.
-    def _getDaySlacks(self, webLines):
-        sunrise = None
-        slacksIndexes = []
-        for i, line in enumerate(webLines):
-            if sunrise and 'slack' in line:
-                slacksIndexes.append(i)
-            elif 'sunrise' in line:
-                sunrise = self._parseTime(line.split())
-            elif 'sunset' in line:
-                sunset = self._parseTime(line.split())
-                return slacksIndexes, sunrise, sunset
-        return slacksIndexes, sunrise, None
-
-    # Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
-    def getSlacks(self, day, daylight):
-        if not self._canReuseWebData(day):
-            url = self.getDayUrl(self.baseUrl, day)
-            self._webLines = self._getWebLines(url)
-
-        sunrise = None
-        sunset = None
-        if daylight:
-            slackIndexes, sunrise, sunset = self._getDaySlacks(self._webLines)
-        else:
-            slackIndexes = self._getAllSlacks(self._webLines)
-        return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset)  # populate Slack objects
-
 
 # Class to retrieve and parse current data from Noaa website
 class NoaaInterpreter(Interpreter):
@@ -166,7 +192,7 @@ class NoaaInterpreter(Interpreter):
 
     # Returns the day-specific URL for the current base URL
     @staticmethod
-    def getDayUrl(self, baseUrl, day):
+    def getDayUrl(baseUrl, day):
         return baseUrl + dt.strftime(day, DATEFMT)
 
     # Returns the noaa current data from the given url
@@ -186,21 +212,22 @@ class NoaaInterpreter(Interpreter):
             return lines[start:]
 
     # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
-    def _getSlackData(self, lines, indexes, sunrise, sunset):
+    def _getSlackData(self, lines, indexes, sunrise, sunset, moonPhase):
         slacks = []
         for i in indexes:
             s = Slack()
             s.sunriseTime = sunrise
             s.sunsetTime = sunset
+            s.moonPhase = moonPhase
 
-            preMax = self._getBeforeMaxSpeedLine(i, lines)
+            preMax = self._getCurrentBefore(i, lines)
             if not preMax:
                 continue
             tokens1 = preMax.split()
 
             s.slackBeforeEbb = 'flood' in preMax
 
-            postMax = self._getAfterMaxSpeedLine(i, lines)
+            postMax = self._getCurrentAfter(i, lines)
             if not postMax:
                 continue
             tokens2 = postMax.split()
@@ -216,19 +243,6 @@ class NoaaInterpreter(Interpreter):
             slacks.append(s)
         return slacks
 
-    def getSlacks(self, day, daylight):
-        if not self._canReuseWebData(day):
-            url = self.getDayUrl(self.baseUrl, day)
-            self._webLines = self._getWebLines(url, day)
-
-        sunrise = None
-        sunset = None
-        # if daylight:
-        #     slackIndexes, sunrise, sunset = self._getDaySlacks(self._webLines)
-        # else:
-        slackIndexes = self._getAllSlacks(self._webLines)
-        return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset)
-
 
 
 
@@ -237,6 +251,7 @@ class Slack:
     time = None
     sunriseTime = None
     sunsetTime = None  # this is never used, but might be interesting to print it sometimes
+    moonPhase = -1
     slackBeforeEbb = False
     ebbSpeed = 0.0  # negative number
     floodSpeed = 0.0  # positive number
@@ -347,6 +362,8 @@ def printDive(s, site):
                 .format(dt.strftime(minCurrentTime, TIMEPRINTFMT), site['dive_duration'], site['surface_swim_time']))
         print('\t\tEntry Time: ' + dt.strftime(entryTime, TIMEPRINTFMT))  # Time to get in the water.
         print('\t\tMarker Buoy Entrytime (60min dive, no surface swim):', dt.strftime(markerBuoyEntryTime, TIMEPRINTFMT))
+        moonAction = "waxing" if s.moonPhase <= 14 else "waning"
+        print('\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'.format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
 
 
 # Checks the givens list of Slacks if a dive is possible. If so, prints information about the dive.
@@ -372,7 +389,7 @@ def printDiveDay(slacks, site):
 
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
 START = dt.now()
-START = dt(2019, 3, 3)  # date to begin considering diveable conditions
+START = dt(2019, 3, 2)  # date to begin considering diveable conditions
 DAYS_IN_FUTURE = 0  # number of days after START to consider
 
 SITES = None  # Consider all sites
@@ -386,15 +403,15 @@ SITES = None  # Consider all sites
 # createOrAppend('Three Tree North')
 # createOrAppend('Alki Pipeline')
 # createOrAppend('Saltwater State Park')
-# createOrAppend('Day Island Wall')
-createOrAppend('Sunrise Beach')
+createOrAppend('Day Island Wall')
+# createOrAppend('Sunrise Beach')
 # createOrAppend('Fox Island Bridge')
 # createOrAppend('Fox Island East Wall')
 # createOrAppend('Titlow')
 # createOrAppend('Waterman Wall')
 
 filterNonWorkDays = True  # only consider diving on weekends and holidays
-filterDaylight = False  # only consider slacks that occur during daylight hours
+filterDaylight = True  # only consider slacks that occur during daylight hours
 
 PRINTINFO = True  # print non-diveable days and reason why not diveable
 
@@ -411,8 +428,6 @@ possibleDiveDays = [
 
 def main():
     global possibleDiveDays
-    a = Astral()  # https://astral.readthedocs.io/en/latest
-    city = a["Seattle"]
 
     if not possibleDiveDays:
         if filterNonWorkDays:
@@ -429,26 +444,20 @@ def main():
         station = getStation(data['stations'], siteData['data'])
 
         m = MobilegeographicsInterpreter(station['url'])
-        print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], m.baseUrl, station['coords']))
-
         m2 = NoaaInterpreter(station['url_noaa'])
 
+        print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))
+        print(m.getDayUrl(m.baseUrl, possibleDiveDays[0]))
+        print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
+
         for day in possibleDiveDays:
-            sun = city.sun(date=day, local=True)
-            print('Sunrise:  {}'.format(dt.strftime(sun['sunrise'], TIMEPRINTFMT)))
-            print('Sunset:   {}'.format(dt.strftime(sun['sunset'], TIMEPRINTFMT)))
-
-            moonPhase = a.moon_phase(date=day)
-            moonAction = "waxing" if moonPhase <= 14 else "waning"
-            print("Moon phase: day {} of 28 day lunar month, {:.2f}% {}".format(moonPhase, moonPhase % 14 / 14, moonAction))
-
-            # print("Mobile Geographics")
-            slacks = m.getSlacks(day, daylight=filterDaylight)
+            print("Mobile Geographics")
+            slacks = m.getSlacks(day, filterDaylight)
             printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
 
-            # print("NOAA")
-            # slacks = m2.getSlacks(day, filterDaylight)
-            # printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
+            print("NOAA")
+            slacks = m2.getSlacks(day, filterDaylight)
+            printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
 
 
 if __name__ == '__main__':
