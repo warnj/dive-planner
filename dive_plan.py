@@ -371,15 +371,15 @@ def printDiveDay(slacks, site):
 
 
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
-# START = dt.now()
-START = dt(2019, 2, 16)  # date to begin considering diveable conditions
+START = dt.now()
+START = dt(2019, 3, 3)  # date to begin considering diveable conditions
 DAYS_IN_FUTURE = 0  # number of days after START to consider
 
 SITES = None  # Consider all sites
 # createOrAppend('Salt Creek')
 # createOrAppend('Deception Pass')
 # createOrAppend('Skyline Wall')
-createOrAppend('Keystone Jetty')
+# createOrAppend('Keystone Jetty')
 # createOrAppend('Possession Point')
 # createOrAppend('Mukilteo')
 # createOrAppend('Edmonds Underwater Park')
@@ -387,16 +387,16 @@ createOrAppend('Keystone Jetty')
 # createOrAppend('Alki Pipeline')
 # createOrAppend('Saltwater State Park')
 # createOrAppend('Day Island Wall')
-# createOrAppend('Sunrise Beach')
+createOrAppend('Sunrise Beach')
 # createOrAppend('Fox Island Bridge')
 # createOrAppend('Fox Island East Wall')
 # createOrAppend('Titlow')
 # createOrAppend('Waterman Wall')
 
-filterNonWorkDays = False  # only consider diving on weekends and holidays
+filterNonWorkDays = True  # only consider diving on weekends and holidays
 filterDaylight = False  # only consider slacks that occur during daylight hours
 
-PRINTINFO = False  # print non-diveable days and reason why not diveable
+PRINTINFO = True  # print non-diveable days and reason why not diveable
 
 possibleDiveDays = None  # Specify dates
 possibleDiveDays = [
@@ -411,11 +411,8 @@ possibleDiveDays = [
 
 def main():
     global possibleDiveDays
-
-# https://astral.readthedocs.io/en/latest/
-    a = Astral()
-    moon_phase = a.moon_phase(date=dt(2018, 1, 1))
-    print(moon_phase)
+    a = Astral()  # https://astral.readthedocs.io/en/latest
+    city = a["Seattle"]
 
     if not possibleDiveDays:
         if filterNonWorkDays:
@@ -437,13 +434,21 @@ def main():
         m2 = NoaaInterpreter(station['url_noaa'])
 
         for day in possibleDiveDays:
-            print("Mobile Geographics")
+            sun = city.sun(date=day, local=True)
+            print('Sunrise:  {}'.format(dt.strftime(sun['sunrise'], TIMEPRINTFMT)))
+            print('Sunset:   {}'.format(dt.strftime(sun['sunset'], TIMEPRINTFMT)))
+
+            moonPhase = a.moon_phase(date=day)
+            moonAction = "waxing" if moonPhase <= 14 else "waning"
+            print("Moon phase: day {} of 28 day lunar month, {:.2f}% {}".format(moonPhase, moonPhase % 14 / 14, moonAction))
+
+            # print("Mobile Geographics")
             slacks = m.getSlacks(day, daylight=filterDaylight)
             printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
 
-            print("NOAA")
-            slacks = m2.getSlacks(day, filterDaylight)
-            printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
+            # print("NOAA")
+            # slacks = m2.getSlacks(day, filterDaylight)
+            # printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
 
 
 if __name__ == '__main__':
