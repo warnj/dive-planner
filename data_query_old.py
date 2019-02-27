@@ -2,9 +2,10 @@
 This program is used to identify current trends and metrics from past Marker Buoy club dives as saved
 in dive_meetup_data_old_format_with_slacks.csv.
 '''
-
-from dive_plan import *
+import dive_plan
+import interpreter as intp
 from data_collect import absName
+
 from datetime import datetime as dt
 import json, csv
 import numpy as np
@@ -75,7 +76,7 @@ def getDives(file):
     return dives, slacks
 
 def parseSlack(s):
-    slack = Slack()
+    slack = intp.Slack()
     arrow = " -> "
     n = len(arrow)
     first = s.index(arrow)
@@ -85,7 +86,7 @@ def parseSlack(s):
     date = s[first+n:last]
     b = float(s[last+n:])
 
-    slack.time = dt.strptime(date, TIMEPRINTFMT)
+    slack.time = dt.strptime(date, intp.TIMEPRINTFMT)
     slack.slackBeforeEbb = b <= 0
     if slack.slackBeforeEbb:
         slack.floodSpeed = a
@@ -234,7 +235,7 @@ def main():
         siteData = getSiteData(SITES, site, data)
         if siteData == None:
             continue
-        station = getStation(data['stations'], siteData['data'])
+        station = dive_plan.getStation(data['stations'], siteData['data'])
         print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], station['url'], station['coords']))
 
         # Print each dive, its corresponding slack, and predicted entry time
@@ -242,7 +243,7 @@ def main():
             for dive in sitedives:
                 print('\t', dive)
                 print('\t\t', dive.slack)
-                minCurrentTime, markerBuoyEntryTime, entryTime = getEntryTimes(dive.slack, siteData)
+                minCurrentTime, markerBuoyEntryTime, entryTime = dive_plan.getEntryTimes(dive.slack, siteData)
                 minCurrentTime = dt.strftime(minCurrentTime, MEETUP_TIME_FORMAT)
                 markerBuoyEntryTime = dt.strftime(markerBuoyEntryTime, MEETUP_TIME_FORMAT)
                 entryTime = dt.strftime(entryTime, MEETUP_TIME_FORMAT)

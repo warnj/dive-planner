@@ -3,6 +3,7 @@ This program is used to
 '''
 
 import dive_plan, data_collect
+import interpreter as intp
 
 from datetime import datetime as dt
 import numpy as np
@@ -51,15 +52,15 @@ def main():
 
     station1 = dive_plan.getStation(data['stations'], STATION1)
     if NOAA1:
-        m1 = dive_plan.NoaaInterpreter(station1['url_noaa'])
+        m1 = intp.NoaaInterpreter(station1['url_noaa'])
     else:
-        m1 = dive_plan.MobilegeographicsInterpreter(station1['url'])
+        m1 = intp.MobilegeographicsInterpreter(station1['url'])
 
     station2 = dive_plan.getStation(data['stations'], STATION2)
     if NOAA2:
-        m2 = dive_plan.NoaaInterpreter(station2['url_noaa'])
+        m2 = intp.NoaaInterpreter(station2['url_noaa'])
     else:
-        m2 = dive_plan.MobilegeographicsInterpreter(station2['url'])
+        m2 = intp.MobilegeographicsInterpreter(station2['url'])
 
     slacks1 = m1.allSlacks(START)
     slacks2 = m2.allSlacks(START)

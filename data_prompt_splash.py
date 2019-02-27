@@ -3,9 +3,10 @@ This program is used to identify the time offset from the current station slack 
 by prompting the user to enter the splash times for past Marker Buoy club dives as current-sensitive locations.
 '''
 
-from dive_plan import *
-from data_collect import absName
+import interpreter as intp
+import dive_plan
 from data_query_old import *
+
 from datetime import datetime as dt
 import json, webbrowser, csv
 import numpy as np
@@ -19,9 +20,9 @@ def promptForActualSplash(dive):
             return None
         if time == 'X':
             raise RuntimeError
-        dayStr = dt.strftime(dive.date, DATEFMT)
+        dayStr = dt.strftime(dive.date, intp.DATEFMT)
         try:
-            splash = dt.strptime(dayStr + ' ' + time, TIMEPARSEFMT)
+            splash = dt.strptime(dayStr + ' ' + time, intp.TIMEPARSEFMT)
             return splash
         except ValueError:
             print('Entered time format did not match expected format (example 11:30AM or 02:05pm):')
@@ -33,16 +34,16 @@ def printSplashMetrics(dives, siteData):
         if not dive.splash:
             continue
 
-        minCurrentTime, markerBuoyEntryTime, entryTime = getEntryTimes(dive.slack, siteData)
+        minCurrentTime, markerBuoyEntryTime, entryTime = dive_plan.getEntryTimes(dive.slack, siteData)
 
         print(dive)
         print('\t', dive.slack)
         print('\tPredicted: MarkerBuoyEntryTime = {}   MyEntryTime = {}   MinCurrentTime = {}'.format(
-            dt.strftime(markerBuoyEntryTime, TIMEPRINTFMT),
-            dt.strftime(entryTime, TIMEPRINTFMT),
-            dt.strftime(minCurrentTime, TIMEPRINTFMT))
+            dt.strftime(markerBuoyEntryTime, intp.TIMEPRINTFMT),
+            dt.strftime(entryTime, intp.TIMEPRINTFMT),
+            dt.strftime(minCurrentTime, intp.TIMEPRINTFMT))
         )
-        print('\tActual MarkerBuoyEntryTime = {}'.format(dt.strftime(dive.splash, TIMEPRINTFMT)))
+        print('\tActual MarkerBuoyEntryTime = {}'.format(dt.strftime(dive.splash, intp.TIMEPRINTFMT)))
 
         predictedDif = dive.splash - markerBuoyEntryTime
         print("\tDifference from actual to predicted (minutes): {}".format(predictedDif.total_seconds()/60))
@@ -98,7 +99,7 @@ def main():
         siteData = getSiteData(sites, site, data)
         if siteData == None:
             continue
-        station = getStation(data['stations'], siteData['data'])
+        station = dive_plan.getStation(data['stations'], siteData['data'])
         print('{} - {}\n{} - {}'.format(siteData['name'], siteData['data'], station['url'], station['coords']))
 
         # Print each dive, its corresponding slack, and predicted entry time
