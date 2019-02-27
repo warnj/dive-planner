@@ -16,13 +16,13 @@ def main():
 
     # STATION1 = "Strait of Juan de Fuca Entrance, Washington Current"
     # STATION1 = "Juan De Fuca Strait (East), British Columbia Current"
-    STATION1 = "Rosario Strait, Washington Current"
+    # STATION1 = "Rosario Strait, Washington Current"
     # STATION1 = "Deception Pass (narrows), Washington Current"
     # STATION1 = "Admiralty Inlet (off Bush Point), Washington Current"
     # STATION1 = "Alki Point, 0.3 mile west of, Puget Sound, Washington Current"
     # STATION1 = "West end, Rich Passage, Puget Sound, Washington Current"
     # STATION1 = "Agate Passage, north end, Puget Sound, Washington Current"
-    # STATION1 = "The Narrows, north end (midstream), Washington Current"
+    STATION1 = "The Narrows, north end (midstream), Washington Current"
     # STATION1 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
     # STATION1 = "Hale Passage, west end, Puget Sound, Washington Current"
 
@@ -32,13 +32,13 @@ def main():
 
     # STATION2 = "Strait of Juan de Fuca Entrance, Washington Current"
     # STATION2 = "Juan De Fuca Strait (East), British Columbia Current"
-    STATION2 = "Rosario Strait, Washington Current"
+    # STATION2 = "Rosario Strait, Washington Current"
     # STATION2 = "Deception Pass (narrows), Washington Current"
     # STATION2 = "Admiralty Inlet (off Bush Point), Washington Current"
     # STATION2 = "Alki Point, 0.3 mile west of, Puget Sound, Washington Current"
     # STATION2 = "West end, Rich Passage, Puget Sound, Washington Current"
     # STATION2 = "Agate Passage, north end, Puget Sound, Washington Current"
-    # STATION2 = "The Narrows, north end (midstream), Washington Current"
+    STATION2 = "The Narrows, north end (midstream), Washington Current"
     # STATION2 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
     # STATION2 = "Hale Passage, west end, Puget Sound, Washington Current"
 

@@ -223,6 +223,21 @@
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
+    {
+      "name": "Agate Pass",
+      "data": "Agate Passage, north end, Puget Sound, Washington Current",
+      "slack_before_ebb": 40,
+      "COMMENT": "Plan to get in 10 min before slack, swim around a bit, then ride the current to the exit",
+      "COMMENT2": "Current under bridge about 2 times the reading at this station. Want a 1-1.5kt ebb to ride to exit.",
+      "max_flood": 5,
+      "max_ebb": 3.5,
+      "max_total_speed": 8,
+      "dive_duration": 100,
+      "surface_swim_time": 0,
+      "diveable_before_flood": false,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
 
 
 

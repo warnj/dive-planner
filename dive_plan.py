@@ -403,8 +403,8 @@ def printDiveDay(slacks, site):
 
 # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
 START = dt.now()
-START = dt(2019, 3, 2)  # date to begin considering diveable conditions
-DAYS_IN_FUTURE = 0  # number of days after START to consider
+# START = dt(2019, 1, 10)  # date to begin considering diveable conditions
+DAYS_IN_FUTURE = 10  # number of days after START to consider
 
 SITES = None  # Consider all sites
 # createOrAppend('Salt Creek')
@@ -417,12 +417,13 @@ SITES = None  # Consider all sites
 # createOrAppend('Three Tree North')
 # createOrAppend('Alki Pipeline')
 # createOrAppend('Saltwater State Park')
-createOrAppend('Day Island Wall')
+# createOrAppend('Day Island Wall')
 # createOrAppend('Sunrise Beach')
 # createOrAppend('Fox Island Bridge')
 # createOrAppend('Fox Island East Wall')
 # createOrAppend('Titlow')
 # createOrAppend('Waterman Wall')
+# createOrAppend('Agate Pass')
 
 filterNonWorkDays = True  # only consider diving on weekends and holidays
 filterDaylight = True  # only consider slacks that occur during daylight hours
@@ -437,7 +438,6 @@ possibleDiveDays = [
     # dt(2019, 1, 19),
     # dt(2018, 12, 27)
 ]
-# TODO: add agate pass site
 # ----------------------------------------------------------------------------------------------------------------------
 
 def main():
