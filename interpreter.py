@@ -134,6 +134,9 @@ class Interpreter:
         if not self._canReuseWebData(day):
             url = self.getDayUrl(self.baseUrl, day)
             self._webLines = self._getWebLines(url, day)
+        if not self._webLines:
+            print('Error getting web data')  # TODO: could be a flaky webserver - try again a couple times
+            return []
 
         # Note: astral sunrise and sunset times do account for daylight savings
         sun = self._astralCity.sun(date=day, local=True)

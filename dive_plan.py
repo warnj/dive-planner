@@ -12,17 +12,17 @@ from datetime import timedelta as td
 import json
 
 
-def printinfo(str):
-    if PRINTINFO:
+def printInfo(shouldPrint, str):
+    if shouldPrint:
         print(str)
 
 
-def createOrAppend(str):
-    global SITES
-    if SITES:
-        SITES.add(str)
+def createOrAppend(sites, str):
+    if sites:
+        sites.add(str)
+        return sites
     else:
-        SITES = {str}
+        return {str}
 
 
 def getStation(stations, name):
@@ -113,70 +113,69 @@ def printDive(s, site):
 
 
 # Checks the givens list of Slacks if a dive is possible. If so, prints information about the dive.
-def printDiveDay(slacks, site):
+def printDiveDay(slacks, site, printNonDiveable):
     for s in slacks:
         assert s.ebbSpeed <= 0.0
         assert s.floodSpeed >= 0.0
         # Check if diveable or not
         if s.slackBeforeEbb and not site['diveable_before_ebb']:
-            printinfo('\t' + str(s) + '\t Not diveable before ebb')
+            printInfo(printNonDiveable, '\t' + str(s) + '\t Not diveable before ebb')
         elif not s.slackBeforeEbb and not site['diveable_before_flood']:
-            printinfo('\t' + str(s) + '\t Not diveable before flood')
+            printInfo(printNonDiveable, '\t' + str(s) + '\t Not diveable before flood')
         elif site['diveable_off_slack'] and \
                 (s.floodSpeed < site['max_diveable_flood'] or abs(s.ebbSpeed) < site['max_diveable_ebb']):
             print('\t' + str(s) + '\t Diveable off slack')
             printDive(s, site)
         elif s.floodSpeed > site['max_flood'] or abs(s.ebbSpeed) > abs(site['max_ebb']) or \
                 s.floodSpeed + abs(s.ebbSpeed) > site['max_total_speed']:
-            printinfo('\t' + str(s) + '\t Current too strong')
+            printInfo(printNonDiveable, '\t' + str(s) + '\t Current too strong')
         else:
             printDive(s, site)
 
 
-# ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
-START = dt.now()
-# START = dt(2019, 1, 10)  # date to begin considering diveable conditions
-DAYS_IN_FUTURE = 10  # number of days after START to consider
-
-SITES = None  # Consider all sites
-# createOrAppend('Salt Creek')
-# createOrAppend('Deception Pass')
-# createOrAppend('Skyline Wall')
-# createOrAppend('Keystone Jetty')
-# createOrAppend('Possession Point')
-# createOrAppend('Mukilteo')
-# createOrAppend('Edmonds Underwater Park')
-# createOrAppend('Three Tree North')
-# createOrAppend('Alki Pipeline')
-# createOrAppend('Saltwater State Park')
-# createOrAppend('Day Island Wall')
-# createOrAppend('Sunrise Beach')
-# createOrAppend('Fox Island Bridge')
-# createOrAppend('Fox Island East Wall')
-# createOrAppend('Titlow')
-# createOrAppend('Waterman Wall')
-# createOrAppend('Agate Pass')
-
-filterNonWorkDays = True  # only consider diving on weekends and holidays
-filterDaylight = True  # only consider slacks that occur during daylight hours
-
-PRINTINFO = True  # print non-diveable days and reason why not diveable
-
-possibleDiveDays = None  # Specify dates
-possibleDiveDays = [
-    # dt(2016, 11, 5),
-    # dt(2016, 3, 5),
-    # dt(2014, 6, 7)
-    # dt(2019, 1, 19),
-    # dt(2018, 12, 27)
-]
-# ----------------------------------------------------------------------------------------------------------------------
-
 def main():
-    global possibleDiveDays
+
+    # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
+    START = dt.now()
+    # START = dt(2019, 3, 2)  # date to begin considering diveable conditions
+    DAYS_IN_FUTURE = 6  # number of days after START to consider
+
+    SITES = None  # Consider all sites
+    # SITES = createOrAppend(SITES, 'Salt Creek')
+    # SITES = createOrAppend(SITES, 'Deception Pass')
+    # SITES = createOrAppend(SITES, 'Skyline Wall')
+    # SITES = createOrAppend(SITES, 'Keystone Jetty')
+    # SITES = createOrAppend(SITES, 'Possession Point')
+    # SITES = createOrAppend(SITES, 'Mukilteo')
+    # SITES = createOrAppend(SITES, 'Edmonds Underwater Park')
+    # SITES = createOrAppend(SITES, 'Three Tree North')
+    # SITES = createOrAppend(SITES, 'Alki Pipeline')
+    # SITES = createOrAppend(SITES, 'Saltwater State Park')
+    # SITES = createOrAppend(SITES, 'Day Island Wall')
+    # SITES = createOrAppend(SITES, 'Sunrise Beach')
+    # SITES = createOrAppend(SITES, 'Fox Island Bridge')
+    # SITES = createOrAppend(SITES, 'Fox Island East Wall')
+    # SITES = createOrAppend(SITES, 'Titlow')
+    # SITES = createOrAppend(SITES, 'Waterman Wall')
+    # SITES = createOrAppend(SITES, 'Agate Pass')
+
+    FILTER_NON_WORKDAYS = True  # only consider diving on weekends and holidays
+    FILTER_DAYLIGHT = True  # only consider slacks that occur during daylight hours
+
+    PRINT_NON_DIVEABLE = True  # print non-diveable days and reason why not diveable
+
+    possibleDiveDays = [  # Specify dates
+        # dt(2016, 11, 5),
+        # dt(2016, 3, 5),
+        # dt(2014, 6, 7)
+        # dt(2019, 1, 19),
+        # dt(2018, 12, 27)
+    ]
+    # ----------------------------------------------------------------------------------------------------------------------
+
 
     if not possibleDiveDays:
-        if filterNonWorkDays:
+        if FILTER_NON_WORKDAYS:
             possibleDiveDays = getNonWorkDays(DAYS_IN_FUTURE, START)
         else:
             possibleDiveDays = getAllDays(DAYS_IN_FUTURE, START)
@@ -198,12 +197,12 @@ def main():
 
         for day in possibleDiveDays:
             print("Mobile Geographics")
-            slacks = m.getSlacks(day, filterDaylight)
-            printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
+            slacks = m.getSlacks(day, FILTER_DAYLIGHT)
+            printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE)  # interpret Slacks to identify diveable times
 
             print("NOAA")
-            slacks = m2.getSlacks(day, filterDaylight)
-            printDiveDay(slacks, siteData)  # interpret Slack objects with json data to identify diveable times
+            slacks = m2.getSlacks(day, FILTER_DAYLIGHT)
+            printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE)
 
 
 if __name__ == '__main__':
