@@ -115,8 +115,10 @@ def printDive(s, site):
 # Checks the givens list of Slacks if a dive is possible. If so, prints information about the dive.
 def printDiveDay(slacks, site):
     for s in slacks:
-        assert s.ebbSpeed <= 0.0
-        assert s.floodSpeed >= 0.0
+        if s.ebbSpeed > 0.0:
+            print('WARNING - EBB SPEED IS POSITIVE')
+        if s.floodSpeed < 0.0:
+            print('WARNING - FLOOD SPEED IS NEGATIVE')
         # Check if diveable or not
         if s.slackBeforeEbb and not site['diveable_before_ebb']:
             printinfo('\t' + str(s) + '\t Not diveable before ebb')

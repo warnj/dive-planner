@@ -216,10 +216,11 @@
       "slack_before_ebb": 0,
       "max_flood": 2.2,
       "max_ebb": 2.2,
+      "COMMENT": "A flooding current can have waterfall currents, so recommended to enter close to slack before ebb",
       "max_total_speed": 3.2,
       "dive_duration": 90,
       "surface_swim_time": 5,
-      "diveable_before_flood": true,
+      "diveable_before_flood": false,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
