@@ -87,7 +87,7 @@ def getEntryTimes(s, site):
 
 
 # Prints entry time for Slack s at the given site
-def printDive(s, site):
+def printDive(s, site, titleMessage):
     times = getEntryTimes(s, site)
     if not times:
         print('ERROR: a json key was expected that was not found')
@@ -100,39 +100,53 @@ def printDive(s, site):
             elif entryTime - td(minutes=30) < s.sunriseTime:
                 warning = 'near'
             if warning:
-                print('\tWARNING: entry time of {} is {} sunrise at {}'.format(intp.dateString(entryTime),
+                print('\t\tWARNING: entry time of {} is {} sunrise at {}'.format(intp.dateString(entryTime),
                     warning, intp.dateString(s.sunriseTime)))
 
-        print('\tDiveable: ' + str(s))
-        print('\t\tMinCurrentTime = {}, Duration = {}, SurfaceSwim = {}'
+        print('\t\t{}: {}'.format(titleMessage, s))
+        print('\t\t\tMinCurrentTime = {}, Duration = {}, SurfaceSwim = {}'
                 .format(intp.dateString(minCurrentTime), site['dive_duration'], site['surface_swim_time']))
-        print('\t\tEntry Time: ' + intp.dateString(entryTime))  # Time to get in the water.
-        print('\t\tMarker Buoy Entrytime (60min dive, no surface swim):', intp.dateString(markerBuoyEntryTime))
+        print('\t\t\tEntry Time: ' + intp.dateString(entryTime))  # Time to get in the water.
+        print('\t\t\tMarker Buoy Entrytime (60min dive, no surface swim):', intp.dateString(markerBuoyEntryTime))
         moonAction = "waxing" if s.moonPhase <= 14 else "waning"
-        print('\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'.format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
+        print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'.format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
+
+
+# Returns true if the given slack is diveable within the parameters of the given site. Also returns description of
+# reasoning the decision was made.
+def isDiveable(s, site):
+    if s.slackBeforeEbb and not site['diveable_before_ebb']:
+        return False, 'Not diveable before ebb'
+    elif not s.slackBeforeEbb and not site['diveable_before_flood']:
+        return False, 'Not diveable before flood'
+    elif site['diveable_off_slack'] and \
+            (s.floodSpeed < site['max_diveable_flood'] or abs(s.ebbSpeed) < site['max_diveable_ebb']):
+        return True, 'Diveable off slack'
+    elif s.floodSpeed > site['max_flood'] or abs(s.ebbSpeed) > abs(site['max_ebb']) or \
+            s.floodSpeed + abs(s.ebbSpeed) > site['max_total_speed']:
+        return False, 'Current too strong'
+    else:
+        return True, 'Diveable'
 
 
 # Checks the givens list of Slacks if a dive is possible. If so, prints information about the dive.
-def printDiveDay(slacks, site, printNonDiveable):
+def printDiveDay(slacks, site, printNonDiveable, title):
+    printed = False
     for s in slacks:
         if s.ebbSpeed > 0.0:
             print('WARNING - EBB SPEED IS POSITIVE')
         if s.floodSpeed < 0.0:
             print('WARNING - FLOOD SPEED IS NEGATIVE')
         # Check if diveable or not
-        if s.slackBeforeEbb and not site['diveable_before_ebb']:
-            printInfo(printNonDiveable, '\t' + str(s) + '\t Not diveable before ebb')
-        elif not s.slackBeforeEbb and not site['diveable_before_flood']:
-            printInfo(printNonDiveable, '\t' + str(s) + '\t Not diveable before flood')
-        elif site['diveable_off_slack'] and \
-                (s.floodSpeed < site['max_diveable_flood'] or abs(s.ebbSpeed) < site['max_diveable_ebb']):
-            print('\t' + str(s) + '\t Diveable off slack')
-            printDive(s, site)
-        elif s.floodSpeed > site['max_flood'] or abs(s.ebbSpeed) > abs(site['max_ebb']) or \
-                s.floodSpeed + abs(s.ebbSpeed) > site['max_total_speed']:
-            printInfo(printNonDiveable, '\t' + str(s) + '\t Current too strong')
+        diveable, info = isDiveable(s, site)
+        if diveable:
+            if not printed:
+                print('\t' + title)
+                printed = True
+            printDive(s, site, info)
         else:
-            printDive(s, site)
+            printInfo(printNonDiveable, '\t\t' + str(s) + '\t' + info)
+    return printed
 
 
 def main():
@@ -140,7 +154,7 @@ def main():
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
     # START = dt(2019, 3, 2)  # date to begin considering diveable conditions
-    DAYS_IN_FUTURE = 6  # number of days after START to consider
+    DAYS_IN_FUTURE = 5  # number of days after START to consider
 
     SITES = None  # Consider all sites
     # SITES = createOrAppend(SITES, 'Salt Creek')
@@ -149,11 +163,11 @@ def main():
     # SITES = createOrAppend(SITES, 'Keystone Jetty')
     # SITES = createOrAppend(SITES, 'Possession Point')
     # SITES = createOrAppend(SITES, 'Mukilteo')
-    # SITES = createOrAppend(SITES, 'Edmonds Underwater Park')
+    SITES = createOrAppend(SITES, 'Edmonds Underwater Park')
     # SITES = createOrAppend(SITES, 'Three Tree North')
     # SITES = createOrAppend(SITES, 'Alki Pipeline')
     # SITES = createOrAppend(SITES, 'Saltwater State Park')
-    # SITES = createOrAppend(SITES, 'Day Island Wall')
+    SITES = createOrAppend(SITES, 'Day Island Wall')
     # SITES = createOrAppend(SITES, 'Sunrise Beach')
     # SITES = createOrAppend(SITES, 'Fox Island Bridge')
     # SITES = createOrAppend(SITES, 'Fox Island East Wall')
@@ -164,7 +178,7 @@ def main():
     FILTER_NON_WORKDAYS = True  # only consider diving on weekends and holidays
     FILTER_DAYLIGHT = True  # only consider slacks that occur during daylight hours
 
-    PRINT_NON_DIVEABLE = True  # print non-diveable days and reason why not diveable
+    PRINT_NON_DIVEABLE = False  # print non-diveable days and reason why not diveable
 
     possibleDiveDays = [  # Specify dates
         # dt(2016, 11, 5),
@@ -198,13 +212,14 @@ def main():
         print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
 
         for day in possibleDiveDays:
-            print("Mobile Geographics")
             slacks = m.getSlacks(day, FILTER_DAYLIGHT)
-            printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE)  # interpret Slacks to identify diveable times
+            canDive = printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE, "Mobile Geographics")
 
-            print("NOAA")
             slacks = m2.getSlacks(day, FILTER_DAYLIGHT)
-            printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE)
+            canDive |= printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE, "NOAA")
+
+            if not canDive:
+                print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
 
 
 if __name__ == '__main__':

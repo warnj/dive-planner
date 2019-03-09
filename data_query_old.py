@@ -96,13 +96,6 @@ def parseSlack(s):
         slack.ebbSpeed = a
     return slack
 
-def createOrAppend(str):
-    global SITES
-    if SITES:
-        SITES.add(str)
-    else:
-        SITES = {str}
-
 def appendMap(map, key, value):
     if key in map:
         map[key].append(value)
@@ -189,28 +182,31 @@ def printSlackMetrics(dives):
     print("{:.2f} avg sum speed, {:.2f} max sum speed".format(np.average(speedSums), np.max(speedSums)))
 
 
-FILENAME = 'dive_meetup_data_old_format_with_slacks.csv'
-SITES = None  # show data for all sites
-# createOrAppend("Salt Creek")
-# createOrAppend("Deception Pass")
-# createOrAppend("Skyline Wall")
-# createOrAppend("Keystone Jetty")
-# createOrAppend("Possession Point")
-# createOrAppend("Mukilteo")
-# createOrAppend("Edmonds Underwater Park")
-# createOrAppend("Three Tree North")
-# createOrAppend("Alki Pipeline")
-# createOrAppend("Saltwater State Park")
-# createOrAppend("Day Island Wall")
-# createOrAppend("Sunrise Beach")
-# createOrAppend("Fox Island Bridge")
-# createOrAppend("Fox Island East Wall")
-# createOrAppend("Titlow")
-
 
 def main():
+    FILENAME = 'dive_meetup_data_old_format_with_slacks.csv'
+
     PRINT_LOCATION_CLASSIFICATION = False
     PRINT_DIVE_DETAILS = True
+
+    SITES = None  # Consider all sites
+    SITES = dive_plan.createOrAppend(SITES, 'Salt Creek')
+    # SITES = dive_plan.createOrAppend(SITES, 'Deception Pass')
+    # SITES = dive_plan.createOrAppend(SITES, 'Skyline Wall')
+    # SITES = dive_plan.createOrAppend(SITES, 'Keystone Jetty')
+    # SITES = dive_plan.createOrAppend(SITES, 'Possession Point')
+    # SITES = dive_plan.createOrAppend(SITES, 'Mukilteo')
+    # SITES = dive_plan.createOrAppend(SITES, 'Edmonds Underwater Park')
+    # SITES = dive_plan.createOrAppend(SITES, 'Three Tree North')
+    # SITES = dive_plan.createOrAppend(SITES, 'Alki Pipeline')
+    # SITES = dive_plan.createOrAppend(SITES, 'Saltwater State Park')
+    # SITES = dive_plan.createOrAppend(SITES, 'Day Island Wall')
+    # SITES = dive_plan.createOrAppend(SITES, 'Sunrise Beach')
+    # SITES = dive_plan.createOrAppend(SITES, 'Fox Island Bridge')
+    # SITES = dive_plan.createOrAppend(SITES, 'Fox Island East Wall')
+    # SITES = dive_plan.createOrAppend(SITES, 'Titlow')
+    # SITES = dive_plan.createOrAppend(SITES, 'Waterman Wall')
+    # SITES = dive_plan.createOrAppend(SITES, 'Agate Pass')
 
     print('Extracting dives from data file', FILENAME)
     dives, slacks = getDives(FILENAME)
