@@ -139,13 +139,13 @@ def printDiveDay(slacks, site, printNonDiveable, title):
             print('WARNING - FLOOD SPEED IS NEGATIVE')
         # Check if diveable or not
         diveable, info = isDiveable(s, site)
+        if not printed and (diveable or printNonDiveable):
+            print('\t' + title)
+            printed = True
         if diveable:
-            if not printed:
-                print('\t' + title)
-                printed = True
             printDive(s, site, info)
         else:
-            printInfo(printNonDiveable, '\t\t' + str(s) + '\t' + info)
+            printInfo(printNonDiveable, '\t\t{}:\t{}'.format(info, s))
     return printed
 
 
@@ -153,32 +153,33 @@ def main():
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
-    # START = dt(2019, 3, 2)  # date to begin considering diveable conditions
-    DAYS_IN_FUTURE = 5  # number of days after START to consider
+    START = dt(2018, 11, 10)  # date to begin considering diveable conditions
+    DAYS_IN_FUTURE = 0  # number of days after START to consider
 
     SITES = None  # Consider all sites
     # SITES = createOrAppend(SITES, 'Salt Creek')
     # SITES = createOrAppend(SITES, 'Deception Pass')
-    # SITES = createOrAppend(SITES, 'Skyline Wall')
+    SITES = createOrAppend(SITES, 'Skyline Wall')
     # SITES = createOrAppend(SITES, 'Keystone Jetty')
     # SITES = createOrAppend(SITES, 'Possession Point')
     # SITES = createOrAppend(SITES, 'Mukilteo')
-    SITES = createOrAppend(SITES, 'Edmonds Underwater Park')
+    # SITES = createOrAppend(SITES, 'Edmonds Underwater Park')
     # SITES = createOrAppend(SITES, 'Three Tree North')
     # SITES = createOrAppend(SITES, 'Alki Pipeline')
     # SITES = createOrAppend(SITES, 'Saltwater State Park')
-    SITES = createOrAppend(SITES, 'Day Island Wall')
+    # SITES = createOrAppend(SITES, 'Day Island Wall')
     # SITES = createOrAppend(SITES, 'Sunrise Beach')
     # SITES = createOrAppend(SITES, 'Fox Island Bridge')
     # SITES = createOrAppend(SITES, 'Fox Island East Wall')
     # SITES = createOrAppend(SITES, 'Titlow')
     # SITES = createOrAppend(SITES, 'Waterman Wall')
     # SITES = createOrAppend(SITES, 'Agate Pass')
+    # SITES = createOrAppend(SITES, 'Redondo')
 
     FILTER_NON_WORKDAYS = True  # only consider diving on weekends and holidays
     FILTER_DAYLIGHT = True  # only consider slacks that occur during daylight hours
 
-    PRINT_NON_DIVEABLE = False  # print non-diveable days and reason why not diveable
+    PRINT_NON_DIVEABLE = True  # print non-diveable days and reason why not diveable
 
     possibleDiveDays = [  # Specify dates
         # dt(2016, 11, 5),
