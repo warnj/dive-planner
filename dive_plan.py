@@ -12,6 +12,19 @@ from datetime import timedelta as td
 import json
 
 
+class Color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
+
 def printInfo(shouldPrint, str):
     if shouldPrint:
         print(str)
@@ -80,8 +93,9 @@ def getEntryTimes(s, site):
             delta = td(minutes=site['slack_before_flood'])
         minCurrentTime = s.time + delta
         entryTime = minCurrentTime - td(minutes=site['dive_duration'] / 2) - td(minutes=site['surface_swim_time'])
+        exitTime = entryTime + 2 * td(minutes=site['surface_swim_time']) + td(minutes=site['dive_duration'])
         markerBuoyEntryTime = minCurrentTime - td(minutes=30)
-        return minCurrentTime, markerBuoyEntryTime, entryTime
+        return minCurrentTime, markerBuoyEntryTime, entryTime, exitTime
     except KeyError:
         return None
 
@@ -92,7 +106,7 @@ def printDive(s, site, titleMessage):
     if not times:
         print('ERROR: a json key was expected that was not found')
     else:
-        minCurrentTime, markerBuoyEntryTime, entryTime = times
+        minCurrentTime, markerBuoyEntryTime, entryTime, exitTime = times
         if s.sunriseTime:
             warning = ''
             if entryTime < s.sunriseTime:
@@ -105,11 +119,12 @@ def printDive(s, site, titleMessage):
 
         print('\t\t{}: {}'.format(titleMessage, s))
         print('\t\t\tMinCurrentTime = {}, Duration = {}, SurfaceSwim = {}'
-                .format(intp.dateString(minCurrentTime), site['dive_duration'], site['surface_swim_time']))
-        print('\t\t\tEntry Time: ' + intp.dateString(entryTime))  # Time to get in the water.
+              .format(intp.dateString(minCurrentTime), site['dive_duration'], site['surface_swim_time']))
+        print('\t\t\t{}{}Entry Time: {}{}\t(Exit time: {})'  # Time to get in the water.
+              .format(Color.BOLD, Color.UNDERLINE, intp.dateString(entryTime), Color.END, dt.strftime(exitTime, intp.TIMEFMT)))
         print('\t\t\tMarker Buoy Entrytime (60min dive, no surface swim):', intp.dateString(markerBuoyEntryTime))
-        moonAction = "waxing" if s.moonPhase <= 14 else "waning"
-        print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'.format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
+        # moonAction = "waxing" if s.moonPhase <= 14 else "waning"
+        # print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'.format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
 
 
 # Returns true if the given slack is diveable within the parameters of the given site. Also returns description of
@@ -153,13 +168,13 @@ def main():
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
-    START = dt(2018, 11, 10)  # date to begin considering diveable conditions
+    START = dt(2019, 3, 31)  # date to begin considering diveable conditions
     DAYS_IN_FUTURE = 0  # number of days after START to consider
 
     SITES = None  # Consider all sites
     # SITES = createOrAppend(SITES, 'Salt Creek')
     # SITES = createOrAppend(SITES, 'Deception Pass')
-    SITES = createOrAppend(SITES, 'Skyline Wall')
+    # SITES = createOrAppend(SITES, 'Skyline Wall')
     # SITES = createOrAppend(SITES, 'Keystone Jetty')
     # SITES = createOrAppend(SITES, 'Possession Point')
     # SITES = createOrAppend(SITES, 'Mukilteo')
@@ -170,7 +185,8 @@ def main():
     # SITES = createOrAppend(SITES, 'Day Island Wall')
     # SITES = createOrAppend(SITES, 'Sunrise Beach')
     # SITES = createOrAppend(SITES, 'Fox Island Bridge')
-    # SITES = createOrAppend(SITES, 'Fox Island East Wall')
+    # SITES = createOrAppend(SITES, 'Fox Island Bridge Hale')
+    SITES = createOrAppend(SITES, 'Fox Island East Wall')
     # SITES = createOrAppend(SITES, 'Titlow')
     # SITES = createOrAppend(SITES, 'Waterman Wall')
     # SITES = createOrAppend(SITES, 'Agate Pass')

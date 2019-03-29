@@ -239,7 +239,7 @@ def main():
             for dive in sitedives:
                 print('\t', dive)
                 print('\t\t', dive.slack)
-                minCurrentTime, markerBuoyEntryTime, entryTime = dive_plan.getEntryTimes(dive.slack, siteData)
+                minCurrentTime, markerBuoyEntryTime, entryTime, exitTime = dive_plan.getEntryTimes(dive.slack, siteData)
                 minCurrentTime = dt.strftime(minCurrentTime, MEETUP_TIME_FORMAT)
                 markerBuoyEntryTime = dt.strftime(markerBuoyEntryTime, MEETUP_TIME_FORMAT)
                 entryTime = dt.strftime(entryTime, MEETUP_TIME_FORMAT)

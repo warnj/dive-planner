@@ -6,6 +6,7 @@ from datetime import datetime as dt
 TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
 TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
 DATEFMT = '%Y-%m-%d'  # example 2019-01-18
+TIMEFMT = '%I:%M%p'  # example 09:36AM
 
 def dateString(date):
     return dt.strftime(date, TIMEPRINTFMT)

@@ -34,7 +34,7 @@ def printSplashMetrics(dives, siteData):
         if not dive.splash:
             continue
 
-        minCurrentTime, markerBuoyEntryTime, entryTime = dive_plan.getEntryTimes(dive.slack, siteData)
+        minCurrentTime, markerBuoyEntryTime, entryTime, exitTime = dive_plan.getEntryTimes(dive.slack, siteData)
 
         print(dive)
         print('\t', dive.slack)
