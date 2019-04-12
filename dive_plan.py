@@ -168,7 +168,7 @@ def main():
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
-    START = dt(2019, 3, 31)  # date to begin considering diveable conditions
+    START = dt(2019, 3, 30)  # date to begin considering diveable conditions
     DAYS_IN_FUTURE = 0  # number of days after START to consider
 
     SITES = None  # Consider all sites
@@ -184,9 +184,9 @@ def main():
     # SITES = createOrAppend(SITES, 'Saltwater State Park')
     # SITES = createOrAppend(SITES, 'Day Island Wall')
     # SITES = createOrAppend(SITES, 'Sunrise Beach')
-    # SITES = createOrAppend(SITES, 'Fox Island Bridge')
-    # SITES = createOrAppend(SITES, 'Fox Island Bridge Hale')
-    SITES = createOrAppend(SITES, 'Fox Island East Wall')
+    SITES = createOrAppend(SITES, 'Fox Island Bridge')
+    SITES = createOrAppend(SITES, 'Fox Island Bridge Hale')
+    # SITES = createOrAppend(SITES, 'Fox Island East Wall')
     # SITES = createOrAppend(SITES, 'Titlow')
     # SITES = createOrAppend(SITES, 'Waterman Wall')
     # SITES = createOrAppend(SITES, 'Agate Pass')
@@ -198,11 +198,9 @@ def main():
     PRINT_NON_DIVEABLE = True  # print non-diveable days and reason why not diveable
 
     possibleDiveDays = [  # Specify dates
-        # dt(2016, 11, 5),
-        # dt(2016, 3, 5),
-        # dt(2014, 6, 7)
-        # dt(2019, 1, 19),
-        # dt(2018, 12, 27)
+        # dt(2019, 3, 31),
+        # dt(2019, 3, 16),
+        # dt(2019, 3, 3)
     ]
     # ----------------------------------------------------------------------------------------------------------------------
 
