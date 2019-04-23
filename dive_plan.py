@@ -198,11 +198,9 @@ def main():
     PRINT_NON_DIVEABLE = True  # print non-diveable days and reason why not diveable
 
     possibleDiveDays = [  # Specify dates
-        # dt(2016, 11, 5),
-        # dt(2016, 3, 5),
-        # dt(2014, 6, 7)
-        # dt(2019, 1, 19),
-        # dt(2018, 12, 27)
+        # dt(2019, 3, 31),
+        # dt(2019, 3, 16),
+        # dt(2019, 3, 3)
     ]
     # ----------------------------------------------------------------------------------------------------------------------
 
