@@ -9,68 +9,68 @@
     {
       "name": "Strait of Juan de Fuca Entrance, Washington Current",
       "coords": "48.4500 N, 124.5833 W",
-      "url": "https://tides.mobilegeographics.com/locations/7867.html",
+      "url": "https://tides.mobilegeographics.com/locations/7867",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1642_49&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Juan De Fuca Strait (East), British Columbia Current",
       "coords": "48.2317 N, 123.5300 W",
-      "url": "http://tides.mobilegeographics.com/locations/3775.html",
+      "url": "http://tides.mobilegeographics.com/locations/3775",
       "COMMENT": "Using Race Rocks NOAA station",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1640_18&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Rosario Strait, Washington Current",
       "coords": "48.4583 N, 122.7833 W",
-      "url": "http://tides.mobilegeographics.com/locations/6882.html",
+      "url": "http://tides.mobilegeographics.com/locations/6882",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1702_16&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Deception Pass (narrows), Washington Current",
       "coords": "48.4062 N, 122.6430 W",
-      "url": "https://tides.mobilegeographics.com/locations/1955.html",
+      "url": "https://tides.mobilegeographics.com/locations/1955",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1701_24&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Admiralty Inlet (off Bush Point), Washington Current",
       "coords": "48.0333 N, 122.6333 W",
-      "url": "http://tides.mobilegeographics.com/locations/69.html",
+      "url": "http://tides.mobilegeographics.com/locations/69",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1616_31&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "coords": "47.5755 N, 122.4280 W",
-      "url": "http://tides.mobilegeographics.com/locations/153.html",
+      "url": "http://tides.mobilegeographics.com/locations/153",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1516_17&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "West end, Rich Passage, Puget Sound, Washington Current",
       "coords": "47.5900 N, 122.5622 W",
-      "url": "http://tides.mobilegeographics.com/locations/8807.html",
+      "url": "http://tides.mobilegeographics.com/locations/8807",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1514_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Agate Passage, north end, Puget Sound, Washington Current",
       "coords": "47.7220 N, 122.5550 W",
-      "url": "https://tides.mobilegeographics.com/locations/75.html",
+      "url": "https://tides.mobilegeographics.com/locations/75",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1530_10&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "The Narrows, north end (midstream), Washington Current",
       "coords": "47.3062 N, 122.5497 W",
-      "url": "http://tides.mobilegeographics.com/locations/8176.html",
+      "url": "http://tides.mobilegeographics.com/locations/8176",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1524_16&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "coords": "47.2608 N, 122.5583 W",
-      "url": "http://tides.mobilegeographics.com/locations/7626.html",
+      "url": "http://tides.mobilegeographics.com/locations/7626",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1528_13&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Hale Passage, west end, Puget Sound, Washington Current",
       "coords": "47.2778 N, 122.6622 W",
-      "url": "https://tides.mobilegeographics.com/locations/3053.html",
+      "url": "https://tides.mobilegeographics.com/locations/3053",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1530_10&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
