@@ -173,9 +173,10 @@ def main():
 
     SITES = None  # Consider all sites
     # SITES = createOrAppend(SITES, 'Salt Creek')
+    # SITES = createOrAppend(SITES, 'Lime Kiln Point')
     # SITES = createOrAppend(SITES, 'Deception Pass')
     # SITES = createOrAppend(SITES, 'Skyline Wall')
-    SITES = createOrAppend(SITES, 'Keystone Jetty')
+    # SITES = createOrAppend(SITES, 'Keystone Jetty')
     # SITES = createOrAppend(SITES, 'Possession Point')
     # SITES = createOrAppend(SITES, 'Mukilteo')
     # SITES = createOrAppend(SITES, 'Edmonds Underwater Park')

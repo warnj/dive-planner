@@ -258,6 +258,20 @@
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
+    {
+      "name": "Lime Kiln Point",
+      "data": "Admiralty Inlet (off Bush Point), Washington Current",
+      "slack_before_flood": 76,
+      "slack_before_ebb": 59,
+      "max_flood": 2.2,
+      "max_ebb": 2.2,
+      "max_total_speed": 4,
+      "dive_duration": 90,
+      "surface_swim_time": 5,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
 
 
 
