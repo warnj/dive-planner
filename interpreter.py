@@ -85,7 +85,7 @@ class Interpreter:
     def _getAllSlacks(self, webLines):
         slacks = []
         for i, line in enumerate(webLines):
-            if 'slack' in line:
+            if 'slack' in line or 'min ebb' in line or 'min flood' in line:
                 slacks.append(i)
         return slacks
 
@@ -96,7 +96,7 @@ class Interpreter:
         for i, line in enumerate(webLines):
             if line.split()[0] != day:
                 return slacksIndexes
-            elif 'slack' in line:
+            elif 'slack' in line or 'min ebb' in line or 'min flood' in line:
                 slacksIndexes.append(i)
         return slacksIndexes
 
@@ -105,7 +105,7 @@ class Interpreter:
     def _getDaySlacks(self, webLines, sunrise, sunset):
         slacksIndexes = []
         for i, line in enumerate(webLines):
-            if 'slack' in line:
+            if 'slack' in line or 'min ebb' in line or 'min flood' in line:
                 time = self._parseTime(line.split())
                 if time > sunset:
                     return slacksIndexes
@@ -193,12 +193,12 @@ class MobilegeographicsInterpreter(Interpreter):
                 continue
             tokens1 = preMax.split()
 
-            s.slackBeforeEbb = 'flood' in preMax
-
             postMax = self._getCurrentAfter(i, lines)
             if not postMax:
                 continue
             tokens2 = postMax.split()
+
+            s.slackBeforeEbb = 'ebb' in postMax
 
             if s.slackBeforeEbb:
                 s.floodSpeed = float(tokens1[5])

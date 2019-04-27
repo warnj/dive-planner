@@ -72,6 +72,12 @@
       "coords": "47.2778 N, 122.6622 W",
       "url": "https://tides.mobilegeographics.com/locations/3053",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1530_10&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Green Point, 0.8 mile northwest of, Rosario Strait, Washington Current",
+      "coords": "48.5047 N, 122.7062 W",
+      "url": "https://tides.mobilegeographics.com/locations/2959",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PCT2026_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
 
@@ -265,6 +271,20 @@
       "slack_before_ebb": 59,
       "max_flood": 2.2,
       "max_ebb": 2.2,
+      "max_total_speed": 4,
+      "dive_duration": 90,
+      "surface_swim_time": 5,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Green Point",
+      "data": "Green Point, 0.8 mile northwest of, Rosario Strait, Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2,
+      "max_ebb": 2,
       "max_total_speed": 4,
       "dive_duration": 90,
       "surface_swim_time": 5,
