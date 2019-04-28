@@ -163,13 +163,15 @@ def printDiveDay(slacks, site, printNonDiveable, title):
             printInfo(printNonDiveable, '\t\t{}:\t{}'.format(info, s))
     return printed
 
+def dt2(a, b, c):
+    return dt(c, a, b)
 
 def main():
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
-    START = dt(2019, 4, 27)  # date to begin considering diveable conditions
-    DAYS_IN_FUTURE = 1  # number of days after START to consider
+    START = dt(2019, 3, 17)  # date to begin considering diveable conditions
+    DAYS_IN_FUTURE = 0  # number of days after START to consider
 
     SITES = None  # Consider all sites
     # SITES = createOrAppend(SITES, 'Salt Creek')
@@ -194,7 +196,7 @@ def main():
     # SITES = createOrAppend(SITES, 'Agate Pass')
     # SITES = createOrAppend(SITES, 'Redondo')
 
-    FILTER_NON_WORKDAYS = False  # only consider diving on weekends and holidays
+    FILTER_NON_WORKDAYS = True  # only consider diving on weekends and holidays
     FILTER_DAYLIGHT = True  # only consider slacks that occur during daylight hours
 
     PRINT_NON_DIVEABLE = True  # print non-diveable days and reason why not diveable

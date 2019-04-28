@@ -111,7 +111,7 @@ class Interpreter:
                     return slacksIndexes
                 elif time > sunrise:
                     slacksIndexes.append(i)
-        return None
+        return slacksIndexes
 
     # Returns true if self._webData contains the data for the given day, false otherwise
     def _canReuseWebData(self, day):
@@ -124,13 +124,15 @@ class Interpreter:
                 return True
         return False
 
+    # Returns all slacks retrieved from the web beginning with the startDay (7 days for NOAA and 4 days for MobileGeo)
     def allSlacks(self, startDay):
         url = self.getDayUrl(self.baseUrl, startDay)
         lines = self._getWebLines(url, startDay)
         slackIndexes = self._getAllSlacks(lines)
         return self._getSlackData(lines, slackIndexes, None, None, -1)
 
-    # Returns a list of slacks from given web data lines. Includes night slacks if daylight=False
+    # Returns a list of slacks for the given day, retrieves new web data if the current data doesn't have info for day.
+    # Includes night slacks if daylight=False
     def getSlacks(self, day, daylight):
         if not self._canReuseWebData(day):
             url = self.getDayUrl(self.baseUrl, day)
@@ -147,6 +149,9 @@ class Interpreter:
             slackIndexes = self._getDaySlacks(self._webLines, sunrise, sunset)
         else:
             slackIndexes = self._getAllDaySlacks(self._webLines)
+        if not slackIndexes:
+            print('ERROR: no slacks for {} found in webLines: {}'.format(day, self._webLines))
+            return []
         return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset, self._astral.moon_phase(date=day))
 
 
