@@ -30,7 +30,7 @@ def printInfo(shouldPrint, str):
         print(str)
 
 
-def createOrAppend(sites, str):
+def append(sites, str):
     if sites:
         sites.add(str)
         return sites
@@ -170,31 +170,31 @@ def main():
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
-    START = dt(2019, 3, 17)  # date to begin considering diveable conditions
-    DAYS_IN_FUTURE = 0  # number of days after START to consider
+    # START = dt(2019, 10, 17)  # date to begin considering diveable conditions
+    DAYS_IN_FUTURE = 100  # number of days after START to consider
 
     SITES = None  # Consider all sites
-    # SITES = createOrAppend(SITES, 'Salt Creek')
-    # SITES = createOrAppend(SITES, 'Lime Kiln Point')
-    # SITES = createOrAppend(SITES, 'Green Point')
-    # SITES = createOrAppend(SITES, 'Skyline Wall')
-    # SITES = createOrAppend(SITES, 'Deception Pass')
-    # SITES = createOrAppend(SITES, 'Keystone Jetty')
-    # SITES = createOrAppend(SITES, 'Possession Point')
-    # SITES = createOrAppend(SITES, 'Mukilteo')
-    # SITES = createOrAppend(SITES, 'Edmonds Underwater Park')
-    # SITES = createOrAppend(SITES, 'Three Tree North')
-    # SITES = createOrAppend(SITES, 'Alki Pipeline')
-    # SITES = createOrAppend(SITES, 'Saltwater State Park')
-    # SITES = createOrAppend(SITES, 'Day Island Wall')
-    # SITES = createOrAppend(SITES, 'Sunrise Beach')
-    # SITES = createOrAppend(SITES, 'Fox Island Bridge')
-    # SITES = createOrAppend(SITES, 'Fox Island Bridge Hale')
-    # SITES = createOrAppend(SITES, 'Fox Island East Wall')
-    # SITES = createOrAppend(SITES, 'Titlow')
-    # SITES = createOrAppend(SITES, 'Waterman Wall')
-    # SITES = createOrAppend(SITES, 'Agate Pass')
-    # SITES = createOrAppend(SITES, 'Redondo')
+    # SITES = append(SITES, 'Salt Creek')
+    # SITES = append(SITES, 'Lime Kiln Point')
+    # SITES = append(SITES, 'Green Point')
+    # SITES = append(SITES, 'Skyline Wall')
+    SITES = append(SITES, 'Deception Pass')
+    # SITES = append(SITES, 'Keystone Jetty')
+    # SITES = append(SITES, 'Possession Point')
+    # SITES = append(SITES, 'Mukilteo')
+    # SITES = append(SITES, 'Edmonds Underwater Park')
+    # SITES = append(SITES, 'Three Tree North')
+    # SITES = append(SITES, 'Alki Pipeline')
+    # SITES = append(SITES, 'Saltwater State Park')
+    # SITES = append(SITES, 'Day Island Wall')
+    # SITES = append(SITES, 'Sunrise Beach')
+    # SITES = append(SITES, 'Fox Island Bridge')
+    # SITES = append(SITES, 'Fox Island Bridge Hale')
+    # SITES = append(SITES, 'Fox Island East Wall')
+    # SITES = append(SITES, 'Titlow')
+    # SITES = append(SITES, 'Waterman Wall')
+    # SITES = append(SITES, 'Agate Pass')
+    # SITES = append(SITES, 'Redondo')
 
     FILTER_NON_WORKDAYS = True  # only consider diving on weekends and holidays
     FILTER_DAYLIGHT = True  # only consider slacks that occur during daylight hours

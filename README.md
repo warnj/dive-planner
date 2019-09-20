@@ -15,7 +15,7 @@ approximate dive duration.
 * Configure the following settings in dive_plan.py
     * START - set to start date
     * DAYS_IN_FUTURE - set to number of days to consider beyond start
-    * SITES - uncomment the "createOrAppend" lines of dive sites to consider diving at
+    * SITES - uncomment the "append" lines of dive sites to consider diving at
     * filterNonWorkDays - True 
     * filterDaylight - 
     * PRINTINFO

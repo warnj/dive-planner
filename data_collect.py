@@ -70,22 +70,18 @@ def main():
     d.get('https://secure.meetup.com/login')
 
     # Use cookie to login
+    print('Logging in with cookie')
     load_cookie(d, absName('cookies.pkl'))
 
-    # Painful process of manual login
+    # # Painful process of manual login
     # d.maximize_window()
-    # data = json.loads(open('../personal_data.json').read())
-    # elem = d.find_element_by_name("email")
-    # elem.send_keys(data['meetup_username'])
-    # elem = d.find_element_by_name("password")
-    # elem.send_keys(data['meetup_password'])
-    # input('Check "Im not a Robot box", then login. Enter any key to continue.')
+    # input('Log in manually, then enter any key to continue.')
     # save_cookie(d, absName('cookies.pkl'))
 
     d.get('https://www.meetup.com/Marker-Buoy-Dive-Club/events/past')
 
-    scrollSeconds = 20
-    pauseSeconds = 7
+    scrollSeconds = 600
+    pauseSeconds = 5
     print('Scrolling for {}s. Content load pause = {}s'.format(scrollSeconds, pauseSeconds))
     scroll(d, pauseSeconds, scrollSeconds)
 
