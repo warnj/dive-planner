@@ -10,18 +10,16 @@ import json
 
 
 def main():
-    START = dt(2019, 1, 1)
-
     # STATION = "Strait of Juan de Fuca Entrance, Washington Current"
     # STATION = "Juan De Fuca Strait (East), British Columbia Current"
-    # STATION = "Rosario Strait, Washington Current"
+    STATION = "Rosario Strait, Washington Current"
     # STATION = "Deception Pass (narrows), Washington Current"
     # STATION = "Admiralty Inlet (off Bush Point), Washington Current"
     # STATION = "Alki Point, 0.3 mile west of, Puget Sound, Washington Current"
     # STATION = "West end, Rich Passage, Puget Sound, Washington Current"
     # STATION = "Agate Passage, north end, Puget Sound, Washington Current"
     # STATION = "The Narrows, north end (midstream), Washington Current"
-    STATION = "South end (midstream), The Narrows, Puget Sound, Washington Current"
+    # STATION = "South end (midstream), The Narrows, Puget Sound, Washington Current"
     # STATION = "Hale Passage, west end, Puget Sound, Washington Current"
 
     # NOAA = True
@@ -36,7 +34,8 @@ def main():
         m = intp.MobilegeographicsInterpreter(station['url'])
 
     slacks = []
-    days = dive_plan.getAllDays(365, START)
+    # days = dive_plan.getAllDays(365, dt(2019, 1, 1))
+    days = dive_plan.getAllDays(100)
     for day in days:
         slacks.extend(m.getSlacks(day, False))
 

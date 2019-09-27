@@ -81,6 +81,32 @@
     }
   ],
 
+  "must_do_dives": [
+    {
+      "name1": "Day Island Wall",
+      "name2": "Day Island Wall"
+    },
+
+    {
+      "name1": "Deception Pass",
+      "name2": "Skyline Wall"
+    }
+  ],
+  "might_do_dives": [
+    {
+      "name1": "Day Island Wall",
+      "name2": "Titlow"
+    },
+    {
+      "name1": "Deception Pass",
+      "name2": "Keystone Jetty"
+    },
+    {
+      "name1": "Deception Pass",
+      "name2": "Green Point"
+    }
+  ],
+
   "sites": [
     {
       "name": "Day Island Wall",
