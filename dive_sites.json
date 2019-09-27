@@ -146,7 +146,7 @@
       "slack_before_ebb": 1,
       "max_flood": 2.2,
       "max_ebb": 2.2,
-      "max_total_speed": 4,
+      "max_total_speed": 4.4,
       "dive_duration": 100,
       "surface_swim_time": 5,
       "diveable_before_flood": true,
