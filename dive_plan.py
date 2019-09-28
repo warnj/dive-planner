@@ -170,15 +170,15 @@ def main():
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
-    START = dt(2019, 10, 7)  # date to begin considering diveable conditions
-    DAYS_IN_FUTURE = 0  # number of days after START to consider
+    START = dt(2019, 12, 8)  # date to begin considering diveable conditions
+    DAYS_IN_FUTURE = 7  # number of days after START to consider
 
     SITES = None  # Consider all sites
     # SITES = append(SITES, 'Salt Creek')
     # SITES = append(SITES, 'Lime Kiln Point')
     # SITES = append(SITES, 'Green Point')
     # SITES = append(SITES, 'Skyline Wall')
-    SITES = append(SITES, 'Deception Pass')
+    # SITES = append(SITES, 'Deception Pass')
     # SITES = append(SITES, 'Keystone Jetty')
     # SITES = append(SITES, 'Possession Point')
     # SITES = append(SITES, 'Mukilteo')
@@ -191,8 +191,10 @@ def main():
     # SITES = append(SITES, 'Fox Island Bridge')
     # SITES = append(SITES, 'Fox Island Bridge Hale')
     # SITES = append(SITES, 'Fox Island East Wall')
+    # SITES = append(SITES, 'Fox Island East Wall Gibson')
     # SITES = append(SITES, 'Titlow')
     # SITES = append(SITES, 'Waterman Wall')
+    SITES = append(SITES, 'Warren Avenue Bridge')
     # SITES = append(SITES, 'Agate Pass')
     # SITES = append(SITES, 'Redondo')
 

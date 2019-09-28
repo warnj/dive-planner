@@ -78,6 +78,18 @@
       "coords": "48.5047 N, 122.7062 W",
       "url": "https://tides.mobilegeographics.com/locations/2959",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PCT2026_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Gibson Point, 0.8 mile east of, Puget Sound, Washington Current",
+      "coords": "47.2180 N, 122.5895 W",
+      "url": "https://tides.mobilegeographics.com/locations/2786",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1531_18&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Port Washington Narrows, north ent, Puget Sound, Washington Current",
+      "coords": "47.6013 N, 122.6617 W",
+      "url": "https://tides.mobilegeographics.com/locations/6412",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1510_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
 
@@ -216,6 +228,21 @@
       "diveable_off_slack": false
     },
     {
+      "name": "Fox Island East Wall Gibson",
+      "data": "Gibson Point, 0.8 mile east of, Puget Sound, Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "COMMENT": "Closest current station, not sure about the corrections for it, if any",
+      "max_flood": 2.7,
+      "max_ebb": 2.7,
+      "max_total_speed": 4.4,
+      "dive_duration": 100,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
       "name": "Sunrise Beach",
       "data": "The Narrows, north end (midstream), Washington Current",
       "slack_before_flood": -55,
@@ -270,6 +297,20 @@
       "max_ebb": 2.7,
       "COMMENT": "A flooding current can have waterfall currents, so recommended to enter close to slack before ebb",
       "max_total_speed": 3.2,
+      "dive_duration": 80,
+      "surface_swim_time": 5,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Warren Avenue Bridge",
+      "data": "Port Washington Narrows, north ent, Puget Sound, Washington Current",
+      "slack_before_flood": -6,
+      "slack_before_ebb": -6,
+      "max_flood": 2,
+      "max_ebb": 2,
+      "max_total_speed": 4,
       "dive_duration": 80,
       "surface_swim_time": 5,
       "diveable_before_flood": true,
