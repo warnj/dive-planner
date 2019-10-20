@@ -171,7 +171,7 @@ def main():
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
     START = dt(2019, 10, 19)  # date to begin considering diveable conditions
-    DAYS_IN_FUTURE = 0  # number of days after START to consider
+    DAYS_IN_FUTURE = 1  # number of days after START to consider
 
     SITES = None  # Consider all sites
     # SITES = append(SITES, 'Salt Creek')

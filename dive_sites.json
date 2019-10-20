@@ -90,6 +90,12 @@
       "coords": "47.6013 N, 122.6617 W",
       "url": "https://tides.mobilegeographics.com/locations/6412",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1510_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Point Richmond, East of, Colvos Passage",
+      "coords": "47.3766 N   122.5287 W",
+      "url": "",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1519_18&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
 

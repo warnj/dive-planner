@@ -135,10 +135,13 @@ class Interpreter:
     # Includes night slacks if daylight=False
     def getSlacks(self, day, daylight):
         if not self._canReuseWebData(day):
+            if not self.baseUrl:
+                print('Base url empty')
+                return []
             url = self.getDayUrl(self.baseUrl, day)
             self._webLines = self._getWebLines(url, day)
         if not self._webLines:
-            print('Error getting web data')  # TODO: could be a flaky webserver - try again a couple times
+            print('Error getting web data')
             return []
 
         # Note: astral sunrise and sunset times do account for daylight savings
