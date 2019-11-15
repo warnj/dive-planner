@@ -129,7 +129,7 @@ def printDive(s, site, titleMessage):
 
 # Returns true if the given slack is diveable within the parameters of the given site. Also returns description of
 # reasoning the decision was made.
-def isDiveable(s, site):
+def isDiveable(s, site, ignoreMaxSpeed):
     if s.slackBeforeEbb and not site['diveable_before_ebb']:
         return False, 'Not diveable before ebb'
     elif not s.slackBeforeEbb and not site['diveable_before_flood']:
@@ -137,15 +137,15 @@ def isDiveable(s, site):
     elif site['diveable_off_slack'] and \
             (s.floodSpeed < site['max_diveable_flood'] or abs(s.ebbSpeed) < site['max_diveable_ebb']):
         return True, 'Diveable off slack'
-    elif s.floodSpeed > site['max_flood'] or abs(s.ebbSpeed) > abs(site['max_ebb']) or \
-            s.floodSpeed + abs(s.ebbSpeed) > site['max_total_speed']:
+    elif not ignoreMaxSpeed and (s.floodSpeed > site['max_flood'] or abs(s.ebbSpeed) > abs(site['max_ebb']) or \
+            s.floodSpeed + abs(s.ebbSpeed) > site['max_total_speed']):
         return False, 'Current too strong'
     else:
         return True, 'Diveable'
 
 
 # Checks the givens list of Slacks if a dive is possible. If so, prints information about the dive.
-def printDiveDay(slacks, site, printNonDiveable, title):
+def printDiveDay(slacks, site, printNonDiveable, ignoreMaxSpeed, title):
     printed = False
     for s in slacks:
         if s.ebbSpeed > 0.0:
@@ -153,7 +153,7 @@ def printDiveDay(slacks, site, printNonDiveable, title):
         if s.floodSpeed < 0.0:
             print('WARNING - FLOOD SPEED IS NEGATIVE')
         # Check if diveable or not
-        diveable, info = isDiveable(s, site)
+        diveable, info = isDiveable(s, site, ignoreMaxSpeed)
         if not printed and (diveable or printNonDiveable):
             print('\t' + title)
             printed = True
@@ -170,7 +170,7 @@ def main():
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
-    START = dt(2019, 10, 19)  # date to begin considering diveable conditions
+    START = dt(2019, 11, 16)  # date to begin considering diveable conditions
     DAYS_IN_FUTURE = 1  # number of days after START to consider
 
     SITES = None  # Consider all sites
@@ -203,6 +203,8 @@ def main():
 
     PRINT_NON_DIVEABLE = True  # print non-diveable days and reason why not diveable
 
+    IGNORE_MAX_SPEED = False  # ignore the max current speeds in dive_sites.json
+
     possibleDiveDays = [  # Specify dates
         # dt(2019, 3, 31),
         # dt(2019, 3, 16),
@@ -234,10 +236,10 @@ def main():
 
         for day in possibleDiveDays:
             slacks = m.getSlacks(day, FILTER_DAYLIGHT)
-            canDive = printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE, "Mobile Geographics")
+            canDive = printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE, IGNORE_MAX_SPEED, "Mobile Geographics")
 
             slacks = m2.getSlacks(day, FILTER_DAYLIGHT)
-            canDive |= printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE, "NOAA")
+            canDive |= printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE, IGNORE_MAX_SPEED, "NOAA")
 
             if not canDive:
                 print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
