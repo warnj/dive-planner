@@ -37,7 +37,7 @@ def main():
     # days = dive_plan.getAllDays(365, dt(2019, 1, 1))
     days = dive_plan.getAllDays(100)
     for day in days:
-        slacks.extend(m.getSlacks(day, False))
+        slacks.extend(m.getSlacks(day, night=True))
 
     # sort by the sum of the max current speeds from weakest to strongest
     slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))

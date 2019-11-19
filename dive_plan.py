@@ -5,6 +5,7 @@ specified by dive_sites.json
 
 import data_collect
 import interpreter as intp
+import argparse
 
 from pandas.tseries.holiday import USFederalHolidayCalendar
 from datetime import datetime as dt
@@ -144,8 +145,8 @@ def isDiveable(s, site, ignoreMaxSpeed):
         return True, 'Diveable'
 
 
-# Checks the givens list of Slacks if a dive is possible. If so, prints information about the dive.
-def printDiveDay(slacks, site, printNonDiveable, ignoreMaxSpeed, title):
+# Checks the given list of Slacks if a dive is possible. If so, prints information about the dive.
+def printDiveDay(slacks, site, printAll, ignoreMaxSpeed, title):
     printed = False
     for s in slacks:
         if s.ebbSpeed > 0.0:
@@ -154,56 +155,73 @@ def printDiveDay(slacks, site, printNonDiveable, ignoreMaxSpeed, title):
             print('WARNING - FLOOD SPEED IS NEGATIVE')
         # Check if diveable or not
         diveable, info = isDiveable(s, site, ignoreMaxSpeed)
-        if not printed and (diveable or printNonDiveable):
+        if not printed and (diveable or printAll):
             print('\t' + title)
             printed = True
         if diveable:
             printDive(s, site, info)
         else:
-            printInfo(printNonDiveable, '\t\t{}:\t{}'.format(info, s))
+            printInfo(printAll, '\t\t{}:\t{}'.format(info, s))
     return printed
 
 def dt2(a, b, c):
     return dt(c, a, b)
 
 def main():
+    # Command-line Args
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--night',             action='store_true', default=False, dest='INCLUDE_NIGHT',       help='Consider slacks that occur during during the night')
+    parser.add_argument('-s', '--ignorespeed',       action='store_true', default=False, dest='IGNORE_MAX_SPEED',    help='Ignore the max current speeds in dive_sites.json')
+    parser.add_argument('-w', '--includeworkdays',   action='store_true', default=False, dest='INCLUDE_WORKDAYS',    help='Consider dives on any day, otherwise only considers diving on weekends and holidays')
+    parser.add_argument('-i', '--ignorenondiveable', action='store_true', default=False, dest='IGNORE_NON_DIVEABLE', help='Only print diveable slacks, otherwise prints non-diveable days and reason why not diveable')
+
+    parser.add_argument("-d", "--start-date", dest="START", default=dt.now(), type=lambda d: dt.strptime(d, '%Y-%m-%d').date(), help="Start date to begin considering diveable conditions in the format yyyy-mm-dd")
+    parser.add_argument("-f", "--futuredays", dest="DAYS_IN_FUTURE", default=7, type=int, help="Number of days after start date to consider diving")
+
+    parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json")
+
+    args = parser.parse_args()
+
+    # Parse site list - allow indeterminate whitespace and capitals
+    SITES = []
+    for item in args.sites.split(','):
+        if not item:
+            continue
+        words = item.split()
+        n = len(words)
+        if n == 1:
+            SITES.append(words[0].capitalize())
+        elif n > 1:
+            site = words[0].capitalize()
+            for i in range(1, n):
+                site += ' ' + words[i].capitalize()
+            SITES.append(site)
+    print(SITES)
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
-    START = dt.now()
-    START = dt(2019, 11, 16)  # date to begin considering diveable conditions
-    DAYS_IN_FUTURE = 1  # number of days after START to consider
-
-    SITES = None  # Consider all sites
-    # SITES = append(SITES, 'Salt Creek')
-    # SITES = append(SITES, 'Lime Kiln Point')
-    # SITES = append(SITES, 'Green Point')
-    # SITES = append(SITES, 'Skyline Wall')
-    # SITES = append(SITES, 'Deception Pass')
-    # SITES = append(SITES, 'Keystone Jetty')
-    # SITES = append(SITES, 'Possession Point')
-    # SITES = append(SITES, 'Mukilteo')
-    # SITES = append(SITES, 'Edmonds Underwater Park')
-    # SITES = append(SITES, 'Three Tree North')
-    # SITES = append(SITES, 'Alki Pipeline')
-    # SITES = append(SITES, 'Saltwater State Park')
-    # SITES = append(SITES, 'Day Island Wall')
-    # SITES = append(SITES, 'Sunrise Beach')
-    # SITES = append(SITES, 'Fox Island Bridge')
-    # SITES = append(SITES, 'Fox Island Bridge Hale')
-    # SITES = append(SITES, 'Fox Island East Wall')
-    # SITES = append(SITES, 'Fox Island East Wall Gibson')
-    # SITES = append(SITES, 'Titlow')
-    # SITES = append(SITES, 'Waterman Wall')
-    # SITES = append(SITES, 'Warren Avenue Bridge')
-    # SITES = append(SITES, 'Agate Pass')
-    # SITES = append(SITES, 'Redondo')
-
-    FILTER_NON_WORKDAYS = False  # only consider diving on weekends and holidays
-    FILTER_DAYLIGHT = True  # only consider slacks that occur during daylight hours
-
-    PRINT_NON_DIVEABLE = True  # print non-diveable days and reason why not diveable
-
-    IGNORE_MAX_SPEED = False  # ignore the max current speeds in dive_sites.json
+    if not SITES:
+        SITES = None  # Consider all sites
+        # SITES = append(SITES, 'Salt Creek')
+        # SITES = append(SITES, 'Lime Kiln Point')
+        # SITES = append(SITES, 'Green Point')
+        # SITES = append(SITES, 'Skyline Wall')
+        # SITES = append(SITES, 'Deception Pass')
+        # SITES = append(SITES, 'Keystone Jetty')
+        # SITES = append(SITES, 'Possession Point')
+        # SITES = append(SITES, 'Mukilteo')
+        # SITES = append(SITES, 'Edmonds Underwater Park')
+        # SITES = append(SITES, 'Alki Pipeline')
+        # SITES = append(SITES, 'Saltwater State Park')
+        # SITES = append(SITES, 'Day Island Wall')
+        # SITES = append(SITES, 'Sunrise Beach')
+        # SITES = append(SITES, 'Fox Island Bridge')
+        # SITES = append(SITES, 'Fox Island Bridge Hale')
+        # SITES = append(SITES, 'Fox Island East Wall')
+        # SITES = append(SITES, 'Fox Island East Wall Gibson')
+        # SITES = append(SITES, 'Titlow')
+        # SITES = append(SITES, 'Waterman Wall')
+        # SITES = append(SITES, 'Warren Avenue Bridge')
+        # SITES = append(SITES, 'Agate Pass')
 
     possibleDiveDays = [  # Specify dates
         # dt(2019, 3, 31),
@@ -212,12 +230,14 @@ def main():
     ]
     # ----------------------------------------------------------------------------------------------------------------------
 
-
     if not possibleDiveDays:
-        if FILTER_NON_WORKDAYS:
-            possibleDiveDays = getNonWorkDays(DAYS_IN_FUTURE, START)
+        if args.INCLUDE_WORKDAYS:
+            possibleDiveDays = getAllDays(args.DAYS_IN_FUTURE, args.START)
         else:
-            possibleDiveDays = getAllDays(DAYS_IN_FUTURE, START)
+            possibleDiveDays = getNonWorkDays(args.DAYS_IN_FUTURE, args.START)
+    if not possibleDiveDays:
+        print('No dive days possible with current params. Is the start date a workday and includeworkdays flag is not set?')
+        exit(1)
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
 
@@ -235,11 +255,11 @@ def main():
         print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
 
         for day in possibleDiveDays:
-            slacks = m.getSlacks(day, FILTER_DAYLIGHT)
-            canDive = printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE, IGNORE_MAX_SPEED, "Mobile Geographics")
+            slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
+            canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "Mobile Geographics")
 
-            slacks = m2.getSlacks(day, FILTER_DAYLIGHT)
-            canDive |= printDiveDay(slacks, siteData, PRINT_NON_DIVEABLE, IGNORE_MAX_SPEED, "NOAA")
+            slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
+            canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
 
             if not canDive:
                 print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))

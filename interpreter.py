@@ -132,8 +132,8 @@ class Interpreter:
         return self._getSlackData(lines, slackIndexes, None, None, -1)
 
     # Returns a list of slacks for the given day, retrieves new web data if the current data doesn't have info for day.
-    # Includes night slacks if daylight=False
-    def getSlacks(self, day, daylight):
+    # Includes night slacks if night=True
+    def getSlacks(self, day, night):
         if not self._canReuseWebData(day):
             if not self.baseUrl:
                 print('Base url empty')
@@ -148,10 +148,10 @@ class Interpreter:
         sun = self._astralCity.sun(date=day, local=True)
         sunrise = sun['sunrise'].replace(tzinfo=None)
         sunset = sun['sunset'].replace(tzinfo=None)
-        if daylight:
-            slackIndexes = self._getDaySlacks(self._webLines, sunrise, sunset)
-        else:
+        if night:
             slackIndexes = self._getAllDaySlacks(self._webLines)
+        else:
+            slackIndexes = self._getDaySlacks(self._webLines, sunrise, sunset)
         if not slackIndexes:
             print('ERROR: no slacks for {} found in webLines: {}'.format(day, self._webLines))
             return []

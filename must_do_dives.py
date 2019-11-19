@@ -79,16 +79,16 @@ def main():
 
         for day in possibleDiveDays:
             if site1 == site2:
-                slacks = m1.getSlacks(day, FILTER_DAYLIGHT)
+                slacks = m1.getSlacks(day, not FILTER_DAYLIGHT)
                 diveableSlacks = getDiveable(slacks, site1)
                 if len(diveableSlacks) >= 2:
                     for s, info in diveableSlacks:
                         dive_plan.printDive(s, site1, info)
             else:
-                slacks1 = m1.getSlacks(day, FILTER_DAYLIGHT)
+                slacks1 = m1.getSlacks(day, not FILTER_DAYLIGHT)
                 diveableSlacks1 = getDiveable(slacks1, site1)
 
-                slacks2 = m2.getSlacks(day, FILTER_DAYLIGHT)
+                slacks2 = m2.getSlacks(day, not FILTER_DAYLIGHT)
                 diveableSlacks2 = getDiveable(slacks2, site2)
 
                 if len(diveableSlacks2) >= 2 or len(diveableSlacks1) >= 2:
