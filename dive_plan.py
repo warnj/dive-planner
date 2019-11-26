@@ -167,9 +167,28 @@ def printDiveDay(slacks, site, printAll, ignoreMaxSpeed, title):
 def dt2(a, b, c):
     return dt(c, a, b)
 
+def isDiveSite(site, sitesData):
+    for i in range(len(sitesData)):
+        if site == sitesData[i]['name']:
+            return True
+    return False
+
+def listDiveSites(sitesData):
+    r = ""
+    for i in range(len(sitesData)):
+        r += sitesData[i]['name']
+        if i != len(sitesData) - 1:
+            r += ', '
+    return r
+
+
 # python dive_plan.py --night -w -f 1 -d 2019-12-04
 # python dive_plan.py -f 1 -d 2019-12-07 --sites "day island wall, sunrise beach"
+# python3 dive_plan.py -w -f 0 -d 2019-12-04 --sites "deception pass" -s
 def main():
+    # Dive site and current station data file
+    data = json.loads(open(data_collect.absName('dive_sites.json')).read())
+
     # Command-line Args
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--night',             action='store_true', default=False, dest='INCLUDE_NIGHT',       help='Consider slacks that occur during during the night')
@@ -180,7 +199,7 @@ def main():
     parser.add_argument("-d", "--start-date", dest="START", default=dt.now(), type=lambda d: dt.strptime(d, '%Y-%m-%d').date(), help="Start date to begin considering diveable conditions in the format yyyy-mm-dd")
     parser.add_argument("-f", "--futuredays", dest="DAYS_IN_FUTURE", default=7, type=int, help="Number of days after start date to consider diving")
 
-    parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json")
+    parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json ({})".format(listDiveSites(data['sites'])))
 
     args = parser.parse_args()
 
@@ -199,7 +218,7 @@ def main():
                 site += ' ' + words[i].capitalize()
             SITES.append(site)
 
-    # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
+    # ---------------------------------- CONFIGURABLE PARAMETERS -------------------------------------------------------
     if not SITES:
         SITES = None  # Consider all sites
         # SITES = append(SITES, 'Salt Creek')
@@ -227,19 +246,31 @@ def main():
     possibleDiveDays = [  # Specify dates
         # dt(2019, 4, 31),
     ]
-    # ----------------------------------------------------------------------------------------------------------------------
+    # ------------------------------------------------------------------------------------------------------------------
 
+    # Create list of dates based on given start date
     if not possibleDiveDays:
         if args.INCLUDE_WORKDAYS:
             possibleDiveDays = getAllDays(args.DAYS_IN_FUTURE, args.START)
         else:
             possibleDiveDays = getNonWorkDays(args.DAYS_IN_FUTURE, args.START)
+
+    # Parameter validation
     if not possibleDiveDays:
-        print('No dive days possible with current params. Is the start date a workday and includeworkdays flag is not set?')
+        print('No dive days possible with current params. Is start date a workday and includeworkdays flag is not set?')
+        parser.print_help()
         exit(1)
+    if not SITES:
+        print('No dive sites were specified')
+        parser.print_help()
+        exit(2)
+    for site in SITES:
+        if not isDiveSite(site, data['sites']):
+            print('{} is not a valid dive site'.format(site))
+            parser.print_help()
+            exit(3)
 
-    data = json.loads(open(data_collect.absName('dive_sites.json')).read())
-
+    # Get slacks for each site and each day and print the data and splash times
     for i in range(len(data['sites'])):
         siteData = data['sites'][i]
         if SITES and siteData['name'] not in SITES:
