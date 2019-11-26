@@ -121,11 +121,12 @@ def printDive(s, site, titleMessage):
         print('\t\t{}: {}'.format(titleMessage, s))
         print('\t\t\tMinCurrentTime = {}, Duration = {}, SurfaceSwim = {}'
               .format(intp.dateString(minCurrentTime), site['dive_duration'], site['surface_swim_time']))
-        print('\t\t\t{}{}Entry Time: {}{}\t(Exit time: {})'  # Time to get in the water.
-              .format(Color.BOLD, Color.UNDERLINE, intp.dateString(entryTime), Color.END, dt.strftime(exitTime, intp.TIMEFMT)))
+        print('\t\t\t{}Entry Time: {}{}\t(Exit time: {})'  # Time to get in the water.
+              .format(Color.UNDERLINE, intp.dateString(entryTime), Color.END, dt.strftime(exitTime, intp.TIMEFMT)))
         print('\t\t\tMarker Buoy Entrytime (60min dive, no surface swim):', intp.dateString(markerBuoyEntryTime))
         # moonAction = "waxing" if s.moonPhase <= 14 else "waning"
-        # print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'.format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
+        # print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'
+        #       .format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
 
 
 # Returns true if the given slack is diveable within the parameters of the given site. Also returns description of
@@ -164,15 +165,16 @@ def printDiveDay(slacks, site, printAll, ignoreMaxSpeed, title):
             printInfo(printAll, '\t\t{}:\t{}'.format(info, s))
     return printed
 
-def dt2(a, b, c):
-    return dt(c, a, b)
 
+# returns true if given string site is a dive site name in the given json dive site data
 def isDiveSite(site, sitesData):
     for i in range(len(sitesData)):
         if site == sitesData[i]['name']:
             return True
     return False
 
+
+# returns comma-separated list of dive site name in the given json dive site data
 def listDiveSites(sitesData):
     r = ""
     for i in range(len(sitesData)):
@@ -191,16 +193,27 @@ def main():
 
     # Command-line Args
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--night',             action='store_true', default=False, dest='INCLUDE_NIGHT',       help='Consider slacks that occur during during the night')
-    parser.add_argument('-s', '--ignorespeed',       action='store_true', default=False, dest='IGNORE_MAX_SPEED',    help='Ignore the max current speeds in dive_sites.json')
-    parser.add_argument('-w', '--includeworkdays',   action='store_true', default=False, dest='INCLUDE_WORKDAYS',    help='Consider dives on any day, otherwise only considers diving on weekends and holidays')
-    parser.add_argument('-i', '--ignorenondiveable', action='store_true', default=False, dest='IGNORE_NON_DIVEABLE', help='Only print diveable slacks, otherwise prints non-diveable days and reason why not diveable')
+    parser.add_argument('-n', '--night', action='store_true', default=False, dest='INCLUDE_NIGHT',
+                        help='Consider slacks that occur during during the night')
 
-    parser.add_argument("-d", "--start-date", dest="START", default=dt.now(), type=lambda d: dt.strptime(d, '%Y-%m-%d').date(), help="Start date to begin considering diveable conditions in the format yyyy-mm-dd")
-    parser.add_argument("-f", "--futuredays", dest="DAYS_IN_FUTURE", default=7, type=int, help="Number of days after start date to consider diving")
+    parser.add_argument('-s', '--ignorespeed', action='store_true', default=False, dest='IGNORE_MAX_SPEED',
+                        help='Ignore the max current speeds in dive_sites.json')
 
-    parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json ({})".format(listDiveSites(data['sites'])))
+    parser.add_argument('-w', '--includeworkdays', action='store_true', default=False, dest='INCLUDE_WORKDAYS',
+                        help='Consider dives on any day, otherwise only considers diving on weekends and holidays')
 
+    parser.add_argument('-i', '--ignorenondiveable', action='store_true', default=False, dest='IGNORE_NON_DIVEABLE',
+                        help='Only print diveable slacks, otherwise non-diveable slack information is printed')
+
+    parser.add_argument("-f", "--futuredays", dest="DAYS_IN_FUTURE", default=7, type=int,
+                        help="Number of days after start date to consider diving")
+
+    parser.add_argument("-d", "--start-date", dest="START", default=dt.now(),
+                        type=lambda d: dt.strptime(d, '%Y-%m-%d').date(),
+                        help="Start date to begin considering diveable conditions in the format yyyy-mm-dd")
+
+    parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json"
+                                                              "({})".format(listDiveSites(data['sites'])))
     args = parser.parse_args()
 
     # Parse site list - allow indeterminate whitespace and capitals
@@ -286,7 +299,7 @@ def main():
 
         for day in possibleDiveDays:
             slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
-            canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "Mobile Geographics")
+            canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "Mobile Geo")
 
             slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
             canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
