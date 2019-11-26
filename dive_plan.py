@@ -167,6 +167,8 @@ def printDiveDay(slacks, site, printAll, ignoreMaxSpeed, title):
 def dt2(a, b, c):
     return dt(c, a, b)
 
+# python dive_plan.py --night -w -f 1 -d 2019-12-04
+# python dive_plan.py -f 1 -d 2019-12-07 --sites "day island wall, sunrise beach"
 def main():
     # Command-line Args
     parser = argparse.ArgumentParser()
@@ -196,7 +198,6 @@ def main():
             for i in range(1, n):
                 site += ' ' + words[i].capitalize()
             SITES.append(site)
-    print(SITES)
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     if not SITES:
@@ -224,9 +225,7 @@ def main():
         # SITES = append(SITES, 'Agate Pass')
 
     possibleDiveDays = [  # Specify dates
-        # dt(2019, 3, 31),
-        # dt(2019, 3, 16),
-        # dt(2019, 3, 3)
+        # dt(2019, 4, 31),
     ]
     # ----------------------------------------------------------------------------------------------------------------------
 
