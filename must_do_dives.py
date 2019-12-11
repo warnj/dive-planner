@@ -20,7 +20,7 @@ def getDiveable(slacks, site):
             print('WARNING - FLOOD SPEED IS NEGATIVE')
 
         # Check if diveable or not
-        diveable, info = dive_plan.isDiveable(s, site)
+        diveable, info = dive_plan.isDiveable(s, site, False)
         if diveable:
             diveableSlacks.append((s, info))
     return diveableSlacks
@@ -36,8 +36,8 @@ def main():
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
-    START = dt(2015, 8, 23)  # date to begin considering diveable conditions
-    DAYS_IN_FUTURE = 0  # number of days after START to consider
+    START = dt(2020, 4, 16)  # date to begin considering diveable conditions
+    DAYS_IN_FUTURE = 30  # number of days after START to consider
 
     FILTER_NON_WORKDAYS = False  # only consider diving on weekends and holidays
     FILTER_DAYLIGHT = True  # only consider slacks that occur during daylight hours
@@ -120,7 +120,8 @@ def main():
                     print("{} Diveable".format(site2['name']))
                     dive_plan.printDive(diveableSlacks2[0][0], site2, diveableSlacks2[0][1])
                 else:
-                    print("Both sites diveable but times overlap by {0:0.2f} minutes".format((earliest_end-latest_start).total_seconds() / 60))
+                    print("{0}: Both sites diveable but times overlap by {1:0.2f} minutes".format(
+                        dt.strftime(day, intp.DATEFMT), (earliest_end-latest_start).total_seconds() / 60))
 
 
 
