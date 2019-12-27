@@ -205,6 +205,9 @@ def main():
     parser.add_argument('-i', '--ignorenondiveable', action='store_true', default=False, dest='IGNORE_NON_DIVEABLE',
                         help='Only print diveable slacks, otherwise non-diveable slack information is printed')
 
+    parser.add_argument("--sort", action='store_true', default=False, dest="SORT",
+                        help="Sort diveable days by from most optimal slack to least optimal slack")
+
     parser.add_argument("-f", "--futuredays", dest="DAYS_IN_FUTURE", default=7, type=int,
                         help="Number of days after start date to consider diving")
 
@@ -257,8 +260,10 @@ def main():
         # SITES = append(SITES, 'Agate Pass')
 
     possibleDiveDays = [  # Specify dates
-        # dt(2019, 4, 31),
+        # dt(2019, 12, 21),
     ]
+
+    # args.DAYS_IN_FUTURE = 14
     # ------------------------------------------------------------------------------------------------------------------
 
     # Create list of dates based on given start date
@@ -297,15 +302,29 @@ def main():
         print(m.getDayUrl(m.baseUrl, possibleDiveDays[0]))
         print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
 
-        for day in possibleDiveDays:
-            slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
-            canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "Mobile Geo")
+        if args.SORT:
+            slacks = []
+            for day in possibleDiveDays:
+                slacks.extend(m.getSlacks(day, args.INCLUDE_NIGHT))
+            # sort by the sum of the max current speeds from weakest to strongest
+            slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
+            printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "Mobile Geo")
 
-            slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
-            canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
+            slacks = []
+            for day in possibleDiveDays:
+                slacks.extend(m2.getSlacks(day, args.INCLUDE_NIGHT))
+            slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
+            printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
+        else:
+            for day in possibleDiveDays:
+                slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
+                canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "Mobile Geo")
 
-            if not canDive:
-                print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
+                slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
+                canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
+
+                if not canDive:
+                    print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
 
 
 if __name__ == '__main__':
