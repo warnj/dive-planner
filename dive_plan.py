@@ -260,10 +260,11 @@ def main():
         # SITES = append(SITES, 'Agate Pass')
 
     possibleDiveDays = [  # Specify dates
-        # dt(2020, 2, 1),
+        # dt(2020, 2, 17),
     ]
 
-    # args.DAYS_IN_FUTURE = 14
+    # args.START = dt(2020, 4, 30)
+    # args.DAYS_IN_FUTURE = 150
     # ------------------------------------------------------------------------------------------------------------------
 
     # Create list of dates based on given start date
