@@ -53,7 +53,13 @@
       "name": "Agate Passage, north end, Puget Sound, Washington Current",
       "coords": "47.7220 N, 122.5550 W",
       "url": "https://tides.mobilegeographics.com/locations/75",
-      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1530_10&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PCT1636_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Agate Passage, south end, Puget Sound, Washington Current",
+      "coords": "47.7128 N, 122.5655 W",
+      "url": "https://tides.mobilegeographics.com/locations/76",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1501_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "The Narrows, north end (midstream), Washington Current",
@@ -100,10 +106,6 @@
   ],
 
   "must_do_dives": [
-    {
-      "name1": "Day Island Wall",
-      "name2": "Day Island Wall"
-    },
 
     {
       "name1": "Deception Pass",
@@ -111,6 +113,10 @@
     }
   ],
   "might_do_dives": [
+    {
+      "name1": "Day Island Wall",
+      "name2": "Day Island Wall"
+    },
     {
       "name1": "Day Island Wall",
       "name2": "Titlow"
@@ -327,12 +333,12 @@
     },
     {
       "name": "Agate Pass",
-      "data": "Agate Passage, north end, Puget Sound, Washington Current",
+      "data": "Agate Passage, south end, Puget Sound, Washington Current",
       "slack_before_ebb": 40,
       "COMMENT": "Plan to get in 10 min before slack, swim around a bit, then ride the current to the exit",
       "COMMENT2": "Current under bridge about 2 times the reading at this station. Want a 1-1.5kt ebb to ride to exit.",
       "max_flood": 5,
-      "max_ebb": 3.5,
+      "max_ebb": 5,
       "max_total_speed": 8,
       "dive_duration": 100,
       "surface_swim_time": 0,
