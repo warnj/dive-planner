@@ -102,6 +102,12 @@
       "coords": "47.3766 N   122.5287 W",
       "url": "",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1519_18&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Possession Sound Entrance",
+      "coords": "47.8993 N   122.3601 W",
+      "url": "",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1605_40&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
 
@@ -289,13 +295,14 @@
     },
     {
       "name": "Possession Point",
-      "data": "Admiralty Inlet (off Bush Point), Washington Current",
-      "slack_before_flood": 44,
-      "slack_before_ebb": 13,
+      "data": "Possession Sound Entrance",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
       "COMMENT": "Dive any time during medium to weak floods. Surface current typically headed south. Surface current and bad vis from river runoff typically only top 20ft of water.",
-      "max_flood": 3,
-      "max_ebb": 3,
-      "max_total_speed": 5,
+      "COMMENT2": "Deep zoom has good data from xtides and another station near Mukilteo",
+      "max_flood": 0.5,
+      "max_ebb": 0.5,
+      "max_total_speed": 0.8,
       "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
