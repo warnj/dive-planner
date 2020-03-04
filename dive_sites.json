@@ -108,6 +108,12 @@
       "coords": "47.8993 N   122.3601 W",
       "url": "",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1605_40&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Browns Point, 1.6 miles North of, Washington Current",
+      "coords": "47.3287 N   122.4540 W",
+      "url": "",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1521_34&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
 
@@ -159,6 +165,7 @@
       "name": "Skyline Wall",
       "data": "Rosario Strait, Washington Current",
       "COMMENT": "Current can be weird on low exchange days. Best to dive on medium exchanges. Recommended ebb around 1kt or greater to get expected reverse current, flood strength not very important.",
+      "COMMENT2": "Some say slack corresponds with Rosario slack and not much correction is needed, error on late side for entry",
       "slack_before_ebb": -32,
       "max_flood": 2.2,
       "max_ebb": 2.9,
@@ -389,7 +396,7 @@
       "name": "Saltwater State Park",
       "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "data2": "South end (midstream), The Narrows, Puget Sound, Washington Current",
-      "COMMENT": "consider moving this to admiralty inlet station",
+      "COMMENT": "Can use Browns Point current from NOAA or deepzoom.com",
       "slack_before_flood": 0,
       "slack_before_flood2": -20,
       "slack_before_ebb": 0,
