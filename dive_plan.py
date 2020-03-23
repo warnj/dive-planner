@@ -263,8 +263,10 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    # args.START = dt(2020, 3, 7)
-    # args.DAYS_IN_FUTURE = 150
+    args.START = dt(2020, 3, 22)
+    args.DAYS_IN_FUTURE = 0
+    args.IGNORE_MAX_SPEED = True
+    args.INCLUDE_WORKDAYS = True
     # ------------------------------------------------------------------------------------------------------------------
 
     # Create list of dates based on given start date
