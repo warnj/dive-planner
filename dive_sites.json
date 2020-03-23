@@ -4,7 +4,9 @@
       "name": "all",
       "coords": "n/a",
       "url": "https://tides.mobilegeographics.com/index.html",
-      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/Stations?g=698"
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/Stations?g=698",
+      "url_noaa_map": "https://tidesandcurrents.noaa.gov/map/index.html",
+      "url_interactive_map": "http://deepzoom.com/"
     },
     {
       "name": "Strait of Juan de Fuca Entrance, Washington Current",
@@ -24,6 +26,12 @@
       "coords": "48.4583 N, 122.7833 W",
       "url": "http://tides.mobilegeographics.com/locations/6882",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1702_16&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Burrows Pass, Washington Current",
+      "coords": "48.4895 N,  122.6867 W",
+      "url": "",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1738_23&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Deception Pass (narrows), Washington Current",
@@ -174,6 +182,21 @@
       "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": false,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Skyline Wall Burrows Pass",
+      "data": "Burrows Pass, Washington Current",
+      "COMMENT": "Only dive slack before flood with scooter or really weak flood, flood runs E to W",
+      "slack_before_ebb": 0,
+      "slack_before_flood": 0,
+      "max_flood": 2,
+      "max_ebb": 2,
+      "max_total_speed": 4,
+      "dive_duration": 90,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
@@ -398,6 +421,7 @@
       "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "data2": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "COMMENT": "Can use Browns Point current from NOAA or deepzoom.com",
+      "COMMENT2": "Ebb has most pronounced currents since located on the outside of the 'bend'",
       "slack_before_flood": 0,
       "slack_before_flood2": -20,
       "slack_before_ebb": 0,
