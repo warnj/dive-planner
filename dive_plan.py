@@ -241,7 +241,7 @@ def main():
         # SITES = append(SITES, 'Lime Kiln Point')
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall')
-        # SITES = append(SITES, 'Skyline Wall Burrows Pass')
+        # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')

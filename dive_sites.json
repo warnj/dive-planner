@@ -155,11 +155,12 @@
     {
       "name": "Day Island Wall",
       "data": "South end (midstream), The Narrows, Puget Sound, Washington Current",
-      "slack_before_flood": -30,
-      "COMMENT": "Can drift from S entrance to N entrance on the ebb current at the beginning of a dive before a flood. Enter",
-      "COMMENT2": "the water about 10min earlier than the predicted time given by the program for a dive with same entry/exit.",
+      "slack_before_flood": -20,
+      "slack_before_ebb": -50,
+      "COMMENT": "slack_before_flood was -30, this was often ~10min early. slack_before_ebb was -60, this resulted in reliable weak current but end of dive near slack without much reversal",
+      "COMMENT2": "Can drift from S entrance to N entrance on the ebb current at the beginning of a dive before a flood. Enter",
+      "COMMENT3": "the water about the predicted time given by the program. For dive with same entry/exit enter 10min late.",
       "PREFERENCE": "Mobile Geographics Current Station",
-      "slack_before_ebb": -60,
       "max_flood": 3.5,
       "max_ebb": 3.5,
       "max_total_speed": 6.1,
@@ -170,11 +171,11 @@
       "diveable_off_slack": false
     },
     {
-      "name": "Skyline Wall",
+      "name": "Skyline Wall Rosario",
       "data": "Rosario Strait, Washington Current",
       "COMMENT": "Current can be weird on low exchange days. Best to dive on medium exchanges. Recommended ebb around 1kt or greater to get expected reverse current, flood strength not very important.",
       "COMMENT2": "Some say slack corresponds with Rosario slack and not much correction is needed, error on late side for entry",
-      "COMMENT3": "Slack before flood happens much earlier than Rosario slack, estimating 90-110 min early. Would be safe to dive this with scooter to get out, error on early side",
+      "COMMENT3": "Slack before flood happens much earlier than Rosario slack, estimating 180 min early. Would be safe to dive this with scooter to get out, error on early side",
       "slack_before_ebb": -32,
       "max_flood": 2.2,
       "max_ebb": 2.9,
@@ -186,7 +187,7 @@
       "diveable_off_slack": false
     },
     {
-      "name": "Skyline Wall Burrows Pass",
+      "name": "Skyline Wall",
       "data": "Burrows Pass, Washington Current",
       "COMMENT": "Only dive slack before flood with scooter or really weak flood, flood runs E to W",
       "slack_before_ebb": 0,
