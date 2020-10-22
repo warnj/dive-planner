@@ -134,6 +134,12 @@
       "coords": "48.4717 N, 122.6997 W",
       "url": "https://tides.mobilegeographics.com/locations/1034",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1737_23&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Hazel Point, Hood Canal, Washington Current",
+      "coords": "47.6912 N   122.7628 W",
+      "url": "",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1601_21&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
 
@@ -237,7 +243,8 @@
       "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "slack_before_flood": -31,
       "slack_before_ebb": -60,
-      "COMMENT": "slack before ebb is hard to predict and correction is factor -60 is approximate",
+      "COMMENT": "Slack before ebb is hard to predict and correction is factor -60 is approximate",
+      "COMMENT2": "Slack before flood is preference and can have long slacks",
       "max_flood": 2.2,
       "max_ebb": 2.2,
       "max_total_speed": 4.4,
@@ -252,7 +259,7 @@
       "data": "Deception Pass (narrows), Washington Current",
       "slack_before_ebb": 0,
       "COMMENT": "Marker Buoy seems to have max_flood = 4.1 and max_ebb = 5.9, however NW Dive Club dives with either flood or ebb max about 5.9 and sum of the two less than 11 kts",
-      "COMMENT2": "North Beach opens April 1 and closes October 1",
+      "COMMENT2": "North Beach opens somewhere around April 1 and closes somewhere around October 31",
       "max_flood": 5,
       "max_ebb": 6,
       "max_total_speed": 10.5,
@@ -268,7 +275,7 @@
       "slack_before_flood": -80,
       "slack_before_ebb": -140,
       "COMMENT": "Boydski says -105 before ebb correction. Marker Buoy (Justin M) does -45 to -80 before flood. NW Shore Dives: -XX before flood, -140 before ebb.",
-	  "COMMENT2": "check out https://tides.mobilegeographics.com/locations/3053.html for Hale Passage - 0 correction before flood and -140 before ebb compared to Narrows North",
+	    "COMMENT2": "check out https://tides.mobilegeographics.com/locations/3053.html for Hale Passage - 0 correction before flood and -140 before ebb compared to Narrows North",
       "max_flood": 2.5,
       "max_ebb": 2.5,
       "max_total_speed": 4.2,
@@ -299,7 +306,7 @@
       "PREFERENCE": "Mobile Geographics Current Station",
       "slack_before_flood": -80,
       "slack_before_ebb": -65,
-      "COMMENT": "Slack before flood in book = -56, which agrees with Marker Buoy. Many reports of hitting slack late & I hit late 12/20/18. Needs to be earlier, estimating -105, though max speeds could perhaps be adjusted",
+      "COMMENT": "Slack before flood in book = -56, which agrees with Marker Buoy. Many reports of hitting slack late. Needs to be earlier, estimating -105, though max speeds could perhaps be adjusted",
       "max_flood": 3.3,
       "max_ebb": 3.3,
       "max_total_speed": 6.4,
@@ -330,7 +337,7 @@
       "slack_before_flood": -45,
       "slack_before_ebb": -25,
       "COMMENT": "Slack before ebb of -25 aligns with Marker Buoy & NW Shore Dives. seaotter.com says -65 is better. emeralddiving.com and 151 Dives say -90",
-      "COMMENT2": "NW Shore Dives first slack before flood = -90 and 2nd +4 min. Joyce Merkel has slack_before_flood = -50. Steve and Rich splash 45min before slack_before_flood.",
+      "COMMENT2": "NW Shore Dives first slack before flood = -90 and 2nd +4 min. J Merkel has slack_before_flood = -50. Steve and Rich splash 45min before slack_before_flood.",
       "PREFERENCE": "NOAA Current Station (at for slack before flood)",
       "max_flood": 4.2,
       "max_ebb": 2.4,
@@ -474,7 +481,7 @@
       "data": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "slack_before_flood": -5,
       "slack_before_ebb": 33,
-      "COMMENT": "Marker buoy splash 1hr before slack before ebb at narrows south. ",
+      "COMMENT": "Club splash 1hr before slack before ebb at narrows south.",
       "max_flood": 4.2,
       "max_ebb": 4.2,
       "max_total_speed": 7.5,
@@ -489,7 +496,7 @@
       "data": "West of Mukilteo, Washington Current",
       "slack_before_flood": 44,
       "slack_before_ebb": 13,
-      "COMMEND": "Using Admiralty inlet, slack_before_flood=44 and slack_before_ebb=13",
+      "COMMENT": "Using Admiralty inlet, slack_before_flood=44 and slack_before_ebb=13",
       "max_flood": 2,
       "max_ebb": 2,
       "max_total_speed": 4,
@@ -502,18 +509,21 @@
       "max_diveable_ebb": 3
     },
     {
-      "name": "Alki Pipeline",
-      "data": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
+      "name": "Flagpole",
+      "data": "Hazel Point, Hood Canal, Washington Current",
+      "COMMENT": "Can dive during large exchanges, but will have some surface current",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
-      "max_flood": 0.8,
-      "max_ebb": 0.8,
-      "max_total_speed": 1.5,
-      "dive_duration": 110,
-      "surface_swim_time": 5,
+      "max_flood": 4,
+      "max_ebb": 4,
+      "max_total_speed": 8,
+      "dive_duration": 90,
+      "surface_swim_time": 15,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
-      "diveable_off_slack": false
+      "diveable_off_slack": true,
+      "max_diveable_flood": 4,
+      "max_diveable_ebb": 4
     },
 
 
@@ -537,24 +547,9 @@
       "max_diveable_ebb": 4
     },
     {
-      "name": "Three Tree North",
-      "data": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
-      "slack_before_flood": -36,
-      "slack_before_ebb": -13,
-      "max_flood": 1.1,
-      "max_ebb": 1.1,
-      "max_total_speed": 2.2,
-      "dive_duration": 110,
-      "surface_swim_time": 5,
-      "diveable_before_flood": true,
-      "diveable_before_ebb": true,
-      "diveable_off_slack": true,
-      "max_diveable_flood": 1.1,
-      "max_diveable_ebb": 1.1
-    },
-    {
       "name": "Edmonds Underwater Park",
       "data": "Admiralty Inlet (off Bush Point), Washington Current",
+      "COMMENT": "mildly current sensitive",
       "slack_before_flood": 44,
       "slack_before_ebb": 13,
       "max_flood": 4,
@@ -565,23 +560,7 @@
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": true,
-	  "max_diveable_flood": 4,
-      "max_diveable_ebb": 4
-    },
-    {
-      "name": "Sund Rock",
-      "data": "Admiralty Inlet (off Bush Point), Washington Current",
-      "slack_before_flood": 0,
-      "slack_before_ebb": -15,
-      "max_flood": 4,
-      "max_ebb": 4,
-      "max_total_speed": 8,
-      "dive_duration": 120,
-      "surface_swim_time": 10,
-      "diveable_before_flood": true,
-      "diveable_before_ebb": true,
-      "diveable_off_slack": true,
-	  "max_diveable_flood": 4,
+	    "max_diveable_flood": 4,
       "max_diveable_ebb": 4
     },
     {
@@ -602,6 +581,7 @@
       "name": "Redondo",
       "data": "The Narrows, north end (midstream), Washington Current",
       "COMMENT": "consider moving to admiralty inlet station",
+      "COMMENT2": "avoid large ebbs, otherwise dive any time",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
       "max_flood": 4,
@@ -612,7 +592,7 @@
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": true,
-	  "max_diveable_flood": 4,
+	    "max_diveable_flood": 4,
       "max_diveable_ebb": 4
     }
   ]

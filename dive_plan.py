@@ -82,8 +82,8 @@ def getAllDays(futureDays, start=dt.now()):
     return days
 
 
-# Returns [mincurrenttime, markerbuoyentrytime, myentrytime] for the given slack at the given site
-# mincurrenttime = time of slack current, markerbuoyentrytime = 30min before mincurrenttime,
+# Returns [mincurrenttime, clubentrytime, myentrytime] for the given slack at the given site
+# mincurrenttime = time of slack current, clubentrytime = 30min before mincurrenttime,
 # myentrytime = mincurrenttime - surfaceswimtime - expecteddivetime/2
 # Returns None if an expected json data point is not found
 def getEntryTimes(s, site):
@@ -95,8 +95,8 @@ def getEntryTimes(s, site):
         minCurrentTime = s.time + delta
         entryTime = minCurrentTime - td(minutes=site['dive_duration'] / 2) - td(minutes=site['surface_swim_time'])
         exitTime = entryTime + 2 * td(minutes=site['surface_swim_time']) + td(minutes=site['dive_duration'])
-        markerBuoyEntryTime = minCurrentTime - td(minutes=30)
-        return minCurrentTime, markerBuoyEntryTime, entryTime, exitTime
+        clubEntryTime = minCurrentTime - td(minutes=30)
+        return minCurrentTime, clubEntryTime, entryTime, exitTime
     except KeyError:
         return None
 
@@ -107,7 +107,7 @@ def printDive(s, site, titleMessage):
     if not times:
         print('ERROR: a json key was expected that was not found')
     else:
-        minCurrentTime, markerBuoyEntryTime, entryTime, exitTime = times
+        minCurrentTime, clubEntryTime, entryTime, exitTime = times
         if s.sunriseTime:
             warning = ''
             if entryTime < s.sunriseTime:
@@ -123,7 +123,7 @@ def printDive(s, site, titleMessage):
               .format(intp.dateString(minCurrentTime), site['dive_duration'], site['surface_swim_time']))
         print('\t\t\t{}Entry Time: {}{}\t(Exit time: {})'  # Time to get in the water.
               .format(Color.UNDERLINE, intp.dateString(entryTime), Color.END, dt.strftime(exitTime, intp.TIMEFMT)))
-        print('\t\t\tMarker Buoy Entrytime (60min dive, no surface swim):', intp.dateString(markerBuoyEntryTime))
+        print('\t\t\tClub Entry Time (60min dive, no surface swim):', intp.dateString(clubEntryTime))
         # moonAction = "waxing" if s.moonPhase <= 14 else "waning"
         # print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'
         #       .format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
@@ -184,9 +184,6 @@ def listDiveSites(sitesData):
     return r
 
 
-# python dive_plan.py --night -w -f 1 -d 2019-12-04
-# python dive_plan.py -f 1 -d 2019-12-07 --sites "day island wall, sunrise beach"
-# python3 dive_plan.py -w -f 0 -d 2019-12-04 --sites "deception pass" -s
 def main():
     # Dive site and current station data file
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
@@ -215,7 +212,7 @@ def main():
                         type=lambda d: dt.strptime(d, '%Y-%m-%d').date(),
                         help="Start date to begin considering diveable conditions in the format yyyy-mm-dd")
 
-    parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json"
+    parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json "
                                                               "({})".format(listDiveSites(data['sites'])))
     args = parser.parse_args()
 
@@ -234,7 +231,7 @@ def main():
                 site += ' ' + words[i].capitalize()
             SITES.append(site)
 
-    # ---------------------------------- CONFIGURABLE PARAMETERS -------------------------------------------------------
+    # ---------------------------------- MANUALLY CONFIGURABLE PARAMETERS -------------------------------------------------------
     if not SITES:
         SITES = None  # Consider all sites
         # SITES = append(SITES, 'Salt Creek')
@@ -265,11 +262,12 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2020, 8, 11)
+    # args.START = dt(2020, 10, 10)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 1
-    args.IGNORE_MAX_SPEED = False
-    args.INCLUDE_WORKDAYS = True
+    # args.DAYS_IN_FUTURE = 90
+    # args.IGNORE_MAX_SPEED = False
+    # args.INCLUDE_WORKDAYS = False
+    # args.INCLUDE_NIGHT = True
     # ------------------------------------------------------------------------------------------------------------------
 
     # Create list of dates based on given start date

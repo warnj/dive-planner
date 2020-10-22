@@ -1,6 +1,6 @@
 '''
-This program is used to identify if days in the future (or past) are considered diveable for a subset of dive sites
-specified by dive_sites.json
+This program is used to identify if days in the future (or past) are considered
+diveable for a subset of dive sites specified by dive_sites.json
 '''
 
 import data_collect

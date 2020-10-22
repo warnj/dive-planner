@@ -1,5 +1,10 @@
 '''
-This program is used to
+This program is used to compare slack at two current stations.
+
+Current stations will have a constant offset (one for slack before ebb and
+another before flood) from each other if based on the same underlying data
+source. Otherwise the time differences between the stations will vary for each
+slack.
 '''
 
 import dive_plan, data_collect
@@ -27,8 +32,8 @@ def main():
     # STATION1 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
     # STATION1 = "Hale Passage, west end, Puget Sound, Washington Current"
 
-    # NOAA1 = True
-    NOAA1 = False
+    NOAA1 = True
+    # NOAA1 = False
 
 
     # STATION2 = "Strait of Juan de Fuca Entrance, Washington Current"
@@ -39,8 +44,8 @@ def main():
     # STATION2 = "Alki Point, 0.3 mile west of, Puget Sound, Washington Current"
     # STATION2 = "West end, Rich Passage, Puget Sound, Washington Current"
     # STATION2 = "Agate Passage, north end, Puget Sound, Washington Current"
-    STATION2 = "The Narrows, north end (midstream), Washington Current"
-    # STATION2 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
+    # STATION2 = "The Narrows, north end (midstream), Washington Current"
+    STATION2 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
     # STATION2 = "Hale Passage, west end, Puget Sound, Washington Current"
 
     NOAA2 = True

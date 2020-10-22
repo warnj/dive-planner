@@ -1,11 +1,12 @@
 '''
-This program is used to
+This program is used to rank the longest and shortest slack times for a current
+station over a given time interval. Longer slacks are present when the max
+current speed on the exchange before and after slack is smaller.
 '''
 
 import dive_plan, data_collect
 import interpreter as intp
 
-from datetime import datetime as dt
 import json
 
 

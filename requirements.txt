@@ -1,0 +1,5 @@
+numpy
+bs4
+astral
+pandas
+# Other dependencies for data collection: Firefox, Selenium

@@ -1,5 +1,6 @@
 '''
-This program is used to collect past dives from the Marker Buoy dive club meetup page and save them to a .csv file.
+This program is used to collect past dives from the Marker Buoy dive club
+Meetup page and save them to a .csv file.
 '''
 
 from selenium import webdriver
