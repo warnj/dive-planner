@@ -35,8 +35,8 @@ def getSite(sites, name):
 def main():
 
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
-    START = dt.now()
-    # START = dt(2020, 3, 1)  # date to begin considering diveable conditions
+    # START = dt.now()
+    START = dt(2020, 11, 30)  # date to begin considering diveable conditions
     DAYS_IN_FUTURE = 90  # number of days after START to consider
 
     FILTER_NON_WORKDAYS = False  # only consider diving on weekends and holidays
@@ -71,8 +71,8 @@ def main():
             m1 = intp.NoaaInterpreter(station1['url_noaa'])
             m2 = intp.NoaaInterpreter(station2['url_noaa'])
         else:
-            m1 = intp.MobilegeographicsInterpreter(station1['url'])
-            m2 = intp.MobilegeographicsInterpreter(station2['url'])
+            m1 = intp.TBoneSCInterpreter(station1['url_xtide'])
+            m2 = intp.TBoneSCInterpreter(station2['url_xtide'])
 
 
         print('{} - {}'.format(site1['name'], site2['name']))

@@ -17,7 +17,7 @@ import json
 
 def main():
     # START = dt.now()
-    START = dt(2019, 2, 15)
+    START = dt(2020, 11, 1)
     TRIM_NOAA = True
 
     # STATION1 = "Strait of Juan de Fuca Entrance, Washington Current"
@@ -35,7 +35,6 @@ def main():
     NOAA1 = True
     # NOAA1 = False
 
-
     # STATION2 = "Strait of Juan de Fuca Entrance, Washington Current"
     # STATION2 = "Juan De Fuca Strait (East), British Columbia Current"
     # STATION2 = "Rosario Strait, Washington Current"
@@ -45,12 +44,11 @@ def main():
     # STATION2 = "West end, Rich Passage, Puget Sound, Washington Current"
     # STATION2 = "Agate Passage, north end, Puget Sound, Washington Current"
     # STATION2 = "The Narrows, north end (midstream), Washington Current"
-    STATION2 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
-    # STATION2 = "Hale Passage, west end, Puget Sound, Washington Current"
+    # STATION2 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
+    STATION2 = "Hale Passage, west end, Puget Sound, Washington Current"
 
-    NOAA2 = True
-    # NOAA2 = False
-
+    # NOAA2 = True
+    NOAA2 = False
 
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
@@ -59,13 +57,13 @@ def main():
     if NOAA1:
         m1 = intp.NoaaInterpreter(station1['url_noaa'])
     else:
-        m1 = intp.MobilegeographicsInterpreter(station1['url'])
+        m1 = intp.TBoneSCInterpreter(station1['url_xtide'])
 
     station2 = dive_plan.getStation(data['stations'], STATION2)
     if NOAA2:
         m2 = intp.NoaaInterpreter(station2['url_noaa'])
     else:
-        m2 = intp.MobilegeographicsInterpreter(station2['url'])
+        m2 = intp.TBoneSCInterpreter(station2['url_xtide'])
 
     slacks1 = m1.allSlacks(START)
     slacks2 = m2.allSlacks(START)

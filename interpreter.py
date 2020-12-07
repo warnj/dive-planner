@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime as dt
 
 TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
+TIMEPARSEFMT_TBONE = '%Y-%m-%d %H:%M'  # example: 2019-01-18 22:36
 TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
 DATEFMT = '%Y-%m-%d'  # example 2019-01-18
 TIMEFMT = '%I:%M%p'  # example 09:36AM
@@ -159,6 +160,7 @@ class Interpreter:
 
 
 # Class to retrieve and parse current data from mobilegeographics website
+# NOTE: As of 11/2020, website down for weeks, deprecated and replaced by TBoneSCInterpreter
 class MobilegeographicsInterpreter(Interpreter):
 
     # Returns the datetime object parsed from the given data line from MobileGeographics website
@@ -214,6 +216,68 @@ class MobilegeographicsInterpreter(Interpreter):
             else:
                 s.ebbSpeed = float(tokens1[5])
                 s.floodSpeed = float(tokens2[5])
+
+            s.time = self._parseTime(lines[i].split())
+            slacks.append(s)
+        return slacks
+
+
+# Class to retrieve and parse current data from tbone.biol.sc.edu website
+class TBoneSCInterpreter(Interpreter):
+
+    # Returns the datetime object parsed from the given data line from tbone.biol.sc.edu website
+    def _parseTime(self, tokens):
+        dayTimeStr = tokens[0] + ' ' + tokens[1]  # ex: 2018-11-17 22:41
+        return dt.strptime(dayTimeStr, TIMEPARSEFMT_TBONE)
+
+    # Returns the day-specific URL for the base URL
+    @staticmethod
+    def getDayUrl(baseUrl, day):
+        return baseUrl + '?year={}&month={}&day={}'.format(day.year, day.month, day.day)
+
+    # Returns the tbone.biol.sc.edu current data from the given url
+    def _getWebLines(self, url, day):
+        with urllib.request.urlopen(url) as response:
+            html = response.read()
+            soup = BeautifulSoup(html, 'html.parser')
+            predictions = soup.find('pre')
+            lines = predictions.text.lower().splitlines()
+            # ignore the non-current speed data at the top, like current direction and gps coords
+            start = 0
+            for line in lines:
+                if "knots" not in line:
+                    start += 1
+                else:
+                    break
+            return lines[start:]
+
+    # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
+    def _getSlackData(self, lines, indexes, sunrise, sunset, moonPhase):
+        slacks = []
+        for i in indexes:
+            s = Slack()
+            s.sunriseTime = sunrise
+            s.sunsetTime = sunset
+            s.moonPhase = moonPhase
+
+            preMax = self._getCurrentBefore(i, lines)
+            if not preMax:
+                continue
+            tokens1 = preMax.split()
+
+            postMax = self._getCurrentAfter(i, lines)
+            if not postMax:
+                continue
+            tokens2 = postMax.split()
+
+            s.slackBeforeEbb = 'ebb' in postMax
+
+            if s.slackBeforeEbb:
+                s.floodSpeed = float(tokens1[3])
+                s.ebbSpeed = float(tokens2[3])
+            else:
+                s.ebbSpeed = float(tokens1[3])
+                s.floodSpeed = float(tokens2[3])
 
             s.time = self._parseTime(lines[i].split())
             slacks.append(s)

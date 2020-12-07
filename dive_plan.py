@@ -247,8 +247,8 @@ def main():
         # SITES = append(SITES, 'Edmonds Underwater Park')
         # SITES = append(SITES, 'Alki Pipeline')
         # SITES = append(SITES, 'Saltwater State Park')
+        SITES = append(SITES, 'Sunrise Beach')
         # SITES = append(SITES, 'Day Island Wall')
-        # SITES = append(SITES, 'Sunrise Beach')
         # SITES = append(SITES, 'Fox Island Bridge')
         # SITES = append(SITES, 'Fox Island Bridge Hale')
         # SITES = append(SITES, 'Fox Island East Wall')
@@ -262,11 +262,11 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    # args.START = dt(2020, 10, 10)
+    args.START = dt(2020, 12, 5)
     # args.START = dt.now()
-    # args.DAYS_IN_FUTURE = 90
-    # args.IGNORE_MAX_SPEED = False
-    # args.INCLUDE_WORKDAYS = False
+    args.DAYS_IN_FUTURE = 0
+    # args.IGNORE_MAX_SPEED = True
+    args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # ------------------------------------------------------------------------------------------------------------------
 
@@ -299,7 +299,7 @@ def main():
             continue
         station = getStation(data['stations'], siteData['data'])
 
-        m = intp.MobilegeographicsInterpreter(station['url'])
+        m = intp.TBoneSCInterpreter(station['url_xtide'])
         m2 = intp.NoaaInterpreter(station['url_noaa'])
 
         print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))

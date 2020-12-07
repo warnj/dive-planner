@@ -32,7 +32,7 @@ def main():
     if NOAA:
         m = intp.NoaaInterpreter(station['url_noaa'])
     else:
-        m = intp.MobilegeographicsInterpreter(station['url'])
+        m = intp.TBoneSCInterpreter(station['url_xtide'])
 
     slacks = []
     # days = dive_plan.getAllDays(365, dt(2019, 1, 1))
