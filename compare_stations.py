@@ -28,12 +28,12 @@ def main():
     # STATION1 = "Alki Point, 0.3 mile west of, Puget Sound, Washington Current"
     # STATION1 = "West end, Rich Passage, Puget Sound, Washington Current"
     # STATION1 = "Agate Passage, north end, Puget Sound, Washington Current"
-    STATION1 = "The Narrows, north end (midstream), Washington Current"
-    # STATION1 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
+    # STATION1 = "The Narrows, north end (midstream), Washington Current"
+    STATION1 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
     # STATION1 = "Hale Passage, west end, Puget Sound, Washington Current"
 
-    NOAA1 = True
-    # NOAA1 = False
+    # NOAA1 = True
+    NOAA1 = False
 
     # STATION2 = "Strait of Juan de Fuca Entrance, Washington Current"
     # STATION2 = "Juan De Fuca Strait (East), British Columbia Current"
@@ -45,7 +45,8 @@ def main():
     # STATION2 = "Agate Passage, north end, Puget Sound, Washington Current"
     # STATION2 = "The Narrows, north end (midstream), Washington Current"
     # STATION2 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
-    STATION2 = "Hale Passage, west end, Puget Sound, Washington Current"
+    # STATION2 = "Hale Passage, west end, Puget Sound, Washington Current"
+    STATION2 = "Gibson Point, 0.8 mile east of, Puget Sound, Washington Current"
 
     # NOAA2 = True
     NOAA2 = False
@@ -77,9 +78,9 @@ def main():
 
     if len(slacks1) != len(slacks2):
         print("Pick a different day or add some fancy comparison - number of slacks don't match")
-        source = "NOAA" if NOAA1 else "Mobile Geographics"
+        source = "NOAA" if NOAA1 else "XTide"
         print('{} slacks from {} station for location {}'.format(len(slacks1), source, STATION1))
-        source = "NOAA" if NOAA2 else "Mobile Geographics"
+        source = "NOAA" if NOAA2 else "XTide"
         print('{} slacks from {} station for location {}'.format(len(slacks2), source, STATION2))
         exit(0)
 

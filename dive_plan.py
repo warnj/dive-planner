@@ -247,12 +247,12 @@ def main():
         # SITES = append(SITES, 'Edmonds Underwater Park')
         # SITES = append(SITES, 'Alki Pipeline')
         # SITES = append(SITES, 'Saltwater State Park')
-        SITES = append(SITES, 'Sunrise Beach')
+        # SITES = append(SITES, 'Sunrise Beach')
         # SITES = append(SITES, 'Day Island Wall')
         # SITES = append(SITES, 'Fox Island Bridge')
         # SITES = append(SITES, 'Fox Island Bridge Hale')
-        # SITES = append(SITES, 'Fox Island East Wall')
-        # SITES = append(SITES, 'Fox Island East Wall Gibson')
+        SITES = append(SITES, 'Fox Island East Wall')
+        SITES = append(SITES, 'Fox Island East Wall Gibson')
         # SITES = append(SITES, 'Titlow')
         # SITES = append(SITES, 'Waterman Wall')
         # SITES = append(SITES, 'Warren Avenue Bridge')
@@ -262,10 +262,10 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2020, 12, 5)
+    args.START = dt(2020, 12, 4)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
-    # args.IGNORE_MAX_SPEED = True
+    args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # ------------------------------------------------------------------------------------------------------------------
@@ -312,7 +312,7 @@ def main():
                 slacks.extend(m.getSlacks(day, args.INCLUDE_NIGHT))
             # sort by the sum of the max current speeds from weakest to strongest
             slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
-            printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "Mobile Geo")
+            printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "XTide")
 
             slacks = []
             for day in possibleDiveDays:
@@ -322,7 +322,7 @@ def main():
         else:
             for day in possibleDiveDays:
                 slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
-                canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "Mobile Geo")
+                canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "XTide")
 
                 slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
                 canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
