@@ -251,8 +251,8 @@ def main():
         # SITES = append(SITES, 'Day Island Wall')
         # SITES = append(SITES, 'Fox Island Bridge')
         # SITES = append(SITES, 'Fox Island Bridge Hale')
-        SITES = append(SITES, 'Fox Island East Wall')
-        SITES = append(SITES, 'Fox Island East Wall Gibson')
+        # SITES = append(SITES, 'Fox Island East Wall')
+        # SITES = append(SITES, 'Fox Island East Wall Gibson')
         # SITES = append(SITES, 'Titlow')
         # SITES = append(SITES, 'Waterman Wall')
         # SITES = append(SITES, 'Warren Avenue Bridge')
@@ -262,7 +262,7 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2020, 12, 4)
+    args.START = dt(2020, 12, 18)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
     args.IGNORE_MAX_SPEED = True

@@ -361,7 +361,7 @@
       "name": "Sunrise Beach",
       "data": "The Narrows, north end (midstream), Washington Current",
       "slack_before_flood": -45,
-      "slack_before_ebb": -25,
+      "slack_before_ebb": -35,
       "COMMENT": "Slack before ebb of -25 aligns with Marker Buoy & NW Shore Dives. seaotter.com says -65 is better. emeralddiving.com and 151 Dives say -90",
       "COMMENT2": "NW Shore Dives first slack before flood = -90 and 2nd +4 min. J Merkel has slack_before_flood = -50. Steve and Rich splash 45min before slack_before_flood.",
       "PREFERENCE": "NOAA Current Station (at for slack before flood)",
