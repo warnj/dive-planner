@@ -108,10 +108,15 @@ class Interpreter:
         for i, line in enumerate(webLines):
             if 'slack' in line or 'min ebb' in line or 'min flood' in line:
                 time = self._parseTime(line.split())
+                timeDate = dt.strftime(time, DATEFMT)  # sanity checks to surface errors with mismatched web dates early
+                sunriseDate, sunsetDate = dt.strftime(sunrise, DATEFMT), dt.strftime(sunset, DATEFMT)
                 if time > sunset:
                     return slacksIndexes
                 elif time > sunrise:
                     slacksIndexes.append(i)
+                elif sunriseDate != timeDate or sunriseDate != sunsetDate:
+                    print('ERROR: website date {} does not match requested date {}'.format(timeDate, sunriseDate))
+                    return []
         return slacksIndexes
 
     # Returns true if self._webData contains the data for the given day, false otherwise
