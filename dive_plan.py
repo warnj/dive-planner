@@ -123,7 +123,8 @@ def printDive(s, site, titleMessage):
               .format(intp.dateString(minCurrentTime), site['dive_duration'], site['surface_swim_time']))
         print('\t\t\t{}Entry Time: {}{}\t(Exit time: {})'  # Time to get in the water.
               .format(Color.UNDERLINE, intp.dateString(entryTime), Color.END, dt.strftime(exitTime, intp.TIMEFMT)))
-        print('\t\t\tClub Entry Time (60min dive, no surface swim):', intp.dateString(clubEntryTime))
+        print('\t\t\t{}'.format(s.logString()))
+        # print('\t\t\tClub Entry Time (60min dive, no surface swim):', intp.dateString(clubEntryTime))
         # moonAction = "waxing" if s.moonPhase <= 14 else "waning"
         # print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'
         #       .format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
@@ -262,11 +263,11 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    # args.START = dt(2021, 8, 14)
+    args.START = dt(2021, 5, 22)
     # args.START = dt.now()
-    # args.DAYS_IN_FUTURE = 1
+    args.DAYS_IN_FUTURE = 0
     # args.IGNORE_MAX_SPEED = True
-    # args.INCLUDE_WORKDAYS = True
+    args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------

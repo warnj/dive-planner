@@ -27,6 +27,13 @@ class Slack:
         else:
             return '{} -> {} -> {}'.format(self.ebbSpeed, dateString(self.time), self.floodSpeed)
 
+    # string without date info (only time) for logbook entry
+    def logString(self):
+        if self.slackBeforeEbb:
+            return '{} > {} > {}'.format(self.floodSpeed, dt.strftime(self.time, TIMEFMT), self.ebbSpeed)
+        else:
+            return '{} > {} > {}'.format(self.ebbSpeed, dt.strftime(self.time, TIMEFMT), self.floodSpeed)
+
     def __repr__(self):
         return self.__str__()
 
