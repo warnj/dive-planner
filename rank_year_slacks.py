@@ -13,8 +13,8 @@ import json
 def main():
     # STATION = "Strait of Juan de Fuca Entrance, Washington Current"
     # STATION = "Juan De Fuca Strait (East), British Columbia Current"
-    STATION = "Rosario Strait, Washington Current"
-    # STATION = "Deception Pass (narrows), Washington Current"
+    # STATION = "Rosario Strait, Washington Current"
+    STATION = "Deception Pass (narrows), Washington Current"
     # STATION = "Admiralty Inlet (off Bush Point), Washington Current"
     # STATION = "Alki Point, 0.3 mile west of, Puget Sound, Washington Current"
     # STATION = "West end, Rich Passage, Puget Sound, Washington Current"
@@ -23,8 +23,8 @@ def main():
     # STATION = "South end (midstream), The Narrows, Puget Sound, Washington Current"
     # STATION = "Hale Passage, west end, Puget Sound, Washington Current"
 
-    # NOAA = True
-    NOAA = False
+    NOAA = True
+    # NOAA = False
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
 
