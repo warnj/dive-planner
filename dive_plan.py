@@ -236,6 +236,7 @@ def main():
     if not SITES:
         SITES = None  # Consider all sites
         # SITES = append(SITES, 'Salt Creek')
+        SITES = append(SITES, 'Point Hudson')
         # SITES = append(SITES, 'Lime Kiln Point')
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
@@ -263,9 +264,9 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2021, 6, 4)
+    args.START = dt(2021, 9, 10)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    args.DAYS_IN_FUTURE = 3
     # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True

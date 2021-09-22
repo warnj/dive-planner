@@ -7,7 +7,7 @@
       "url_xtide": "http://tbone.biol.sc.edu/tide/sites_uswest.html & http://tbone.biol.sc.edu/tide/sites_othernorth.html",
       "url_xtide_options": "http://tbone.biol.sc.edu/tide/options.html",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/Stations?g=698",
-      "url_noaa_map": "https://tidesandcurrents.noaa.gov/map/index.html",
+      "url_noaa_map": "https://tidesandcurrents.noaa.gov/map/index.html?type=CurrentPredictions",
       "url_interactive_map": "http://deepzoom.com/"
     },
     {
@@ -108,6 +108,13 @@
       "url": "https://tides.mobilegeographics.com/locations/2959",
       "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Green+Point%2C+0%2E8+mile+northwest+of%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PCT2026_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Point Hudson, 0.5 mile east of, Washington Current",
+      "coords": "48.1167 N, 122.7333 W",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Point+Hudson%2C+0%2E5+mile+east+of%2C+Washington+Current&glen=14",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1623_33&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Gibson Point, 0.8 mile east of, Puget Sound, Washington Current",
@@ -237,6 +244,7 @@
       "name": "Skyline Wall Allan Pass",
       "data": "Burrows I. Allan I. Passage between, Washington Current",
       "COMMENT": "Mobilegeographics before flood is 40min late, otherwise matches Burrows Pass very closely",
+      "COMMENT2": "NOAA source here is usually pretty good",
       "slack_before_ebb": 0,
       "slack_before_flood": 0,
       "max_flood": 1.9,
@@ -244,7 +252,7 @@
       "max_total_speed": 3.5,
       "dive_duration": 90,
       "surface_swim_time": 0,
-      "diveable_before_flood": false,
+      "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
@@ -261,7 +269,7 @@
       "max_total_speed": 4,
       "dive_duration": 90,
       "surface_swim_time": 0,
-      "diveable_before_flood": false,
+      "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
@@ -388,6 +396,21 @@
       "max_total_speed": 3,
       "dive_duration": 110,
       "surface_swim_time": 10,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Point Hudson",
+      "data": "Point Hudson, 0.5 mile east of, Washington Current",
+      "slack_before_flood": -30,
+      "COMMENT": "Preferred to dive during flood (especially the first half), ebbs are amplified. Use xtide, ignore noaa",
+      "slack_before_ebb": 0,
+      "max_flood": 2.5,
+      "max_ebb": 2,
+      "max_total_speed": 3,
+      "dive_duration": 100,
+      "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
