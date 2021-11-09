@@ -15,7 +15,7 @@
       "name": "Strait of Juan de Fuca Entrance, Washington Current",
       "coords": "48.4500 N, 124.5833 W",
       "url": "https://tides.mobilegeographics.com/locations/7867",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Strait+of+Juan+de+Fuca+Entrance%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Strait+of+Juan+de+Fuca+Entrance%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1642_49&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
@@ -23,14 +23,14 @@
       "coords": "48.2317 N, 123.5300 W",
       "url": "http://tides.mobilegeographics.com/locations/3775",
       "COMMENT": "Using Race Rocks NOAA station",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Juan+De+Fuca+Strait+%28East%29%2C+British+Columbia+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Juan+De+Fuca+Strait+%28East%29%2C+British+Columbia+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1640_18&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Rosario Strait, Washington Current",
       "coords": "48.4583 N, 122.7833 W",
       "url": "http://tides.mobilegeographics.com/locations/6882",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Rosario+Strait%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Rosario+Strait%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1702_16&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
@@ -44,91 +44,91 @@
       "name": "Deception Pass (narrows), Washington Current",
       "coords": "48.4062 N, 122.6430 W",
       "url": "https://tides.mobilegeographics.com/locations/1955",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Deception+Pass+%28narrows%29%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Deception+Pass+%28narrows%29%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1701_24&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Admiralty Inlet (off Bush Point), Washington Current",
       "coords": "48.0333 N, 122.6333 W",
       "url": "http://tides.mobilegeographics.com/locations/69",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Admiralty+Inlet+%28off+Bush+Point%29%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Admiralty+Inlet+%28off+Bush+Point%29%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1616_31&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "coords": "47.5755 N, 122.4280 W",
       "url": "http://tides.mobilegeographics.com/locations/153",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Alki+Point%2C+0%2E3+miles+W+of%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Alki+Point%2C+0%2E3+miles+W+of%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1516_17&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "West end, Rich Passage, Puget Sound, Washington Current",
       "coords": "47.5900 N, 122.5622 W",
       "url": "http://tides.mobilegeographics.com/locations/8807",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=West+end%2C+Rich+Passage%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=West+end%2C+Rich+Passage%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1514_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Agate Passage, north end, Puget Sound, Washington Current",
       "coords": "47.7220 N, 122.5550 W",
       "url": "https://tides.mobilegeographics.com/locations/75",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+north+end%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Agate+Passage%2C+north+end%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PCT1636_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Agate Passage, south end, Puget Sound, Washington Current",
       "coords": "47.7128 N, 122.5655 W",
       "url": "https://tides.mobilegeographics.com/locations/76",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+south+end%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Agate+Passage%2C+south+end%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1501_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "The Narrows, north end (midstream), Washington Current",
       "coords": "47.3062 N, 122.5497 W",
       "url": "http://tides.mobilegeographics.com/locations/8176",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=The+Narrows%2C+north+end+%28midstream%29%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=The+Narrows%2C+north+end+%28midstream%29%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1524_16&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "South end (midstream), The Narrows, Puget Sound, Washington Current",
       "coords": "47.2608 N, 122.5583 W",
       "url": "http://tides.mobilegeographics.com/locations/7626",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=South+end+%28midstream%29%2C+The+Narrows%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=South+end+%28midstream%29%2C+The+Narrows%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1528_13&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Hale Passage, west end, Puget Sound, Washington Current",
       "coords": "47.2778 N, 122.6622 W",
       "url": "https://tides.mobilegeographics.com/locations/3053",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Hale+Passage%2C+West+end%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Hale+Passage%2C+West+end%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1530_10&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Green Point, 0.8 mile northwest of, Rosario Strait, Washington Current",
       "coords": "48.5047 N, 122.7062 W",
       "url": "https://tides.mobilegeographics.com/locations/2959",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Green+Point%2C+0%2E8+mile+northwest+of%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Green+Point%2C+0%2E8+mile+northwest+of%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PCT2026_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Point Hudson, 0.5 mile east of, Washington Current",
       "coords": "48.1167 N, 122.7333 W",
       "url": "",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Point+Hudson%2C+0%2E5+mile+east+of%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Point+Hudson%2C+0%2E5+mile+east+of%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1623_33&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Gibson Point, 0.8 mile east of, Puget Sound, Washington Current",
       "coords": "47.2180 N, 122.5895 W",
       "url": "https://tides.mobilegeographics.com/locations/2786",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Gibson+Point%2C+0%2E8+mile+east+of%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Gibson+Point%2C+0%2E8+mile+east+of%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1531_18&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Port Washington Narrows, north ent, Puget Sound, Washington Current",
       "coords": "47.6013 N, 122.6617 W",
       "url": "https://tides.mobilegeographics.com/locations/6412",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Port+Washington+Narrows%2C+north+ent%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Port+Washington+Narrows%2C+north+ent%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1510_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
@@ -163,7 +163,7 @@
       "name": "Burrows I. Allan I. Passage between, Washington Current",
       "coords": "48.4717 N, 122.6997 W",
       "url": "https://tides.mobilegeographics.com/locations/1034",
-      "url_xtide": "http://tide.arthroinfo.org/tideshow.cgi?site=Burrows+I%2E-Allan+I%2E%2C+Passage+between%2C+Washington+Current&glen=14",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Burrows+I%2E-Allan+I%2E%2C+Passage+between%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1737_23&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
@@ -248,9 +248,9 @@
       "COMMENT2": "NOAA source here is usually pretty good",
       "slack_before_ebb": 0,
       "slack_before_flood": 0,
-      "max_flood": 1.9,
+      "max_flood": 4.3,
       "max_ebb": 1.9,
-      "max_total_speed": 3.5,
+      "max_total_speed": 5,
       "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
@@ -265,8 +265,8 @@
       "COMMENT3": "Error early before flood and late before ebb",
       "slack_before_ebb": 35,
       "slack_before_flood": -20,
-      "max_flood": 2.5,
-      "max_ebb": 2.5,
+      "max_flood": 2.6,
+      "max_ebb": 2,
       "max_total_speed": 4,
       "dive_duration": 90,
       "surface_swim_time": 0,
@@ -621,9 +621,9 @@
       "data": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
-      "max_flood": 0.4,
-      "max_ebb": 0.4,
-      "max_total_speed": 0.8,
+      "max_flood": 0.5,
+      "max_ebb": 0.8,
+      "max_total_speed": 1.2,
       "dive_duration": 110,
       "surface_swim_time": 5,
       "diveable_before_flood": true,
