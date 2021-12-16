@@ -241,13 +241,13 @@ def main():
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
-        # SITES = append(SITES, 'Skyline Wall')
+        SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
         # SITES = append(SITES, 'Edmonds Underwater Park')
-        SITES = append(SITES, 'Alki Junkyard')
+        # SITES = append(SITES, 'Alki Junkyard')
         # SITES = append(SITES, 'Saltwater State Park')
         # SITES = append(SITES, 'Sunrise Beach')
         # SITES = append(SITES, 'Day Island Wall')
@@ -264,10 +264,10 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2021, 11, 7)
+    args.START = dt(2022, 1, 10)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
-    # args.IGNORE_MAX_SPEED = True
+    args.DAYS_IN_FUTURE = 10
+    args.IGNORE_MAX_SPEED = False
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True
