@@ -241,7 +241,7 @@ def main():
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
-        SITES = append(SITES, 'Skyline Wall')
+        # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
@@ -264,12 +264,12 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2022, 1, 10)
+    args.START = dt(2022, 1, 22)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 10
-    args.IGNORE_MAX_SPEED = False
-    args.INCLUDE_WORKDAYS = True
-    # args.INCLUDE_NIGHT = True
+    args.DAYS_IN_FUTURE = 1
+    # args.IGNORE_MAX_SPEED = False
+    # args.INCLUDE_WORKDAYS = True
+    args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
 

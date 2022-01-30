@@ -45,7 +45,7 @@ These programs automate the process of planning dives at sites with strong curre
 Other `data_*.py` programs used to add expected splash time to current sensitive sites to generate
 current correction factors and max allowable speeds.
 
-## Picking Pest Dive Day
+## Picking Best Dive Day
 * Run dive_plan.py for site over desired time period, set args.SORT = True
 * Copy output to notepad++
 * Delete lines containing "Not diveable" or "Current too strong"
