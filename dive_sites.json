@@ -55,6 +55,13 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1616_31&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
+      "name": "Discovery Island, 3.3 miles NE of, Washington Current",
+      "coords": "47.2667 N, 122.5333 W",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Discovery+Island%2C+3%2E3+miles+NE+of%2C+Washington+Current&glen=14",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1744_22&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
       "name": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "coords": "47.5755 N, 122.4280 W",
       "url": "http://tides.mobilegeographics.com/locations/153",
@@ -440,6 +447,7 @@
       "max_flood": 2.7,
       "max_ebb": 2.7,
       "COMMENT": "A flooding current can have waterfall currents, so recommended to enter close to slack before ebb",
+      "COMMENT2": "Slack before weak ebb seems preferred",
       "max_total_speed": 3.2,
       "dive_duration": 80,
       "surface_swim_time": 5,
@@ -478,6 +486,21 @@
     },
     {
       "name": "Lime Kiln Point",
+      "data": "Discovery Island, 3.3 miles NE of, Washington Current",
+      "COMMENT": "Also look at currents at PUG1718_36 (Haro Strait, 1.2 nm west of Kellett Bluff ) - Lime Kiln is halfway between",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2.6,
+      "max_ebb": 2.6,
+      "max_total_speed": 4.2,
+      "dive_duration": 90,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Lime Kiln Point Admiralty",
       "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "slack_before_flood": 76,
       "slack_before_ebb": 59,
@@ -485,7 +508,7 @@
       "max_ebb": 2.2,
       "max_total_speed": 4,
       "dive_duration": 90,
-      "surface_swim_time": 5,
+      "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
