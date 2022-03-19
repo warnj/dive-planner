@@ -4,7 +4,7 @@
       "name": "all",
       "coords": "n/a",
       "url": "https://tides.mobilegeographics.com/index.html",
-      "url_xtide": "http://tide.arthroinfo.org/sites_uswest.html",
+      "url_xtide": "http://tide.arthroinfo.org/sites_uswest.html & http://tide.arthroinfo.org/sites_allcurrent.html",
       "url_xtide_old": "http://tbone.biol.sc.edu/tide/sites_uswest.html & http://tbone.biol.sc.edu/tide/sites_othernorth.html",
       "url_xtide_options": "http://tide.arthroinfo.org/options.html",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/Stations?g=698",
@@ -139,6 +139,27 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1510_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
+      "name": "Seymour Narrows, British Columbia Current",
+      "coords": "50.1333 N, 125.3500 W",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Seymour+Narrows%2C+British+Columbia+Current&glen=14",
+      "url_noaa": ""
+    },
+    {
+      "name": "San Juan Channel (south entrance), Washington Current",
+      "coords": "48.4613 N, 122.9508 W",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=San+Juan+Channel+%28south+entrance%29%2C+Washington+Current&glen=14",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1703_17&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Spieden Channel, north of Limestone Point",
+      "coords": "48.6278 N   123.1116 W",
+      "url": "",
+      "url_xtide": "",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1719_19&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
       "name": "Point Richmond, East of, Colvos Passage",
       "coords": "47.3766 N   122.5287 W",
       "url": "",
@@ -184,8 +205,8 @@
 
   "must_do_dives": [
     {
-      "name1": "Sunrise Beach",
-      "name2": "Sunrise Beach"
+      "name1": "Deception Pass",
+      "name2": "Skyline Wall"
     }
   ],
   "might_do_dives": [
@@ -208,6 +229,10 @@
     {
       "name1": "Deception Pass",
       "name2": "Green Point"
+    },
+    {
+      "name1": "Sunrise Beach",
+      "name2": "Sunrise Beach"
     }
   ],
 
@@ -277,7 +302,7 @@
       "max_total_speed": 4,
       "dive_duration": 90,
       "surface_swim_time": 0,
-      "diveable_before_flood": true,
+      "diveable_before_flood": false,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
@@ -504,9 +529,9 @@
       "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "slack_before_flood": 76,
       "slack_before_ebb": 59,
-      "max_flood": 2.2,
-      "max_ebb": 2.2,
-      "max_total_speed": 4,
+      "max_flood": 4,
+      "max_ebb": 4,
+      "max_total_speed": 5,
       "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
@@ -523,6 +548,48 @@
       "max_total_speed": 4,
       "dive_duration": 90,
       "surface_swim_time": 5,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Goose Island",
+      "data": "San Juan Channel (south entrance), Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 4,
+      "max_ebb": 4,
+      "max_total_speed": 5,
+      "dive_duration": 90,
+      "surface_swim_time": 5,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Reuben Tarte",
+      "data": "Spieden Channel, north of Limestone Point",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 4,
+      "max_ebb": 4,
+      "max_total_speed": 5,
+      "dive_duration": 90,
+      "surface_swim_time": 5,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Seymour Narrows",
+      "data": "Seymour Narrows, British Columbia Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 7,
+      "max_ebb": 7,
+      "max_total_speed": 11,
+      "dive_duration": 80,
+      "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
