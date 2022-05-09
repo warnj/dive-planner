@@ -473,6 +473,7 @@
       "max_ebb": 2.7,
       "COMMENT": "A flooding current can have waterfall currents, so recommended to enter close to slack before ebb",
       "COMMENT2": "Slack before weak ebb seems preferred",
+      "COMMENT3": "Wall actually fairly protected on weak floods, NOAA current strength and XTide current timing seems best",
       "max_total_speed": 3.2,
       "dive_duration": 80,
       "surface_swim_time": 5,

@@ -6,9 +6,23 @@ current speed on the exchange before and after slack is smaller.
 
 import dive_plan, data_collect
 import interpreter as intp
-
 import json
+from must_do_dives import getSite
 
+# returns list of slacks in given list that are divable for the given site, mostly taken from must_do_dives.py
+def getDiveableSlacks(slacks, site):
+    diveableSlacks = []
+    for s in slacks:
+        if s.ebbSpeed > 0.0:
+            print('WARNING - EBB SPEED IS POSITIVE')
+        if s.floodSpeed < 0.0:
+            print('WARNING - FLOOD SPEED IS NEGATIVE')
+
+        # Check if diveable or not
+        diveable, info = dive_plan.isDiveable(s, site, False)
+        if diveable:
+            diveableSlacks.append(s)
+    return diveableSlacks
 
 def main():
     # STATION = "Strait of Juan de Fuca Entrance, Washington Current"
@@ -26,7 +40,11 @@ def main():
     NOAA = True
     # NOAA = False
 
+    # NIGHT = True
+    NIGHT = False
+
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
+    siteJson = getSite(data['sites'], 'Deception Pass')
 
     station = dive_plan.getStation(data['stations'], STATION)
     if NOAA:
@@ -36,14 +54,17 @@ def main():
 
     slacks = []
     # days = dive_plan.getAllDays(365, dt(2019, 1, 1))
-    days = dive_plan.getAllDays(100)
+    days = dive_plan.getAllDays(235)
     for day in days:
-        slacks.extend(m.getSlacks(day, night=True))
+        slacks.extend(m.getSlacks(day, night=NIGHT))
+
+    # filter out the non-diveable slacks
+    diveableSlacks = getDiveableSlacks(slacks, siteJson)
 
     # sort by the sum of the max current speeds from weakest to strongest
-    slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
+    diveableSlacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
 
-    for s in slacks:
+    for s in diveableSlacks:
         print('{}\tSpeed sum = {:0.1f}'.format(s, abs(s.ebbSpeed)+abs(s.floodSpeed)))
 
 

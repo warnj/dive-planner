@@ -11,6 +11,7 @@ from datetime import datetime as dt
 import json
 
 
+# returns list of tuples [slack, info str] of the slacks for the given site that are diveable
 def getDiveable(slacks, site):
     diveableSlacks = []
     for s in slacks:
