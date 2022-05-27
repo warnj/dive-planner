@@ -139,6 +139,13 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1510_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
+      "name": "Hood Canal Bridge, Puget Sound, Washington Current",
+      "coords": "47.8547 N, 122.6294 W",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=South+Point%2C+Washington+Current&glen=14",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1603_20&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
       "name": "Seymour Narrows, British Columbia Current",
       "coords": "50.1333 N, 125.3500 W",
       "url": "",
@@ -278,6 +285,7 @@
       "data": "Burrows I. Allan I. Passage between, Washington Current",
       "COMMENT": "Mobilegeographics before flood is 40min late, otherwise matches Burrows Pass very closely",
       "COMMENT2": "NOAA source here is usually pretty good",
+      "COMMENT3": "NOAA seems to be about 20min early and Xtide about 35min late",
       "slack_before_ebb": 0,
       "slack_before_flood": 0,
       "max_flood": 4.3,
@@ -609,7 +617,21 @@
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
-
+    {
+      "name": "Hood Canal Bridge",
+      "data": "Hood Canal Bridge, Puget Sound, Washington Current",
+      "COMMENT": "NOAA info preferred, xtide is for south point",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 1.5,
+      "max_ebb": 1.5,
+      "max_total_speed": 3,
+      "dive_duration": 90,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
 
 
 

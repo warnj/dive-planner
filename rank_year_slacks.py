@@ -40,8 +40,8 @@ def main():
     NOAA = True
     # NOAA = False
 
-    # NIGHT = True
-    NIGHT = False
+    NIGHT = True
+    # NIGHT = False
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
     siteJson = getSite(data['sites'], 'Deception Pass')
@@ -54,7 +54,7 @@ def main():
 
     slacks = []
     # days = dive_plan.getAllDays(365, dt(2019, 1, 1))
-    days = dive_plan.getAllDays(235)
+    days = dive_plan.getAllDays(230)
     for day in days:
         slacks.extend(m.getSlacks(day, night=NIGHT))
 
