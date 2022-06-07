@@ -1,11 +1,5 @@
 
 
-
-
-
-
-
-
 ## Deception Pass - splash 30-35min before slack
 3.5 flood > 10:54 AM > 5.2 ebb: Splash ~10:15-10:30		5/19/17
 3.0 flood > 11:29 AM > 5.0 ebb: Splash 10:45-11am		4/20/17
@@ -36,4 +30,4 @@
 1.1 kt flood > 11:27am slack > -2.6 kt ebb	Corrected slack = 10:55am		Marker Buoy Club Splash = 10:30am	1/7/17
 1.6 kt flood > 1:16pm slack > -1.4 kt ebb	Corrected slack = 12:44pm		Marker Buoy Club Splash = 12:15pm	10/23/16
 0.9 kt flood > 12:27pm slack > -0.9 kt ebb	Corrected slack = 11:55am		Marker Buoy Club Splash = 12:10pm	8/18/18
-	This dive doesn’t fit the model the others follow. But boy was it timed perfectly. The model would have been splash at 11:30am.
+	This dive doesn’t fit the model the others follow. But it sure was timed perfectly. The model would have been splash at 11:30am.

@@ -1,5 +1,6 @@
 '''
-Crawls http://tide.arthroinfo.org/sites_allcurrent.html and saves all current station GPS coordinates
+Crawls http://tide.arthroinfo.org/sites_allcurrent.html and saves all current station GPS coordinates.
+Allows you to provide GPS coordinates of a dive site and returns a sorted list of nearest current stations.
 '''
 import urllib.request
 from bs4 import BeautifulSoup

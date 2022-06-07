@@ -232,7 +232,7 @@ def main():
                 site += ' ' + words[i].capitalize()
             SITES.append(site)
 
-    # ---------------------------------- MANUALLY CONFIGURABLE PARAMETERS -------------------------------------------------------
+    # ---------------------------------- MANUALLY CONFIGURABLE PARAMETERS ---------------------------------------------
     if not SITES:
         SITES = None  # Consider all sites
         # SITES = append(SITES, 'Seymour Narrows')
@@ -270,12 +270,11 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2022, 5, 28)
-    # args.START = dt(2022, 10, 13)
+    args.START = dt(2022, 6, 5)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 2
     # args.IGNORE_MAX_SPEED = True
-    # args.INCLUDE_WORKDAYS = True
+    args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
