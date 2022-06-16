@@ -62,6 +62,13 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1744_22&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
+      "name": "South Haro Strait, south of Lime Kiln Light, Washington Current",
+      "coords": "48.4980 N   123.1599 W",
+      "url": "",
+      "url_xtide": "",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1724_31&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
       "name": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "coords": "47.5755 N, 122.4280 W",
       "url": "http://tides.mobilegeographics.com/locations/153",
@@ -527,6 +534,20 @@
       "max_flood": 2.6,
       "max_ebb": 2.6,
       "max_total_speed": 4.2,
+      "dive_duration": 90,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Lime Kiln Haro",
+      "data": "South Haro Strait, south of Lime Kiln Light, Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2.6,
+      "max_ebb": 2.6,
+      "max_total_speed": 4.5,
       "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
