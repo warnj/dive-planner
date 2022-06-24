@@ -242,7 +242,6 @@ def main():
         # SITES = append(SITES, 'Reuben Tarte')
         # SITES = append(SITES, 'Lime Kiln Point')
         # SITES = append(SITES, 'Lime Kiln Haro')
-        # SITES = append(SITES, 'Lime Kiln Point Admiralty')
         # SITES = append(SITES, 'Goose Island')
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')

@@ -112,8 +112,12 @@ class Interpreter:
     # list of data lines.
     def _getDaySlacks(self, webLines, sunrise, sunset):
         slacksIndexes = []
+        leng = len(webLines)
         for i, line in enumerate(webLines):
-            if 'slack' in line or 'min ebb' in line or 'min flood' in line:
+            # noaa doesn't have 'min ebb', only 3 ebbs in a row
+            if 'slack' in line or 'min ebb' in line or 'min flood' in line \
+                    or ('ebb' in line and i>0 and 'ebb' in webLines[i-1] and i<(leng-1) and 'ebb' in webLines[i+1]) \
+                    or ('flood' in line and i>0 and 'flood' in webLines[i-1] and i<(leng-1) and 'flood' in webLines[i+1]):
                 time = self._parseTime(line.split())
                 timeDate = dt.strftime(time, DATEFMT)  # sanity checks to surface errors with mismatched web dates early
                 sunriseDate, sunsetDate = dt.strftime(sunrise, DATEFMT), dt.strftime(sunset, DATEFMT)
@@ -339,12 +343,12 @@ class NoaaInterpreter(Interpreter):
                 continue
             tokens1 = preMax.split()
 
-            s.slackBeforeEbb = 'flood' in preMax
-
             postMax = self._getCurrentAfter(i, lines)
             if not postMax:
                 continue
             tokens2 = postMax.split()
+
+            s.slackBeforeEbb = 'ebb' in postMax
 
             if s.slackBeforeEbb:
                 s.floodSpeed = float(tokens1[4])
