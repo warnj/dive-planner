@@ -160,6 +160,13 @@
       "url_noaa": ""
     },
     {
+      "name": "Gabriola Passage, British Columbia Current",
+      "coords": "49.1283 N, 123.7000 W",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Gabriola+Passage%2C+British+Columbia+Current&glen=14",
+      "url_noaa": ""
+    },
+    {
       "name": "San Juan Channel (south entrance), Washington Current",
       "coords": "48.4613 N, 122.9508 W",
       "url": "",
@@ -214,6 +221,13 @@
       "url": "",
       "url_xtide": "",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1601_21&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Pillar Point, Washington Current",
+      "coords": "48.2667 N, 124.0667 W",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Pillar+Point%2C+Washington+Current&glen=14",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1641_75&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
 
@@ -311,7 +325,7 @@
       "COMMENT2": "BEST WAY TO PREDICT SKYLINE, but not perfect. Eric A uses this station for strength and Allen Pass for timing.",
       "COMMENT3": "Error early before flood and late before ebb",
       "slack_before_ebb": 40,
-      "slack_before_flood": -30,
+      "slack_before_flood": 10,
       "max_flood": 2.6,
       "max_ebb": 2.3,
       "max_total_speed": 4,
@@ -346,6 +360,7 @@
       "slack_before_ebb": 0,
       "COMMENT": "Marker Buoy seems to have max_flood = 4.1 and max_ebb = 5.9, however NW Dive Club dives with either flood or ebb max about 5.9 and sum of the two less than 11 kts",
       "COMMENT2": "North Beach opens somewhere around April 1 and closes somewhere around October 31",
+      "COMMENT3": "ALSO CHECK https://www.tides.gc.ca/en/current-predictions-station",
       "max_flood": 5,
       "max_ebb": 6,
       "max_total_speed": 10.5,
@@ -434,6 +449,20 @@
       "diveable_off_slack": false
     },
     {
+      "name": "Sekiu",
+      "data": "Pillar Point, Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2,
+      "max_ebb": 2,
+      "max_total_speed": 3,
+      "dive_duration": 110,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
       "name": "Salt Creek",
       "data": "Juan De Fuca Strait (East), British Columbia Current",
       "slack_before_flood": 82,
@@ -468,7 +497,7 @@
       "data": "Possession Sound Entrance",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
-      "COMMENT": "Dive any time during medium to weak floods. Surface current typically headed south. Surface current and bad vis from river runoff typically only top 20ft of water.",
+      "COMMENT": "Dive any time during medium to weak floods. Even strong floods are doable. Surface current typically headed south. Surface current and bad vis from river runoff typically only top 20ft of water.",
       "COMMENT2": "Deep zoom has good data from xtides and another station near Mukilteo",
       "max_flood": 0.5,
       "max_ebb": 0.5,
@@ -618,6 +647,8 @@
     {
       "name": "Seymour Narrows",
       "data": "Seymour Narrows, British Columbia Current",
+      "COMMENT": "Flood current runs south, ebb to the N",
+      "COMMENT2": "ALSO CHECK https://www.tides.gc.ca/en/current-predictions-station - add an hour if on Daylight Savings March - Nov since entire year in PST",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
       "max_flood": 7,
@@ -627,6 +658,39 @@
       "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Whiskey Point",
+      "data": "Seymour Narrows, British Columbia Current",
+      "COMMENT": "Flood current runs south, ebb to the N",
+      "COMMENT2": "https://www.tides.gc.ca seems to be within 5min of Xtide",
+      "slack_before_flood": 40,
+      "slack_before_ebb": -30,
+      "max_flood": 8,
+      "max_ebb": 8,
+      "max_total_speed": 16,
+      "dive_duration": 80,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Gabriola Pass",
+      "data": "Gabriola Passage, British Columbia Current",
+      "COMMENT": "Flood current runs toward the east 090, Ebb runs west 270 (degrees true) - same behavior as Deception Pass but shore entry on E side of narrows",
+      "COMMENT2": "Should dive on low slack before flood if doing shore entry from 49.132000, -123.699832",
+      "COMMENT3": "ALSO CHECK https://www.tides.gc.ca/en/current-predictions-station - add an hour if on Daylight Savings March - Nov since entire year in PST",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 5,
+      "max_ebb": 5,
+      "max_total_speed": 8,
+      "dive_duration": 80,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": false,
       "diveable_off_slack": false
     },
     {

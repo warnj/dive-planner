@@ -16,8 +16,7 @@ import json
 
 
 def main():
-    # START = dt.now()
-    START = dt(2020, 11, 1)
+    START = dt.now()
     TRIM_NOAA = True
 
     # STATION1 = "Strait of Juan de Fuca Entrance, Washington Current"
@@ -29,11 +28,12 @@ def main():
     # STATION1 = "West end, Rich Passage, Puget Sound, Washington Current"
     # STATION1 = "Agate Passage, north end, Puget Sound, Washington Current"
     # STATION1 = "The Narrows, north end (midstream), Washington Current"
-    STATION1 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
+    # STATION1 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
     # STATION1 = "Hale Passage, west end, Puget Sound, Washington Current"
+    STATION1 = "Burrows I. Allan I. Passage between, Washington Current"
 
-    # NOAA1 = True
-    NOAA1 = False
+    NOAA1 = True
+    # NOAA1 = False
 
     # STATION2 = "Strait of Juan de Fuca Entrance, Washington Current"
     # STATION2 = "Juan De Fuca Strait (East), British Columbia Current"
@@ -46,10 +46,11 @@ def main():
     # STATION2 = "The Narrows, north end (midstream), Washington Current"
     # STATION2 = "South end (midstream), The Narrows, Puget Sound, Washington Current"
     # STATION2 = "Hale Passage, west end, Puget Sound, Washington Current"
-    STATION2 = "Gibson Point, 0.8 mile east of, Puget Sound, Washington Current"
+    # STATION2 = "Gibson Point, 0.8 mile east of, Puget Sound, Washington Current"
+    STATION2 = "Burrows Pass, Washington Current"
 
-    # NOAA2 = True
-    NOAA2 = False
+    NOAA2 = True
+    # NOAA2 = False
 
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())

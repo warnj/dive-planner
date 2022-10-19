@@ -236,7 +236,10 @@ def main():
     if not SITES:
         SITES = None  # Consider all sites
         # SITES = append(SITES, 'Seymour Narrows')
+        SITES = append(SITES, 'Whiskey Point')
+        # SITES = append(SITES, 'Gabriola Pass')
         # SITES = append(SITES, 'Ten Mile Point')
+        # SITES = append(SITES, 'Sekiu')
         # SITES = append(SITES, 'Salt Creek')
         # SITES = append(SITES, 'Point Hudson')
         # SITES = append(SITES, 'Reuben Tarte')
@@ -270,12 +273,12 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2022, 6, 5)
+    args.START = dt(2022, 10, 16)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 2
+    args.DAYS_IN_FUTURE = 1
     # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    # args.INCLUDE_NIGHT = True
+    args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
 
