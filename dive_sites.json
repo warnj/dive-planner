@@ -6,6 +6,7 @@
       "url": "https://tides.mobilegeographics.com/index.html",
       "url_xtide": "http://tide.arthroinfo.org/sites_uswest.html & http://tide.arthroinfo.org/sites_allcurrent.html & http://tide.arthroinfo.org/sites_allalpha.html",
       "url_xtide_old": "http://tbone.biol.sc.edu/tide/sites_uswest.html & http://tbone.biol.sc.edu/tide/sites_othernorth.html",
+      "url_xtide_tbone_options": "http://tbone.biol.sc.edu/tide/options.html",
       "url_xtide_options": "http://tide.arthroinfo.org/options.html",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/Stations?g=698",
       "url_noaa_map": "https://tidesandcurrents.noaa.gov/map/index.html?type=CurrentPredictions",

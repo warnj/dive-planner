@@ -273,12 +273,12 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2022, 10, 16)
+    # args.START = dt(2022, 10, 16)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 1
+    # args.DAYS_IN_FUTURE = 1
     # args.IGNORE_MAX_SPEED = True
-    args.INCLUDE_WORKDAYS = True
-    args.INCLUDE_NIGHT = True
+    # args.INCLUDE_WORKDAYS = True
+    # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
 
