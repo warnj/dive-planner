@@ -126,6 +126,7 @@ class Interpreter:
                 elif time > sunrise:
                     slacksIndexes.append(i)
                 elif sunriseDate != timeDate or sunriseDate != sunsetDate:
+                    # note: mismatched dates may not be caught with this line, can hit (time > sunset) and trigger empty
                     print('ERROR: website date {} does not match requested date {}'.format(timeDate, sunriseDate))
                     return []
         return slacksIndexes
@@ -249,7 +250,7 @@ class TBoneSCInterpreter(Interpreter):
     # Returns the day-specific URL for the base URL
     @staticmethod
     def getDayUrl(baseUrl, day):
-        return baseUrl + '?month={}&day={}&year={}'.format(day.month, day.day, day.year)
+        return baseUrl + '&year={}&month={}&day={}'.format(day.year, day.month, day.day)
 
     # Returns the tbone.biol.sc.edu current data from the given url
     def _getWebLines(self, url, day):
