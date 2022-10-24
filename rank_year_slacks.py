@@ -8,6 +8,7 @@ import dive_plan, data_collect
 import interpreter as intp
 import json
 from must_do_dives import getSite
+from datetime import datetime as dt
 
 # returns list of slacks in given list that are divable for the given site, mostly taken from must_do_dives.py
 def getDiveableSlacks(slacks, site):
@@ -25,36 +26,27 @@ def getDiveableSlacks(slacks, site):
     return diveableSlacks
 
 def main():
-    # STATION = "Strait of Juan de Fuca Entrance, Washington Current"
-    # STATION = "Juan De Fuca Strait (East), British Columbia Current"
-    # STATION = "Rosario Strait, Washington Current"
-    STATION = "Deception Pass (narrows), Washington Current"
-    # STATION = "Admiralty Inlet (off Bush Point), Washington Current"
-    # STATION = "Alki Point, 0.3 mile west of, Puget Sound, Washington Current"
-    # STATION = "West end, Rich Passage, Puget Sound, Washington Current"
-    # STATION = "Agate Passage, north end, Puget Sound, Washington Current"
-    # STATION = "The Narrows, north end (midstream), Washington Current"
-    # STATION = "South end (midstream), The Narrows, Puget Sound, Washington Current"
-    # STATION = "Hale Passage, west end, Puget Sound, Washington Current"
+    SITE = 'Whiskey Point'
+    # SITE = 'Deception Pass'
 
-    NOAA = True
-    # NOAA = False
+    # NOAA = True
+    NOAA = False
 
-    NIGHT = True
-    # NIGHT = False
+    # NIGHT = True
+    NIGHT = False
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
-    siteJson = getSite(data['sites'], 'Deception Pass')
+    siteJson = getSite(data['sites'], SITE)
 
-    station = dive_plan.getStation(data['stations'], STATION)
+    station = dive_plan.getStation(data['stations'], siteJson['data'])
     if NOAA:
         m = intp.NoaaInterpreter(station['url_noaa'])
     else:
         m = intp.TBoneSCInterpreter(station['url_xtide'])
 
     slacks = []
-    # days = dive_plan.getAllDays(365, dt(2019, 1, 1))
-    days = dive_plan.getAllDays(230)
+    days = dive_plan.getAllDays(300, dt(2023, 2, 1))
+    # days = dive_plan.getAllDays(230)
     for day in days:
         slacks.extend(m.getSlacks(day, night=NIGHT))
 
