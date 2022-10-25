@@ -650,6 +650,7 @@
       "data": "Seymour Narrows, British Columbia Current",
       "COMMENT": "Flood current runs south, ebb to the N",
       "COMMENT2": "ALSO CHECK https://www.tides.gc.ca/en/current-predictions-station - add an hour if on Daylight Savings March - Nov since entire year in PST",
+      "COMMENT3": "Flood flows in from both the north and south end of Vancouver Island, meeting just south of Mitlenatch Island. So for Campbell River area, the Flood current is a southerly flow, while from Courtenay and south, the Flood is northerly.",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
       "max_flood": 7,
