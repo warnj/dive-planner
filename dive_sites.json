@@ -229,6 +229,20 @@
       "url": "",
       "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Pillar+Point%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1641_75&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Hawea Point, Hawaii Current",
+      "coords": "21.0018 N 156.6918 W",
+      "url": "",
+      "url_xtide": "",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=HAI1118_34&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
+      "name": "Alalakeiki Channel, Hawaii Current",
+      "coords": "20.6125 N 156.5081 W",
+      "url": "",
+      "url_xtide": "",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=HAI1121_28&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
 
@@ -868,8 +882,41 @@
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": true,
-	    "max_diveable_flood": 4,
+      "max_diveable_flood": 4,
       "max_diveable_ebb": 4
+    },
+
+
+
+    {
+      "name": "Hawea Point",
+      "data": "Hawea Point, Hawaii Current",
+      "COMMENT": "Flood runs toward the SW, Ebb runs toward the NE. Useful to look at this before heading far off Kapalua Bay",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2,
+      "max_ebb": 2,
+      "max_total_speed": 4,
+      "dive_duration": 90,
+      "surface_swim_time": 15,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Red Hill",
+      "data": "Alalakeiki Channel, Hawaii Current",
+      "COMMENT": "not entirely tidal driven",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2,
+      "max_ebb": 2,
+      "max_total_speed": 4,
+      "dive_duration": 60,
+      "surface_swim_time": 25,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
     }
   ]
 }

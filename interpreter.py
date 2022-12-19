@@ -1,7 +1,10 @@
 import urllib.request
-from astral import Astral
+from astral.sun import sun
+from astral import LocationInfo
+from astral import moon
 from bs4 import BeautifulSoup
 from datetime import datetime as dt
+from pytz import timezone
 
 TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
 TIMEPARSEFMT_TBONE = '%Y-%m-%d %H:%M'  # example: 2019-01-18 22:36
@@ -43,8 +46,8 @@ class Interpreter:
     def __init__(self, baseUrl):
         self.baseUrl = baseUrl
         self._webLines = None
-        self._astral = Astral()  # https://astral.readthedocs.io/en/latest
-        self._astralCity = self._astral["Seattle"]
+        # https://astral.readthedocs.io/en/latest
+        self._astralCity = LocationInfo("Seattle", "Washington", "America/Los_Angeles", 47.6, -122.3)
 
     # ----------------------- Stub functions child classes must implement ----------------------------------------------
     # Returns the datetime object parsed from the given data line
@@ -163,9 +166,10 @@ class Interpreter:
             return []
 
         # Note: astral sunrise and sunset times do account for daylight savings
-        sun = self._astralCity.sun(date=day, local=True)
-        sunrise = sun['sunrise'].replace(tzinfo=None)
-        sunset = sun['sunset'].replace(tzinfo=None)
+        sunData = sun(self._astralCity.observer, date=day, tzinfo=timezone('US/Pacific'))
+        # remove time zone info to compare with other local times
+        sunrise = sunData['sunrise'].replace(tzinfo=None)
+        sunset = sunData['sunset'].replace(tzinfo=None)
         if night:
             slackIndexes = self._getAllDaySlacks(self._webLines)
         else:
@@ -173,7 +177,7 @@ class Interpreter:
         if not slackIndexes:
             print('ERROR: no slacks for {} found in webLines: {}'.format(day, self._webLines))
             return []
-        return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset, self._astral.moon_phase(date=day))
+        return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset, moon.phase(day))
 
 
 # Class to retrieve and parse current data from mobilegeographics website

@@ -236,7 +236,7 @@ def main():
     if not SITES:
         SITES = None  # Consider all sites
         # SITES = append(SITES, 'Seymour Narrows')
-        SITES = append(SITES, 'Whiskey Point')
+        # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Gabriola Pass')
         # SITES = append(SITES, 'Ten Mile Point')
         # SITES = append(SITES, 'Sekiu')
@@ -268,14 +268,16 @@ def main():
         # SITES = append(SITES, 'Waterman Wall')
         # SITES = append(SITES, 'Warren Avenue Bridge')
         # SITES = append(SITES, 'Agate Pass')
+        # SITES = append(SITES, 'Hawea Point')
+        SITES = append(SITES, 'Red Hill')
 
     possibleDiveDays = [  # Specify dates
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2022, 3, 11)
+    args.START = dt(2022, 12, 17)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 2
+    args.DAYS_IN_FUTURE = 0
     # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
