@@ -46,7 +46,8 @@
       "coords": "48.4062 N, 122.6430 W",
       "url": "https://tides.mobilegeographics.com/locations/1955",
       "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Deception+Pass+%28narrows%29%2C+Washington+Current&glen=14",
-      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1701_24&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1701_24&t=am%2fpm&i=&threshold=&thresholdvalue=&d=",
+      "url_noaa_new": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&units=english&format=json&interval=max_slack&station=PUG1701&bin=24"
     },
     {
       "name": "Admiralty Inlet (off Bush Point), Washington Current",

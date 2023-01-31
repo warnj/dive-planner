@@ -6,3 +6,4 @@ pandas
 # Other dependencies for data collection: Firefox, Selenium
 selenium
 geopy
+requests

@@ -239,6 +239,7 @@ def main():
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Gabriola Pass')
         # SITES = append(SITES, 'Ten Mile Point')
+
         # SITES = append(SITES, 'Sekiu')
         # SITES = append(SITES, 'Salt Creek')
         # SITES = append(SITES, 'Point Hudson')
@@ -268,18 +269,19 @@ def main():
         # SITES = append(SITES, 'Waterman Wall')
         # SITES = append(SITES, 'Warren Avenue Bridge')
         # SITES = append(SITES, 'Agate Pass')
+
         # SITES = append(SITES, 'Hawea Point')
-        SITES = append(SITES, 'Red Hill')
+        # SITES = append(SITES, 'Red Hill')
 
     possibleDiveDays = [  # Specify dates
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2022, 12, 17)
+    args.START = dt(2023, 5, 27)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    args.DAYS_IN_FUTURE = 2
     # args.IGNORE_MAX_SPEED = True
-    args.INCLUDE_WORKDAYS = True
+    # args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
@@ -315,6 +317,7 @@ def main():
 
         m = intp.TBoneSCInterpreter(station['url_xtide'])
         m2 = intp.NoaaInterpreter(station['url_noaa'])
+        # m2 = intp.NoaaAPIInterpreter(station['url_noaa_new'])
 
         print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))
         print(m.getDayUrl(m.baseUrl, possibleDiveDays[0]))
