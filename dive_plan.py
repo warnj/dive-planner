@@ -256,6 +256,7 @@ def main():
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
         # SITES = append(SITES, 'Hood Canal Bridge')
+        # SITES = append(SITES, 'Misery Point')
         # SITES = append(SITES, 'Edmonds Underwater Park')
         # SITES = append(SITES, 'Alki Junkyard')
         # SITES = append(SITES, 'Saltwater State Park')
@@ -277,11 +278,11 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2023, 5, 27)
+    args.START = dt(2023, 3, 12)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 2
-    # args.IGNORE_MAX_SPEED = True
-    # args.INCLUDE_WORKDAYS = True
+    args.DAYS_IN_FUTURE = 0
+    args.IGNORE_MAX_SPEED = True
+    args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------

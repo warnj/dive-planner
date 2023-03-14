@@ -10,6 +10,7 @@
       "url_xtide_options": "http://tide.arthroinfo.org/options.html",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/Stations?g=698",
       "url_noaa_map": "https://tidesandcurrents.noaa.gov/map/index.html?type=CurrentPredictions",
+      "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/",
       "url_interactive_map": "http://deepzoom.com/"
     },
     {
@@ -249,8 +250,8 @@
 
   "must_do_dives": [
     {
-      "name1": "Deception Pass",
-      "name2": "Skyline Wall"
+      "name1": "Day Island Wall",
+      "name2": "Day Island Wall"
     }
   ],
   "might_do_dives": [
@@ -289,10 +290,11 @@
       "COMMENT": "Error on late side of prediction. slack_before_flood was -30, this was often ~10min early. slack_before_ebb was -60, this resulted in reliable weak current but end of dive near slack without much reversal",
       "COMMENT2": "Can drift from S entrance to N entrance on the ebb current at the beginning of a dive before a flood. Enter",
       "COMMENT3": "the water about the predicted time given by the program. For dive with same entry/exit enter 10min late.",
+      "COMMENT4": "Can bump total speed to 6 for 2nd dive with scooter",
       "PREFERENCE": "Xtide",
       "max_flood": 3.9,
       "max_ebb": 4.2,
-      "max_total_speed": 6.5,
+      "max_total_speed": 5,
       "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
@@ -810,6 +812,23 @@
       "max_total_speed": 8,
       "dive_duration": 90,
       "surface_swim_time": 15,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": true,
+      "max_diveable_flood": 4,
+      "max_diveable_ebb": 4
+    },
+    {
+      "name": "Misery Point",
+      "data": "Hazel Point, Hood Canal, Washington Current",
+      "COMMENT": "Can dive during large exchanges, but will have current, have not experimented finding SBE and done 1 dive SBF",
+      "slack_before_flood": -75,
+      "slack_before_ebb": 0,
+      "max_flood": 1.3,
+      "max_ebb": 1.3,
+      "max_total_speed": 2.5,
+      "dive_duration": 90,
+      "surface_swim_time": 10,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": true,

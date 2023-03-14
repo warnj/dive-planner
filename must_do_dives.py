@@ -38,9 +38,9 @@ def main():
     # ---------------------------------- CONFIGURABLE PARAMETERS -----------------------------------------------------------
     START = dt.now()
     # START = dt(2022, 1, 25)  # date to begin considering diveable conditions
-    DAYS_IN_FUTURE = 120  # number of days after START to consider
+    DAYS_IN_FUTURE = 90  # number of days after START to consider
 
-    FILTER_NON_WORKDAYS = True  # only consider diving on weekends and holidays
+    FILTER_NON_WORKDAYS = False  # only consider diving on weekends and holidays
     FILTER_DAYLIGHT = False  # only consider slacks that occur during daylight hours
 
     possibleDiveDays = [  # Specify dates
@@ -49,7 +49,7 @@ def main():
         # dt(2019, 3, 3)
     ]
 
-    NOAA = True
+    NOAA = False
     # ----------------------------------------------------------------------------------------------------------------------
 
 
