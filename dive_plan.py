@@ -26,20 +26,20 @@ class Color:
    END = '\033[0m'
 
 
-def printInfo(shouldPrint, str):
+def printInfo(shouldPrint: bool, str: str) -> None:
     if shouldPrint:
         print(str)
 
 
-def append(sites, str):
+def append(sites: list, name: str) -> list:
     if sites:
-        sites.add(str)
+        sites.append(name)
         return sites
     else:
-        return {str}
+        return [name]
 
 
-def getStation(stations, name):
+def getStation(stations: list[dict[str, str]], name: str) -> dict[str, str]:
     for station in stations:
         if station['name'] == name:
             return station
@@ -49,7 +49,7 @@ def getStation(stations, name):
 
 # returns a list of datetime days that are weekends and holiday that occur between start (today by default) and
 # futureDays in the future
-def getNonWorkDays(futureDays, start=dt.now()):
+def getNonWorkDays(futureDays: int, start=dt.now()) -> list[dt]:
     start = dt(start.year, start.month, start.day)
     end = start + td(days=futureDays)
 
@@ -70,7 +70,7 @@ def getNonWorkDays(futureDays, start=dt.now()):
 
 
 # returns a list of datetime days that occur between start (today by default) and futureDays in the future
-def getAllDays(futureDays, start=dt.now()):
+def getAllDays(futureDays: int, start=dt.now()) -> list[dt]:
     start = dt(start.year, start.month, start.day)
     end = start + td(days=futureDays)
     delta = td(days=1)
@@ -86,7 +86,7 @@ def getAllDays(futureDays, start=dt.now()):
 # mincurrenttime = time of slack current, clubentrytime = 30min before mincurrenttime,
 # myentrytime = mincurrenttime - surfaceswimtime - expecteddivetime/2
 # Returns None if an expected json data point is not found
-def getEntryTimes(s, site):
+def getEntryTimes(s: intp.Slack, site: dict) -> (dt, dt, dt, dt):
     try:
         if s.slackBeforeEbb:
             delta = td(minutes=site['slack_before_ebb'])
@@ -102,7 +102,7 @@ def getEntryTimes(s, site):
 
 
 # Prints entry time for Slack s at the given site
-def printDive(s, site, titleMessage):
+def printDive(s: intp.Slack, site: dict, titleMessage: str) -> None:
     times = getEntryTimes(s, site)
     if not times:
         print('ERROR: a json key was expected that was not found')
@@ -132,7 +132,7 @@ def printDive(s, site, titleMessage):
 
 # Returns true if the given slack is diveable within the parameters of the given site. Also returns description of
 # reasoning the decision was made.
-def isDiveable(s, site, ignoreMaxSpeed):
+def isDiveable(s: intp.Slack, site: dict, ignoreMaxSpeed: bool) -> (bool, str):
     if s.slackBeforeEbb and not site['diveable_before_ebb']:
         return False, 'Not diveable before ebb'
     elif not s.slackBeforeEbb and not site['diveable_before_flood']:
@@ -140,15 +140,15 @@ def isDiveable(s, site, ignoreMaxSpeed):
     elif site['diveable_off_slack'] and \
             (s.floodSpeed < site['max_diveable_flood'] or abs(s.ebbSpeed) < site['max_diveable_ebb']):
         return True, 'Diveable off slack'
-    elif not ignoreMaxSpeed and (s.floodSpeed > site['max_flood'] or abs(s.ebbSpeed) > abs(site['max_ebb']) or \
-            s.floodSpeed + abs(s.ebbSpeed) > site['max_total_speed']):
+    elif not ignoreMaxSpeed and (s.floodSpeed > site['max_flood'] or abs(s.ebbSpeed) > abs(site['max_ebb']) or
+                                 s.floodSpeed + abs(s.ebbSpeed) > site['max_total_speed']):
         return False, 'Current too strong'
     else:
         return True, 'Diveable'
 
 
 # Checks the given list of Slacks if a dive is possible. If so, prints information about the dive.
-def printDiveDay(slacks, site, printAll, ignoreMaxSpeed, title):
+def printDiveDay(slacks: list[intp.Slack], site: str, printAll: bool, ignoreMaxSpeed: bool, title: str) -> bool:
     printed = False
     for s in slacks:
         if s.ebbSpeed > 0.0:
@@ -168,7 +168,7 @@ def printDiveDay(slacks, site, printAll, ignoreMaxSpeed, title):
 
 
 # returns true if given string site is a dive site name in the given json dive site data
-def isDiveSite(site, sitesData):
+def isDiveSite(site: str, sitesData: list) -> bool:
     for i in range(len(sitesData)):
         if site == sitesData[i]['name']:
             return True
@@ -176,7 +176,7 @@ def isDiveSite(site, sitesData):
 
 
 # returns comma-separated list of dive site name in the given json dive site data
-def listDiveSites(sitesData):
+def listDiveSites(sitesData: list[dict]) -> str:
     r = ""
     for i in range(len(sitesData)):
         r += sitesData[i]['name']
@@ -234,7 +234,7 @@ def main():
 
     # ---------------------------------- MANUALLY CONFIGURABLE PARAMETERS ---------------------------------------------
     if not SITES:
-        SITES = None  # Consider all sites
+        SITES = []  # Consider all sites
         # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Gabriola Pass')
@@ -278,11 +278,11 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2023, 3, 12)
+    # args.START = dt(2023, 9, 19)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
-    args.IGNORE_MAX_SPEED = True
-    args.INCLUDE_WORKDAYS = True
+    # args.DAYS_IN_FUTURE = 0
+    # args.IGNORE_MAX_SPEED = True
+    # args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
