@@ -247,6 +247,13 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=HAI1121_28&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     }
   ],
+  "tide_stations": [
+    {
+      "name": "Ayock Point",
+      "coords": "47.5083 -123.0520",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9445388&datum=MLLW"
+    }
+  ],
 
   "must_do_dives": [
     {
