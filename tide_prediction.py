@@ -11,7 +11,8 @@ import data_collect
 
 DATEFMT = '%Y-%m-%d'  # example 2019-01-18
 TIMEPARSEFMT_TBONE = '%Y-%m-%d %H:%M'  # example: 2019-01-18 22:36
-TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'
+TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
+TIMEFMT = '%I:%M%p'  # example 09:36AM
 
 def getDayUrl(baseUrl, day, daysInFuture):
     today = day.strftime(DATEFMT).replace("-", "")
@@ -22,7 +23,21 @@ def printTides(apiTideLines):
     for tide in apiTideLines:
         datet = dt.strptime(tide['t'], TIMEPARSEFMT_TBONE)
         typet = 'Low' if tide['type']=='L' else 'High'
-        print('{}: {} tide {:.1f}ft'.format(dt.strftime(datet, TIMEPRINTFMT), typet, float(tide['v'])))
+        print('{}: {} tide {:.1f} ft'.format(dt.strftime(datet, TIMEPRINTFMT), typet, float(tide['v'])))
+
+# prints the tides of each day in the format "time (height) > time (height)"
+def printTideDiveFmt(apiTideLines):
+    prevTide = None
+    for tide in apiTideLines:
+        datet = dt.strptime(tide['t'], TIMEPARSEFMT_TBONE)
+        if prevTide and prevTide['t'][:10] == tide['t'][:10]:  # same day
+            print(' > {} ({:.1f} ft)'.format(dt.strftime(datet, TIMEFMT).lstrip('0'), float(tide['v'])), end='')
+        else:
+            print()  # end previous day
+            print('{}: '.format(dt.strftime(datet, DATEFMT)), end='')  # start new day
+            print('{} ({:.1f} ft)'.format(dt.strftime(datet, TIMEFMT).lstrip('0'), float(tide['v'])), end='')
+        prevTide = tide
+    print()
 
 def getAndPrintTides(tideStationConfig, args):
     url = getDayUrl(tideStationConfig['url_noaa'], args.START, args.DAYS_IN_FUTURE)
@@ -31,7 +46,8 @@ def getAndPrintTides(tideStationConfig, args):
         raise Exception('NOAA API is down')
 
     jsonArray = response.json()['predictions']
-    printTides(jsonArray)
+    # printTides(jsonArray)
+    printTideDiveFmt(jsonArray)
 
 def main():
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
@@ -46,7 +62,7 @@ def main():
     STATIONS = ['Ayock Point']
     args.START = dt(2023, 3, 27)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 4
+    args.DAYS_IN_FUTURE = 1
     args.INCLUDE_WORKDAYS = True
     # ------------------------------------------------------------------------------------------------------------------
 

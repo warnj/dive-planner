@@ -8,6 +8,7 @@ from datetime import datetime as dt
 from pytz import timezone
 import requests
 
+# https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
 TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
 TIMEPARSEFMT_TBONE = '%Y-%m-%d %H:%M'  # example: 2019-01-18 22:36
 TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
