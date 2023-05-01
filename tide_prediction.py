@@ -61,9 +61,9 @@ def main():
     # ---------------------------------- MANUALLY CONFIGURABLE PARAMETERS ---------------------------------------------
     STATIONS = ['Ayock Point']
     STATIONS = ['Bowman Bay']
-    args.START = dt(2023, 4, 15)
+    args.START = dt(2023, 4, 26)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    args.DAYS_IN_FUTURE = 4
     args.INCLUDE_WORKDAYS = True
     # ------------------------------------------------------------------------------------------------------------------
 
