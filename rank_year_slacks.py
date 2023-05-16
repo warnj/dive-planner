@@ -28,10 +28,11 @@ def getDiveableSlacks(slacks, site):
 def main():
     # SITE = 'Whiskey Point'
     # SITE = 'Skyline Wall'
-    SITE = 'Deception Pass'
+    # SITE = 'Deception Pass'
+    SITE = 'Goose Island'
 
-    # NOAA = True
-    NOAA = False
+    NOAA = True
+    # NOAA = False
 
     # NIGHT = True
     NIGHT = False
@@ -46,8 +47,8 @@ def main():
         m = intp.TBoneSCInterpreter(station['url_xtide'])
 
     slacks = []
-    days = dive_plan.getAllDays(365, dt(2023, 1, 1))
-    # days = dive_plan.getAllDays(250)
+    # days = dive_plan.getAllDays(365, dt(2023, 1, 1))
+    days = dive_plan.getAllDays(240)
     for day in days:
         slacks.extend(m.getSlacks(day, night=NIGHT))
 

@@ -233,6 +233,13 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1641_75&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
+      "name": "Point Colville, 3.0 nm east",
+      "coords": "48.4125 N   122.7403 W",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Colville+Island%2C+1%2E4+miles+east+of%2C+Washington+Current&glen=14",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1727_30&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
       "name": "Hawea Point, Hawaii Current",
       "coords": "21.0018 N 156.6918 W",
       "url": "",
@@ -356,7 +363,7 @@
       "COMMENT3": "Error early before flood and late before ebb",
       "slack_before_ebb": 40,
       "slack_before_flood": -75,
-      "max_flood": 3.1,
+      "max_flood": 3.3,
       "max_ebb": 2.3,
       "max_total_speed": 4.8,
       "dive_duration": 90,
@@ -397,6 +404,22 @@
       "dive_duration": 70,
       "surface_swim_time": 0,
       "diveable_before_flood": false,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Sares Head",
+      "data": "Point Colville, 3.0 nm east",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "COMMENT": "also reference Rosario Strait, Deception Pass, and Bowman Bay tide. SBE is preferred",
+      "COMMENT2": "SBE preferred since I think that will give you a ride out and back, SBF may also work or off slack on weak exchange",
+      "max_flood": 2,
+      "max_ebb": 2.5,
+      "max_total_speed": 4,
+      "dive_duration": 80,
+      "surface_swim_time": 25,
+      "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },

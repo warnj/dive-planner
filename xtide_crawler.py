@@ -76,7 +76,7 @@ def main():
     # site, dist = find_closest_station((50.040152, -125.221638))
     # print("Current station: {} is {:.2f}mi away".format(site, dist))
 
-    find_closest_stations((47.860386, -122.624328), 5)
+    find_closest_stations((48.425859, -122.675265), 10)
 
 if __name__ == "__main__":
     main()
