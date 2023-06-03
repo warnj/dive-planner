@@ -246,12 +246,13 @@ def main():
         # SITES = append(SITES, 'Reuben Tarte')
         # SITES = append(SITES, 'Lime Kiln Point')
         # SITES = append(SITES, 'Lime Kiln Haro')
+        SITES = append(SITES, 'Lime Kiln Point Admiralty')
         # SITES = append(SITES, 'Goose Island')
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
         # SITES = append(SITES, 'Skyline Wall')
-        SITES = append(SITES, 'Sares Head')
+        # SITES = append(SITES, 'Sares Head')
         # SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
@@ -279,12 +280,12 @@ def main():
         # dt(2020, 2, 17),
     ]
 
-    args.START = dt(2023, 5, 13)
+    args.START = dt(2023, 5, 26)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 2
+    args.DAYS_IN_FUTURE = 3
     # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    args.INCLUDE_NIGHT = True
+    # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
 
