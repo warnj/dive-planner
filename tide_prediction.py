@@ -33,8 +33,8 @@ def printTideDiveFmt(apiTideLines):
         if prevTide and prevTide['t'][:10] == tide['t'][:10]:  # same day
             print(' > {} ({:.1f} ft)'.format(dt.strftime(datet, TIMEFMT).lstrip('0'), float(tide['v'])), end='')
         else:
-            print()  # end previous day
-            print('{}: '.format(dt.strftime(datet, DATEFMT)), end='')  # start new day
+            if prevTide: print()  # end previous day
+            print('\t{}: '.format(dt.strftime(datet, DATEFMT)), end='')  # start new day
             print('{} ({:.1f} ft)'.format(dt.strftime(datet, TIMEFMT).lstrip('0'), float(tide['v'])), end='')
         prevTide = tide
     print()
@@ -59,11 +59,14 @@ def main():
     args = parser.parse_args()
 
     # ---------------------------------- MANUALLY CONFIGURABLE PARAMETERS ---------------------------------------------
-    STATIONS = ['Ayock Point']
-    STATIONS = ['Bowman Bay']
-    args.START = dt(2023, 5, 14)
+    STATIONS = []
+    # STATIONS.append('Ayock Point')
+    # STATIONS.append('Bowman Bay')
+    STATIONS.append('Hanbury Point, North San Juan Island')
+    STATIONS.append('Kanaka Bay, South San Juan Island')
+    args.START = dt(2023, 5, 26)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    args.DAYS_IN_FUTURE = 3
     args.INCLUDE_WORKDAYS = True
     # ------------------------------------------------------------------------------------------------------------------
 

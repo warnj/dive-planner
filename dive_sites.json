@@ -264,6 +264,16 @@
       "name": "Bowman Bay",
       "coords": "47.5083 -123.0520",
       "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9448614&datum=MLLW"
+    },
+    {
+      "name": "Kanaka Bay, South San Juan Island",
+      "coords": "48° 29.1 N 123° 5.0 W",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9449856&datum=MLLW"
+    },
+    {
+      "name": "Hanbury Point, North San Juan Island",
+      "coords": "48° 34.9 N 123° 10.2 W",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9449828&datum=MLLW"
     }
   ],
 
@@ -633,10 +643,14 @@
       "name": "Lime Kiln Haro",
       "data": "South Haro Strait, south of Lime Kiln Light, Washington Current",
       "COMMENT": "seems to be best source, sbe correction match over 3 days in June 2022, main channel can continue to ebb while along shore it floods",
-      "COMMENT2": "so a dive around min ebb is possible, watch the water direction by kelp before entry, error on early side since +50 seems like large offset from such a nearby current station",
-      "COMMENT3": "slack before flood is rough estimate correction based on 1 dive between large exchanges at lime kiln and another at county park, but it is known to be significantly early",
-      "slack_before_flood": -30,
-      "slack_before_ebb": 50,
+      "COMMENT2": "so a dive around min ebb is possible, watch the water direction by kelp before entry, error on early side since +40 seems like large offset from such a nearby current station",
+      "COMMENT3": "slack before flood is super early - based on 3 dives at Lime kiln (only 1 well timed) and 1 short one at county park",
+      "COMMENT4": "reference the time of low tide at Kanaka Bay and Hanbury Point on SBF dives, should start the dive about 1hr after these times",
+      "COMMENT5": "error on the side of diving on ebb rather than flood for scooter dives for easier exit at the rocky beach S of lighthouse",
+      "COMMENT6": "water flow right along shore in front of lighthouse is not a perfect indicator of diving depth current further out",
+      "COMMENT7": "for min ebb dives not much of a correction is needed, but this program will consider it a SBE dive with +40, can easily hop in 30min early",
+      "slack_before_flood": -90,
+      "slack_before_ebb": 40,
       "max_flood": 2.6,
       "max_ebb": 2.6,
       "max_total_speed": 4.5,

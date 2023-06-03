@@ -107,10 +107,14 @@ class Interpreter:
     def _getAllDaySlacks(self, webLines):
         day = webLines[0].split()[0]
         slacksIndexes = []
+        leng = len(webLines)
         for i, line in enumerate(webLines):
             if line.split()[0] != day:
                 return slacksIndexes
-            elif 'slack' in line or 'min ebb' in line or 'min flood' in line:
+            # noaa doesn't have 'min ebb', only 3 ebbs in a row
+            elif 'slack' in line or 'min ebb' in line or 'min flood' in line \
+                    or ('ebb' in line and i>0 and 'ebb' in webLines[i-1] and i<(leng-1) and 'ebb' in webLines[i+1]) \
+                    or ('flood' in line and i>0 and 'flood' in webLines[i-1] and i<(leng-1) and 'flood' in webLines[i+1]):
                 slacksIndexes.append(i)
         return slacksIndexes
 
@@ -167,7 +171,6 @@ class Interpreter:
         if not self._webLines:
             print('Error getting web data')
             return []
-
         # Note: astral sunrise and sunset times do account for daylight savings
         sunData = sun(self._astralCity.observer, date=day, tzinfo=timezone('US/Pacific'))
         # remove time zone info to compare with other local times
