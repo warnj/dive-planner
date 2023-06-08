@@ -26,13 +26,14 @@ def getDiveableSlacks(slacks, site):
     return diveableSlacks
 
 def main():
-    # SITE = 'Whiskey Point'
+    SITE = 'Whiskey Point'
+    # SITE = 'Boat Pass'
     # SITE = 'Skyline Wall'
     # SITE = 'Deception Pass'
-    SITE = 'Goose Island'
+    # SITE = 'Goose Island'
 
-    NOAA = True
-    # NOAA = False
+    # NOAA = True
+    NOAA = False
 
     # NIGHT = True
     NIGHT = False
@@ -48,12 +49,26 @@ def main():
 
     slacks = []
     # days = dive_plan.getAllDays(365, dt(2023, 1, 1))
-    days = dive_plan.getAllDays(240)
+    days = dive_plan.getAllDays(200)
     for day in days:
         slacks.extend(m.getSlacks(day, night=NIGHT))
 
     # filter out the non-diveable slacks
     diveableSlacks = getDiveableSlacks(slacks, siteJson)
+
+    # calc stats
+    if len(slacks) > 0:
+        percentSlacksDiveable = float(len(diveableSlacks)) / len(slacks) * 100
+        print('{:0.2f}% of all slacks are diveable ({}/{})'.format(percentSlacksDiveable, len(diveableSlacks), len(slacks)))
+    diveableDays = 0
+    prevDay = ''
+    for s in diveableSlacks:
+        curDay = dt.strftime(s.time, intp.DATEFMT)
+        if prevDay != curDay:
+            prevDay = curDay
+            diveableDays += 1
+    percentDaysDiveable = float(diveableDays) / len(days) * 100
+    print('{:0.2f}% of all days are diveable ({}/{})'.format(percentDaysDiveable, diveableDays, len(days)))
 
     # sort by the sum of the max current speeds from weakest to strongest
     diveableSlacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))

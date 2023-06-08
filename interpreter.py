@@ -164,7 +164,7 @@ class Interpreter:
     def getSlacks(self, day, night):
         if not self._canReuseWebData(day):
             if not self.baseUrl:
-                # print('Base url empty')
+                print('Base url empty')  # comment this out if it's annoying
                 return []
             url = self.getDayUrl(self.baseUrl, day)
             self._webLines = self._getWebLines(url, day)

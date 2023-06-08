@@ -62,11 +62,12 @@ def main():
     STATIONS = []
     # STATIONS.append('Ayock Point')
     # STATIONS.append('Bowman Bay')
-    STATIONS.append('Hanbury Point, North San Juan Island')
-    STATIONS.append('Kanaka Bay, South San Juan Island')
-    args.START = dt(2023, 5, 26)
+    # STATIONS.append('Hanbury Point, North San Juan Island')
+    # STATIONS.append('Kanaka Bay, South San Juan Island')
+    STATIONS.append('La Push')
+    args.START = dt(2023, 6, 17)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 3
+    args.DAYS_IN_FUTURE = 2
     args.INCLUDE_WORKDAYS = True
     # ------------------------------------------------------------------------------------------------------------------
 

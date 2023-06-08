@@ -219,6 +219,13 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1737_23&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
+      "name": "Boat Pass, British Columbia Current",
+      "coords": "48.8167,-123.1833",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Boat+Passage%2C+British+Columbia+Current&glen=14",
+      "url_noaa": ""
+    },
+    {
       "name": "Hazel Point, Hood Canal, Washington Current",
       "coords": "47.6912 N   122.7628 W",
       "url": "",
@@ -257,6 +264,9 @@
   "tide_stations": [
     {
       "name": "Ayock Point",
+      "all_listings": "https://tidesandcurrents.noaa.gov/tide_predictions.html?gid=1415#listing",
+      "all_listings_map": "https://tidesandcurrents.noaa.gov/map/index.html?type=TidePredictions&region=",
+      "predictions_UI": "https://tidesandcurrents.noaa.gov/noaatidepredictions.html?id=9442388",
       "coords": "47.5083 -123.0520",
       "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9445388&datum=MLLW"
     },
@@ -274,6 +284,11 @@
       "name": "Hanbury Point, North San Juan Island",
       "coords": "48° 34.9 N 123° 10.2 W",
       "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9449828&datum=MLLW"
+    },
+    {
+      "name": "La Push",
+      "coords": "47° 54.8 N 124° 38.1 W",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9442396&datum=MLLW"
     }
   ],
 
@@ -339,9 +354,9 @@
       "COMMENT4": "Not a very accurate current station to plan dives by. Reference for mobilegeographics, NOAA Rosario before flood can be 1hr late",
       "slack_before_ebb": -32,
       "slack_before_flood": -170,
-      "max_flood": 2.2,
+      "max_flood": 3.3,
       "max_ebb": 2.9,
-      "max_total_speed": 4,
+      "max_total_speed": 4.5,
       "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": false,
@@ -356,9 +371,9 @@
       "COMMENT3": "NOAA seems to be about 20min early and Xtide about 35min late",
       "slack_before_ebb": 0,
       "slack_before_flood": 0,
-      "max_flood": 4.3,
+      "max_flood": 4.5,
       "max_ebb": 1.9,
-      "max_total_speed": 5,
+      "max_total_speed": 5.5,
       "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
@@ -423,7 +438,8 @@
       "data": "Point Colville, 3.0 nm east",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
-      "COMMENT": "also reference Rosario Strait, Deception Pass, and Bowman Bay tide. SBE is preferred",
+      "COMMENT": "Rosario Beach vis tends to be alright through 2nd-3rd week of May even when Puget Sound sites get terrible, vis can be horrible in June though",
+      "COMMENT1": "also reference Rosario Strait, Deception Pass, and Bowman Bay tide. SBE is preferred",
       "COMMENT2": "SBE preferred since I think that will give you a ride out and back, SBF may also work or off slack on weak exchange",
       "COMMENT3": "Northwest Island Current Theory (as of 5/2023): ",
       "COMMENT4": "   Ebb from Deception Pass is confined to the top 40ft of water and moves S to N past the outside of the island. This can be reasonably strong.",
@@ -519,6 +535,7 @@
     {
       "name": "Sekiu",
       "data": "Pillar Point, Washington Current",
+      "COMMENT": "Vis is hit-or-miss and tends to be poor in summer: 9-2-18 was great, 7-2-21 was good (busy fishing), 9-29-22 was amazing",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
       "max_flood": 2,
@@ -534,7 +551,8 @@
       "name": "Salt Creek",
       "data": "Juan De Fuca Strait (East), British Columbia Current",
       "slack_before_flood": 82,
-      "COMMENT": "Preferred to dive on lee side of Tongue Point (i.e. dive during flood for main entry). These parameters will allow diving continuously without timing entry - the only way the drive is worth it!",
+      "COMMENT": "Vis is hit-or-miss and tends to be poor in summer: 9-1-18 was amazing, 9-20-19 was terrible, 8-15-20 was poor (busy fishing), 9-10-21 was great, 6-11-22 was ok",
+      "COMMENT1": "Preferred to dive on lee side of Tongue Point (i.e. dive during flood for main entry). These parameters will allow diving continuously without timing entry - the only way the drive is worth it!",
       "slack_before_ebb": -32,
       "max_flood": 1.8,
       "max_ebb": 1.4,
@@ -583,7 +601,8 @@
       "slack_before_ebb": 0,
       "max_flood": 2.7,
       "max_ebb": 2.7,
-      "COMMENT": "A flooding current can have waterfall currents, so recommended to enter close to slack before ebb",
+      "COMMENT": "Generally poor vis and dark when I've dove this late winter March-April",
+      "COMMENT1": "A flooding current can have waterfall currents, so recommended to enter close to slack before ebb",
       "COMMENT2": "Slack before weak ebb seems preferred",
       "COMMENT3": "Wall actually fairly protected on weak floods, NOAA current strength and XTide current timing seems best",
       "max_total_speed": 3.2,
@@ -643,7 +662,8 @@
     {
       "name": "Lime Kiln Haro",
       "data": "South Haro Strait, south of Lime Kiln Light, Washington Current",
-      "COMMENT": "seems to be best source, sbe correction match over 3 days in June 2022, main channel can continue to ebb while along shore it floods",
+      "COMMENT": "Tends to have great vis when Puget Sound sites in May & June get terrible vis",
+      "COMMENT1": "seems to be best source, sbe correction match over 3 days in June 2022, main channel can continue to ebb while along shore it floods",
       "COMMENT2": "so a dive around min ebb is possible, watch the water direction by kelp before entry, error on early side since +40 seems like large offset from such a nearby current station",
       "COMMENT3": "slack before flood is super early - based on 3 dives at Lime kiln (only 1 well timed) and 1 short one at county park",
       "COMMENT4": "reference the time of low tide at Kanaka Bay and Hanbury Point on SBF dives, should start the dive about 1hr after these times",
@@ -741,15 +761,20 @@
       "name": "Whiskey Point",
       "data": "Seymour Narrows, British Columbia Current",
       "COMMENT": "Flood current runs south, ebb to the N",
+      "COMMENT1": "Late May through end of August Campbell River, like almost everywhere else, likely has poor vis",
       "COMMENT2": "Dive middle-of-the-road on SBF (drift N, then S) and end-of-the-road on SBE (drift S, then N)",
-      "COMMENT3": "SBE seems to last longer here",
+      "COMMENT3": "SBE seems to last longer here even on moderate exchange, SBF is quick even on very weak exchange",
       "COMMENT4": "https://www.tides.gc.ca seems to be within 5min of Xtide",
       "COMMENT5": "may be able to push closer to weak side when exceptionally low exchange < 4kts",
+      "COMMENT6": "Steep island dive on SBF",
+      "COMMENT7": "Argo and Copper cliffs can be dove during ebb",
+      "COMMENT8": "Oceanfix boat seems to run dives here even on -12 -> 14kt very large exchange (def wouldn't do from shore)",
+      "COMMENT9": "Could increase the max speeds a little for short dives",
       "slack_before_flood": 40,
       "slack_before_ebb": -30,
       "max_flood": 11.2,
       "max_ebb": 9,
-      "max_total_speed": 20,
+      "max_total_speed": 17.5,
       "dive_duration": 80,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
@@ -772,6 +797,21 @@
       "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": false,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Boat Pass",
+      "data": "Boat Pass, British Columbia Current",
+      "COMMENT": "Use this with Saturna Channel tides for best slack in Saturna Channel, i.e. Jan. 21, 2023",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 5,
+      "max_ebb": 5,
+      "max_total_speed": 8,
+      "dive_duration": 80,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
     {

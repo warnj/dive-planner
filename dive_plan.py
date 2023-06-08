@@ -238,6 +238,7 @@ def main():
         # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Gabriola Pass')
+        # SITES = append(SITES, 'Boat Pass')
         # SITES = append(SITES, 'Ten Mile Point')
 
         # SITES = append(SITES, 'Sekiu')
@@ -246,15 +247,15 @@ def main():
         # SITES = append(SITES, 'Reuben Tarte')
         # SITES = append(SITES, 'Lime Kiln Point')
         # SITES = append(SITES, 'Lime Kiln Haro')
-        SITES = append(SITES, 'Lime Kiln Point Admiralty')
+        # SITES = append(SITES, 'Lime Kiln Point Admiralty')
         # SITES = append(SITES, 'Goose Island')
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
-        # SITES = append(SITES, 'Skyline Wall')
+        SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
-        # SITES = append(SITES, 'Deception Pass')
-        # SITES = append(SITES, 'Keystone Jetty')
+        SITES = append(SITES, 'Deception Pass')
+        SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
         # SITES = append(SITES, 'Hood Canal Bridge')
@@ -277,12 +278,17 @@ def main():
         # SITES = append(SITES, 'Red Hill')
 
     possibleDiveDays = [  # Specify dates
-        # dt(2020, 2, 17),
+        # dt(2012, 2, 3),
+        # dt(2013, 1, 22),
+        # dt(2015, 2, 28),
+        # dt(2020, 2, 5),
+        # dt(2021, 12, 19),
+        # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2023, 5, 26)
+    args.START = dt(2023, 6, 24)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 3
+    args.DAYS_IN_FUTURE = 2
     # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
