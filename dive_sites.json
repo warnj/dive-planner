@@ -289,6 +289,16 @@
       "name": "La Push",
       "coords": "47° 54.8 N 124° 38.1 W",
       "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9442396&datum=MLLW"
+    },
+    {
+      "name": "Sekiu",
+      "coords": "48° 15.8 N 124° 17.8 W",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9443361&datum=MLLW"
+    },
+    {
+      "name": "Crescent Bay",
+      "coords": "48° 9.7 N 123° 43.5 W",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9443826&datum=MLLW"
     }
   ],
 
@@ -538,14 +548,17 @@
     },
     {
       "name": "Sekiu",
-      "data": "Pillar Point, Washington Current",
-      "COMMENT": "Vis is hit-or-miss and tends to be poor in summer: 9-2-18 was great, 7-2-21 was good (busy fishing), 9-29-22 was amazing",
+      "data": "Strait of Juan de Fuca Entrance, Washington Current",
+      "COMMENT": "Vis is hit-or-miss and tends to be poor in summer: 9-2-18 was great, 7-2-21 was good (busy fishing), 9-29-22 was amazing, 7-30-23 was good",
+      "COMMENT2": "Outer reef is current sensitive. Flood runs across the bay away from exit. Ebb runs out of bay S to N as cross current. Current on far edge of kelp good proxy for further out.",
+      "COMMENT3": "Strait entrance seems to be better current predictor than Pillar Point. Pillar station had max flood during slack at Sekiu. Tides at Sekiu also a good approximation for current.",
+      "COMMENT4": "Only done the outer reef on SBE as of summer 2023. On low exchange days 2 dives there may be possible with short SI. Vis better on the flood but has outgoing current.",
       "slack_before_flood": 0,
-      "slack_before_ebb": 0,
+      "slack_before_ebb": -100,
       "max_flood": 2,
       "max_ebb": 2,
       "max_total_speed": 3,
-      "dive_duration": 110,
+      "dive_duration": 100,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
@@ -686,7 +699,7 @@
       "diveable_off_slack": false
     },
     {
-      "name": "Lime Kiln Point Admiralty",
+      "name": "Lime Kiln Admiralty",
       "data": "Admiralty Inlet (off Bush Point), Washington Current",
       "COMMENT": "NOT preferred source, if required noaa and xtide very close, I'd prefer to go with NOAA or go with the earlier one (seems to be NOAA) and maybe snorkel in kelp if still strong",
       "COMMENT2": "offsets (slack_before_flood: 76 & slack_before_ebb: 59) from 151 dives, NW shore dives, & theperfectdive: https://web.archive.org/web/20160422010100/http:/theperfectdive.com/DEF-Site.asp?sID=207",
