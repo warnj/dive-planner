@@ -247,6 +247,13 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1727_30&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
+      "name": "Nakwakto",
+      "coords": "",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Nakwakto+Rapids%2C+British+Columbia+Current&glen=14",
+      "url_noaa": ""
+    },
+    {
       "name": "Hawea Point, Hawaii Current",
       "coords": "21.0018 N 156.6918 W",
       "url": "",
@@ -753,6 +760,21 @@
       "max_total_speed": 5,
       "dive_duration": 90,
       "surface_swim_time": 5,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Nakwakto",
+      "data": "Nakwakto",
+      "COMMENT": "don't trust xtide, verify with Canadian current predictions too and consider slack +/- 1hr",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 9,
+      "max_ebb": 9,
+      "max_total_speed": 13,
+      "dive_duration": 50,
+      "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
