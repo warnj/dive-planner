@@ -306,6 +306,11 @@
       "name": "Crescent Bay",
       "coords": "48° 9.7 N 123° 43.5 W",
       "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9443826&datum=MLLW"
+    },
+    {
+      "name": "Des Moines",
+      "coords": "47° 24.0 N 122° 19.7 W",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9446248&datum=MLLW"
     }
   ],
 
