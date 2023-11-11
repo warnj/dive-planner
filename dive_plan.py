@@ -235,10 +235,11 @@ def main():
     # ---------------------------------- MANUALLY CONFIGURABLE PARAMETERS ---------------------------------------------
     if not SITES:
         SITES = []  # Consider all sites
-        SITES = append(SITES, 'Nakwakto')
+        # SITES = append(SITES, 'Nakwakto')
         # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Gabriola Pass')
+        SITES = append(SITES, 'Dodd Narrows')
         # SITES = append(SITES, 'Boat Pass')
         # SITES = append(SITES, 'Ten Mile Point')
 
@@ -287,12 +288,12 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2023, 9, 22)
+    args.START = dt(2023, 11, 5)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
-    args.IGNORE_MAX_SPEED = True
+    # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    # args.INCLUDE_NIGHT = True
+    args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
 

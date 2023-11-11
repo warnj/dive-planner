@@ -70,7 +70,7 @@ def main():
     STATIONS.append('Des Moines')
     # args.START = dt(2023, 7, 29)
     args.START = dt.now()
-    # args.DAYS_IN_FUTURE = 1
+    args.DAYS_IN_FUTURE = 0
     args.INCLUDE_WORKDAYS = True
     # ------------------------------------------------------------------------------------------------------------------
 
