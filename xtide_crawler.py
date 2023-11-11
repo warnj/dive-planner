@@ -64,7 +64,7 @@ def find_closest_stations(dive_site_coords, nearest):
         site = content[i+1].rstrip()
         sites[coords] = site
         all_coords.append(coords)
-    all_coords = sorted(all_coords, key=lambda x: geopy.distance.geodesic(dive_site_coords, x).m)
+    all_coords = sorted(all_coords, key=lambda x: geopy.distance.geodesic(dive_site_coords, x).miles)
     for i in range(nearest):
         print("Station: {} is {:.2f}mi away".format(sites[all_coords[i]], geopy.distance.geodesic(dive_site_coords, all_coords[i]).mi))
 
@@ -76,7 +76,9 @@ def main():
     # site, dist = find_closest_station((50.040152, -125.221638))
     # print("Current station: {} is {:.2f}mi away".format(site, dist))
 
-    find_closest_stations((48.425859, -122.675265), 10)
+    # find_closest_stations((48.425859, -122.675265), 10)
+    # find_closest_stations((50.592204, -126.800397), 10)
+    find_closest_stations((50.847605, -127.645321), 10)
 
 if __name__ == "__main__":
     main()

@@ -233,6 +233,13 @@
       "url_noaa": ""
     },
     {
+      "name": "Weynton Passage, British Columbia Current",
+      "coords": "50.6033,-126.8117",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Weynton+Passage%2C+British+Columbia+Current&glen=14",
+      "url_noaa": ""
+    },
+    {
       "name": "Hazel Point, Hood Canal, Washington Current",
       "coords": "47.6912 N   122.7628 W",
       "url": "",
@@ -875,6 +882,36 @@
       "max_ebb": 5,
       "max_total_speed": 8,
       "dive_duration": 80,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Weynton Pass",
+      "data": "Weynton Passage, British Columbia Current",
+      "COMMENT": "Port McNeil area dives",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 5,
+      "max_ebb": 5,
+      "max_total_speed": 8,
+      "dive_duration": 70,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Plumper Pass",
+      "data": "Weynton Passage, British Columbia Current",
+      "COMMENT": "Flood runs toward the SW, Ebb runs toward the NE, timing and params based on one SBF dive 9-20-23",
+      "slack_before_flood": -35,
+      "slack_before_ebb": 0,
+      "max_flood": 4,
+      "max_ebb": 4,
+      "max_total_speed": 5,
+      "dive_duration": 70,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
