@@ -290,7 +290,7 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2023, 9, 20)
+    args.START = dt(2023, 12, 10)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
     # args.IGNORE_MAX_SPEED = True
@@ -328,7 +328,7 @@ def main():
             continue
         station = getStation(data['stations'], siteData['data'])
 
-        m = intp.TBoneSCInterpreter(station['url_xtide'])
+        m = intp.TBoneSCInterpreter(station['url_xtide_a'])
         m2 = intp.NoaaInterpreter(station['url_noaa'])
         # m2 = intp.NoaaAPIInterpreter(station['url_noaa_new'])
 
@@ -351,15 +351,21 @@ def main():
             printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
         else:
             for day in possibleDiveDays:
-                slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
-                canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "XTide")
+                canDive = False
+                try:
+                    slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
+                    canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "XTide")
+                except Exception as e:
+                    print('Error fetching and reading slacks from Xtide: ' + repr(e))
 
-                slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
-                canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
+                try:
+                    slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
+                    canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
+                except Exception as e:
+                    print('Error fetching and reading slacks from NOAA: ' + repr(e))
 
                 if not canDive:
                     print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
-
 
 if __name__ == '__main__':
     main()

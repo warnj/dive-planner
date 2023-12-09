@@ -250,6 +250,7 @@ class MobilegeographicsInterpreter(Interpreter):
 
 
 # Class to retrieve and parse current data from tbone.biol.sc.edu website
+# as of 12-9-2023 this class also works for tide.arthroinfo.org
 class TBoneSCInterpreter(Interpreter):
 
     # Returns the datetime object parsed from the given data line from tbone.biol.sc.edu website
@@ -260,7 +261,11 @@ class TBoneSCInterpreter(Interpreter):
     # Returns the day-specific URL for the base URL
     @staticmethod
     def getDayUrl(baseUrl, day):
-        return baseUrl + '&year={}&month={}&day={}'.format(day.year, day.month, day.day)
+        monthStr = str(day.month)
+        if day.month < 10: monthStr = '0'+monthStr
+        dayStr = str(day.day)
+        if day.day < 10: dayStr = '0'+dayStr
+        return baseUrl + '&year={}&month={}&day={}'.format(day.year, monthStr, dayStr)
 
     # Returns the tbone.biol.sc.edu current data from the given url
     def _getWebLines(self, url, day):
