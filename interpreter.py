@@ -7,6 +7,7 @@ import datetime
 from datetime import datetime as dt
 from pytz import timezone
 import requests
+import re
 
 # https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
 TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
@@ -46,8 +47,9 @@ class Slack:
 # Base class to download and parse current data from various websites
 class Interpreter:
 
-    def __init__(self, baseUrl):
+    def __init__(self, baseUrl, stationName):
         self.baseUrl = baseUrl
+        self.stationName = stationName
         self._webLines = None
         # https://astral.readthedocs.io/en/latest
         self._astralCity = LocationInfo("Seattle", "Washington", "America/Los_Angeles", 47.6, -122.3)
@@ -314,6 +316,33 @@ class TBoneSCInterpreter(Interpreter):
             s.time = self._parseTime(lines[i].split())
             slacks.append(s)
         return slacks
+
+
+class TBoneSCOfflineInterpreter(TBoneSCInterpreter):
+    # taken from xtide_saver.py
+    def __getFileName(self, stationName):
+        # remove chars before first comma
+        match = re.match(r'^([^,]+)', stationName.lower())
+        filename = match.group(1)
+        # remove chars before first paren
+        match = re.match(r'^([^(]+)', filename)
+        filename = match.group(1)
+
+        filename = filename.strip()
+        filename = filename.replace('.', '')
+        filename = filename.replace(' ', '-')
+        return 'xtide-offline/' + filename + '.txt'
+
+    def _getWebLines(self, url, day):
+        xtideFile = self.__getFileName(self.stationName)
+        with open(xtideFile, 'r') as f:
+            lines = f.read().splitlines()
+        targetDayStr = dt.strftime(day, DATEFMT)
+        for i, x in enumerate(lines):
+            dayString = x.split()[0]
+            if dayString == targetDayStr:
+                return lines[i:i+400]
+        raise Exception('did not find date {} in offline xtide data'.format(targetDayStr))
 
 
 # Class to retrieve and parse current data from Noaa website

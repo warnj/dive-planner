@@ -294,7 +294,7 @@ def main():
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
     # args.IGNORE_MAX_SPEED = True
-    args.INCLUDE_WORKDAYS = True
+    # args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
@@ -328,8 +328,9 @@ def main():
             continue
         station = getStation(data['stations'], siteData['data'])
 
-        m = intp.TBoneSCInterpreter(station['url_xtide_a'])
-        m2 = intp.NoaaInterpreter(station['url_noaa'])
+        # m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
+        m = intp.TBoneSCOfflineInterpreter('dummy', station['name'])
+        m2 = intp.NoaaInterpreter(station['url_noaa'], station['name'])
         # m2 = intp.NoaaAPIInterpreter(station['url_noaa_new'])
 
         print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))

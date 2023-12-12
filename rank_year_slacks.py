@@ -26,10 +26,10 @@ def getDiveableSlacks(slacks, site):
     return diveableSlacks
 
 def main():
-    # SITE = 'Whiskey Point'
+    SITE = 'Whiskey Point'
     # SITE = 'Boat Pass'
     # SITE = 'Gabriola Pass'
-    SITE = 'Dodd Narrows'
+    # SITE = 'Dodd Narrows'
     # SITE = 'Skyline Wall'
     # SITE = 'Deception Pass'
     # SITE = 'Goose Island'
@@ -49,7 +49,7 @@ def main():
     if NOAA:
         m = intp.NoaaInterpreter(station['url_noaa'])
     else:
-        m = intp.TBoneSCInterpreter(station['url_xtide'])
+        m = intp.TBoneSCInterpreter(station['url_xtide_a'])
 
     slacks = []
     days = dive_plan.getAllDays(365, dt(2024, 1, 1))
