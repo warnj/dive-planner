@@ -26,7 +26,7 @@ def getDiveableSlacks(slacks, site):
     return diveableSlacks
 
 def main():
-    SITE = 'Whiskey Point'
+    # SITE = 'Whiskey Point'
     # SITE = 'Boat Pass'
     # SITE = 'Gabriola Pass'
     # SITE = 'Dodd Narrows'
@@ -34,7 +34,10 @@ def main():
     # SITE = 'Deception Pass'
     # SITE = 'Goose Island'
     # SITE = 'Lime Kiln Haro'
+    # SITE = 'Salt Creek'
     # SITE = 'Day Island Wall'
+    # SITE = 'Sechelt Rapids'
+    SITE = 'Nakwakto'
 
     # NOAA = True
     NOAA = False
@@ -47,9 +50,9 @@ def main():
 
     station = dive_plan.getStation(data['stations'], siteJson['data'])
     if NOAA:
-        m = intp.NoaaInterpreter(station['url_noaa'])
+        m = intp.NoaaInterpreter(station['url_noaa'], station['name'])
     else:
-        m = intp.TBoneSCInterpreter(station['url_xtide_a'])
+        m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
 
     slacks = []
     days = dive_plan.getAllDays(365, dt(2024, 1, 1))
@@ -80,7 +83,6 @@ def main():
 
     for s in diveableSlacks:
         print('{}\tSpeed sum = {:0.1f}'.format(s, abs(s.ebbSpeed)+abs(s.floodSpeed)))
-
 
 if __name__ == '__main__':
     main()

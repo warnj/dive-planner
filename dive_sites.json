@@ -332,6 +332,16 @@
       "url_noaa": ""
     },
     {
+      "name": "Sechelt Rapids, British Columbia Current",
+      "coords": "",
+      "xtide_limit_2037": true,
+      "COMMENT": "doesnt quite match darkiri which also uses xtide, not sure why https://www.dairiki.org/tides/monthly.php/scl",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Sechelt+Rapids%2C+British+Columbia+Current+%28use+with+caution%29&glen=14",
+      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Sechelt+Rapids%2C+British+Columbia+Current+%28use+with+caution%29&glen=14",
+      "url_noaa": ""
+    },
+    {
       "name": "Hawea Point, Hawaii Current",
       "coords": "21.0018 N 156.6918 W",
       "url": "",
@@ -530,6 +540,7 @@
       "COMMENT": "Marker Buoy seems to have max_flood = 4.1 and max_ebb = 5.9, however NW Dive Club dives with either flood or ebb max about 5.9 and sum of the two less than 11 kts",
       "COMMENT2": "North Beach opens somewhere around April 1 and closes somewhere around October 31",
       "COMMENT3": "ALSO CHECK https://www.tides.gc.ca/en/current-predictions-station",
+      "COMMENT4": "Jan has dove on 4.7 -> -6.0 NOAA which was 5.6 > -7.0 XTide and currents were strong and swirly but doable with good timing",
       "max_flood": 5,
       "max_ebb": 6,
       "max_total_speed": 10.5,
@@ -865,6 +876,21 @@
       "diveable_off_slack": false
     },
     {
+      "name": "Sechelt Rapids",
+      "data": "Sechelt Rapids, British Columbia Current",
+      "COMMENT": "don't trust xtide, verify with Canadian current predictions an Dariki too",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 9,
+      "max_ebb": 9,
+      "max_total_speed": 13,
+      "dive_duration": 60,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
       "name": "Seymour Narrows",
       "data": "Seymour Narrows, British Columbia Current",
       "COMMENT": "Flood current runs south, ebb to the N",
@@ -1021,6 +1047,7 @@
       "data2": "Tacoma Narrows South, south end (midstream), Washington Current",
       "COMMENT": "Can use Browns Point current from NOAA or deepzoom.com",
       "COMMENT2": "Ebb has most pronounced currents since located on the outside of the 'bend'",
+      "COMMENT3": "Apparently best on SBF for vis reasons (during flood and SBE is worst for vis reasons since flood mostly runs down the east side of Vashon and ebb runs mostly up west side of Vashon)",
       "slack_before_flood": 0,
       "slack_before_flood2": -20,
       "slack_before_ebb": 0,

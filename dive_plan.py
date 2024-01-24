@@ -244,6 +244,7 @@ def main():
         # SITES = append(SITES, 'Dodd Narrows')
         # SITES = append(SITES, 'Boat Pass')
         # SITES = append(SITES, 'Ten Mile Point')
+        # SITES = append(SITES, 'Sechelt Rapids')
 
         # SITES = append(SITES, 'Sekiu')
         # SITES = append(SITES, 'Salt Creek')
@@ -290,11 +291,11 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2023, 12, 10)
+    args.START = dt(2024, 1, 21)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
-    # args.IGNORE_MAX_SPEED = True
-    # args.INCLUDE_WORKDAYS = True
+    args.DAYS_IN_FUTURE = 2
+    args.IGNORE_MAX_SPEED = True
+    args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
@@ -328,8 +329,8 @@ def main():
             continue
         station = getStation(data['stations'], siteData['data'])
 
-        # m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
-        m = intp.TBoneSCOfflineInterpreter('dummy', station['name'])
+        m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
+        # m = intp.TBoneSCOfflineInterpreter('dummy', station['name'])
         m2 = intp.NoaaInterpreter(station['url_noaa'], station['name'])
         # m2 = intp.NoaaAPIInterpreter(station['url_noaa_new'])
 

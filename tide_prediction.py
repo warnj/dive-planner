@@ -64,13 +64,13 @@ def main():
     # STATIONS.append('Hanbury Point, North San Juan Island')
     # STATIONS.append('Kanaka Bay, South San Juan Island')
     # STATIONS.append('Sekiu')
-    # STATIONS.append('Crescent Bay')
+    STATIONS.append('Crescent Bay')
     # STATIONS.append('Ayock Point')
     # STATIONS.append('La Push')
-    STATIONS.append('Des Moines')
-    # args.START = dt(2023, 7, 29)
-    args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    # STATIONS.append('Des Moines')
+    args.START = dt(2024, 5, 1)
+    # args.START = dt.now()
+    args.DAYS_IN_FUTURE = 200
     args.INCLUDE_WORKDAYS = True
     # ------------------------------------------------------------------------------------------------------------------
 
