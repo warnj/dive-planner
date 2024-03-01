@@ -124,6 +124,7 @@ def printDive(s: intp.Slack, site: dict, titleMessage: str) -> None:
         print('\t\t\t{}Entry Time: {}{}\t(Exit time: {})'  # Time to get in the water.
               .format(Color.UNDERLINE, intp.dateString(entryTime), Color.END, dt.strftime(exitTime, intp.TIMEFMT)))
         print('\t\t\t{}'.format(s.logString()))
+        # todo: print('\t\t\t{}'.format(s.logStringWithSpeed()))
         # print('\t\t\tClub Entry Time (60min dive, no surface swim):', intp.dateString(clubEntryTime))
         # moonAction = "waxing" if s.moonPhase <= 14 else "waning"
         # print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'
@@ -251,7 +252,7 @@ def main():
         # SITES = append(SITES, 'Point Hudson')
         # SITES = append(SITES, 'Reuben Tarte')
         # SITES = append(SITES, 'Lime Kiln Discovery')
-        # SITES = append(SITES, 'Lime Kiln Haro')
+        SITES = append(SITES, 'Lime Kiln Haro')
         # SITES = append(SITES, 'Lime Kiln Admiralty')
         # SITES = append(SITES, 'Goose Island')
         # SITES = append(SITES, 'Green Point')
@@ -276,7 +277,8 @@ def main():
         # SITES = append(SITES, 'Fox Island East Wall Gibson')
         # SITES = append(SITES, 'Titlow')
         # SITES = append(SITES, 'Waterman Wall')
-        # SITES = append(SITES, 'Warren Avenue Bridge')
+        # SITES = append(SITES, 'Warren Avenue Bridge North')
+        # SITES = append(SITES, 'Warren Avenue Bridge South')
         # SITES = append(SITES, 'Agate Pass')
 
         # SITES = append(SITES, 'Hawea Point')
@@ -291,9 +293,9 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2024, 1, 21)
+    args.START = dt(2024, 7, 12)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 2
+    args.DAYS_IN_FUTURE = 3
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True

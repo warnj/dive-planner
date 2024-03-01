@@ -70,8 +70,7 @@ def main():
     # STATIONS.append('Des Moines')
     args.START = dt(2024, 5, 1)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 200
-    args.INCLUDE_WORKDAYS = True
+    args.DAYS_IN_FUTURE = 20
     # ------------------------------------------------------------------------------------------------------------------
 
     # Get tides for each site and each

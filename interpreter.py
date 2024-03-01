@@ -41,6 +41,13 @@ class Slack:
         else:
             return '{} > {} > {}'.format(self.ebbSpeed, dt.strftime(self.time, TIMEFMT), self.floodSpeed)
 
+    # todo: save the time of max current before and after the slack
+    def logStringWithSpeed(self):
+        if self.slackBeforeEbb:
+            return '{} > {} > {}'.format(self.floodSpeed, dt.strftime(self.time, TIMEFMT), self.ebbSpeed)
+        else:
+            return '{} > {} > {}'.format(self.ebbSpeed, dt.strftime(self.time, TIMEFMT), self.floodSpeed)
+
     def __repr__(self):
         return self.__str__()
 

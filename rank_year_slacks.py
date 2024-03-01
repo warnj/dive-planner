@@ -28,7 +28,7 @@ def getDiveableSlacks(slacks, site):
 def main():
     # SITE = 'Whiskey Point'
     # SITE = 'Boat Pass'
-    # SITE = 'Gabriola Pass'
+    SITE = 'Gabriola Pass'
     # SITE = 'Dodd Narrows'
     # SITE = 'Skyline Wall'
     # SITE = 'Deception Pass'
@@ -37,7 +37,7 @@ def main():
     # SITE = 'Salt Creek'
     # SITE = 'Day Island Wall'
     # SITE = 'Sechelt Rapids'
-    SITE = 'Nakwakto'
+    # SITE = 'Nakwakto'
 
     # NOAA = True
     NOAA = False
