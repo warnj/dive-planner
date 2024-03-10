@@ -3,9 +3,9 @@
     {
       "name": "Gabriola Pass",
       "id": "63aef12e84e5432cd3b6db8d",
-      "flood_dir": "260",
+      "flood_dir": 260.0,
       "dir_comment": "direction the current originates from i.e. here flood runs W to E",
-      "ebb_dir": "80"
+      "ebb_dir": 80.0
     }
   ]
 }

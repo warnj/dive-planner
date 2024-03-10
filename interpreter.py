@@ -316,6 +316,7 @@ class TBoneSCInterpreter(Interpreter):
             s.moonPhase = moonPhase
 
             preMax = self._getCurrentBefore(i, lines)
+            # todo: support a null value here to show middle of the night currents better
             if not preMax:
                 continue
             tokens1 = preMax.split()
