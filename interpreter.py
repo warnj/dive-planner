@@ -12,6 +12,7 @@ import re
 # https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
 TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
 TIMEPARSEFMT_TBONE = '%Y-%m-%d %H:%M'  # example: 2019-01-18 22:36
+TIMEPARSEFMT_CA = '%Y-%m-%dT%H:%M:%SZ'  # example: 2024-03-13T23:29:00Z
 TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
 DATEFMT = '%Y-%m-%d'  # example 2019-01-18
 TIMEFMT = '%I:%M%p'  # example 09:36AM
@@ -450,6 +451,72 @@ class NoaaAPIInterpreter(Interpreter):
         # tomorrow = (day + datetime.timedelta(days=1)).strftime(DATEFMT).replace("-", "")
         twoWeeks = (day + datetime.timedelta(days=14)).strftime(DATEFMT).replace("-", "")
         return baseUrl + f'&begin_date={today}&end_date={twoWeeks}'
+
+    # Returns the noaa current data from the given url
+    def _getWebLines(self, url, day):
+        urlFinal = self.getDayUrl(url, day)
+        response = requests.get(urlFinal)
+        if response.status_code != 200:
+            raise Exception('NOAA API is down')
+
+        jsonArray = response.json()['current_predictions']['cp']
+
+        # convert json array to array of weblines - not ideal, fits into existing Interpreter functions better for now
+        weblines = []
+        for event in jsonArray:
+            weblines.append("{} {} {:.2f}".format(event['Time'], event['Type'], event['Velocity_Major']))
+        return weblines
+
+    # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
+    def _getSlackData(self, lines, indexes, sunrise, sunset, moonPhase):
+        slacks = []
+        for i in indexes:
+            s = Slack()
+            s.sunriseTime = sunrise
+            s.sunsetTime = sunset
+            s.moonPhase = moonPhase
+
+            preMax = self._getCurrentBefore(i, lines)
+            if not preMax:
+                continue
+            tokens1 = preMax.split()
+
+            postMax = self._getCurrentAfter(i, lines)
+            if not postMax:
+                continue
+            tokens2 = postMax.split()
+
+            s.slackBeforeEbb = 'ebb' in postMax
+
+            if s.slackBeforeEbb:
+                s.floodSpeed = float(tokens1[3])
+                s.maxFloodTime = self._parseTime(tokens1)
+                s.ebbSpeed = float(tokens2[3])
+                s.maxEbbTime = self._parseTime(tokens2)
+            else:
+                s.ebbSpeed = float(tokens1[3])
+                s.maxEbbTime = self._parseTime(tokens1)
+                s.floodSpeed = float(tokens2[3])
+                s.maxFloodTime = self._parseTime(tokens2)
+
+            s.time = self._parseTime(lines[i].split())
+            slacks.append(s)
+        return slacks
+
+# Class to retrieve and parse current data from Canada Currents REST API
+class CanadaAPIInterpreter(Interpreter):
+    urlFmt = 'https://api-iwls.dfo-mpo.gc.ca/api/v1/stations/{}/data?time-series-code={}'
+
+    # Returns the datetime object from the given time
+    def _parseTime(self, timeStr):
+        return dt.strptime(timeStr, TIMEPARSEFMT_CA)
+
+    # Returns the day-specific URL for the current base URL
+    @staticmethod
+    def getDayUrl(baseUrl, day):
+        start = day.strftime("%Y-%m-%d")
+        twoWeeks = (day + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
+        return baseUrl + '&from={}T00:00:00Z&to={}T00:30:00Z'.format(start, twoWeeks)
 
     # Returns the noaa current data from the given url
     def _getWebLines(self, url, day):

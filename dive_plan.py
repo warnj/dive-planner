@@ -239,10 +239,10 @@ def main():
         # SITES = append(SITES, 'Nakwakto')
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
-        SITES = append(SITES, 'Seymour Narrows')
+        # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
-        # SITES = append(SITES, 'Gabriola Pass')
+        SITES = append(SITES, 'Gabriola Pass')
         # SITES = append(SITES, 'Dodd Narrows')
         # SITES = append(SITES, 'Boat Pass')
         # SITES = append(SITES, 'Ten Mile Point')
@@ -294,9 +294,9 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2024, 3, 17)
+    args.START = dt(2024, 3, 13)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 1
+    args.DAYS_IN_FUTURE = 0
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     args.INCLUDE_NIGHT = True
@@ -335,6 +335,7 @@ def main():
         m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
         # m = intp.TBoneSCOfflineInterpreter('dummy', station['name'])
         m2 = intp.NoaaInterpreter(station['url_noaa'], station['name'])
+        m2 = intp.CanadaAPIInterpreter(intp.CanadaAPIInterpreter.urlFmt, station['name'])
         # m2 = intp.NoaaAPIInterpreter(station['url_noaa_new'])
 
         print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))
