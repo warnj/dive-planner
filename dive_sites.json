@@ -962,6 +962,22 @@
       "diveable_off_slack": false
     },
     {
+      "name": "Argonaut Wharf",
+      "data": "Seymour Narrows, British Columbia Current",
+      "COMMENT": "Earl like to start ~90min after turn to ebb at Seymour Narrows, it's mostly protected from ebb and not from flood",
+      "COMMENT2": "If ropes are set out from the big yellow buoys or the wharf then a ship is expected and don't dive it, otherwise no good way to predict if it will be used",
+      "slack_before_flood": -150,
+      "slack_before_ebb": 110,
+      "max_flood": 12,
+      "max_ebb": 12,
+      "max_total_speed": 20,
+      "dive_duration": 100,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
       "name": "Gabriola Pass",
       "data": "Gabriola Passage, British Columbia Current",
       "COMMENT": "Flood current runs toward the east 090, Ebb runs west 270 (degrees true) - same behavior as Deception Pass but shore entry on E side of narrows",
