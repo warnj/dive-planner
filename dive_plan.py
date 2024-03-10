@@ -115,17 +115,17 @@ def printDive(s: intp.Slack, site: dict, titleMessage: str) -> None:
             elif entryTime - td(minutes=30) < s.sunriseTime:
                 warning = 'near'
             if warning:
-                print('\t\tWARNING: entry time of {} is {} sunrise at {}'.format(intp.dateString(entryTime),
-                    warning, intp.dateString(s.sunriseTime)))
+                print('\t\tWARNING: entry time of {} is {} sunrise at {}'.format(intp.dateStr(entryTime),
+                    warning, intp.dateStr(s.sunriseTime)))
 
         print('\t\t{}: {}'.format(titleMessage, s))
         print('\t\t\tMinCurrentTime = {}, Duration = {}, SurfaceSwim = {}'
-              .format(intp.dateString(minCurrentTime), site['dive_duration'], site['surface_swim_time']))
+              .format(intp.dateStr(minCurrentTime), site['dive_duration'], site['surface_swim_time']))
         print('\t\t\t{}Entry Time: {}{}\t(Exit time: {})'  # Time to get in the water.
-              .format(Color.UNDERLINE, intp.dateString(entryTime), Color.END, dt.strftime(exitTime, intp.TIMEFMT)))
+              .format(Color.UNDERLINE, intp.dateStr(entryTime), Color.END, dt.strftime(exitTime, intp.TIMEFMT)))
         print('\t\t\t{}'.format(s.logString()))
-        # todo: print('\t\t\t{}'.format(s.logStringWithSpeed()))
-        # print('\t\t\tClub Entry Time (60min dive, no surface swim):', intp.dateString(clubEntryTime))
+        print('\t\t\t{}'.format(s.logStringWithSpeed()))
+        # print('\t\t\tClub Entry Time (60min dive, no surface swim):', intp.dateStr(clubEntryTime))
         # moonAction = "waxing" if s.moonPhase <= 14 else "waning"
         # print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'
         #       .format(s.moonPhase, s.moonPhase % 14 / 14, moonAction))
@@ -239,7 +239,7 @@ def main():
         # SITES = append(SITES, 'Nakwakto')
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
-        # SITES = append(SITES, 'Seymour Narrows')
+        SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
         # SITES = append(SITES, 'Gabriola Pass')
@@ -259,7 +259,7 @@ def main():
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
-        SITES = append(SITES, 'Skyline Wall')
+        # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
         # SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
@@ -294,7 +294,7 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2024, 3, 16)
+    args.START = dt(2024, 3, 17)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 1
     args.IGNORE_MAX_SPEED = True

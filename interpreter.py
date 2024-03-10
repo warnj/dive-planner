@@ -16,8 +16,14 @@ TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
 DATEFMT = '%Y-%m-%d'  # example 2019-01-18
 TIMEFMT = '%I:%M%p'  # example 09:36AM
 
-def dateString(date):
+def dateStr(date):
     return dt.strftime(date, TIMEPRINTFMT)
+
+def timeStr(date):
+    result = dt.strftime(date, TIMEFMT)
+    if result.startswith('0'):
+        return result[1:]  # remove leading 0 (i.e. 9:02AM instead of 09:02AM)
+    return result
 
 class Slack:
     time = None
@@ -27,26 +33,29 @@ class Slack:
     slackBeforeEbb = False
     ebbSpeed = 0.0  # negative number
     floodSpeed = 0.0  # positive number
+    maxEbbTime = None
+    maxFloodTime = None
 
     def __str__(self):
         if self.slackBeforeEbb:
-            return '{} -> {} -> {}'.format(self.floodSpeed, dateString(self.time), self.ebbSpeed)
+            return '{} -> {} -> {}'.format(self.floodSpeed, dateStr(self.time), self.ebbSpeed)
         else:
-            return '{} -> {} -> {}'.format(self.ebbSpeed, dateString(self.time), self.floodSpeed)
+            return '{} -> {} -> {}'.format(self.ebbSpeed, dateStr(self.time), self.floodSpeed)
 
     # string without date info (only time) for logbook entry
     def logString(self):
         if self.slackBeforeEbb:
-            return '{} > {} > {}'.format(self.floodSpeed, dt.strftime(self.time, TIMEFMT), self.ebbSpeed)
+            return '{} > {} > {}'.format(self.floodSpeed, timeStr(self.time), self.ebbSpeed)
         else:
-            return '{} > {} > {}'.format(self.ebbSpeed, dt.strftime(self.time, TIMEFMT), self.floodSpeed)
+            return '{} > {} > {}'.format(self.ebbSpeed, timeStr(self.time), self.floodSpeed)
 
-    # todo: save the time of max current before and after the slack
     def logStringWithSpeed(self):
-        if self.slackBeforeEbb:
-            return '{} > {} > {}'.format(self.floodSpeed, dt.strftime(self.time, TIMEFMT), self.ebbSpeed)
+        if not self.maxEbbTime or not self.maxFloodTime:
+            return self.logString()
+        elif self.slackBeforeEbb:
+            return '{}({}) > {} > {}({})'.format(self.floodSpeed, timeStr(self.maxFloodTime), timeStr(self.time), self.ebbSpeed, timeStr(self.maxEbbTime))
         else:
-            return '{} > {} > {}'.format(self.ebbSpeed, dt.strftime(self.time, TIMEFMT), self.floodSpeed)
+            return '{}({}) > {} > {}({})'.format(self.ebbSpeed, timeStr(self.maxEbbTime), timeStr(self.time), self.floodSpeed, timeStr(self.maxFloodTime))
 
     def __repr__(self):
         return self.__str__()
@@ -248,10 +257,14 @@ class MobilegeographicsInterpreter(Interpreter):
 
             if s.slackBeforeEbb:
                 s.floodSpeed = float(tokens1[5])
+                s.maxFloodTime = self._parseTime(tokens1)
                 s.ebbSpeed = float(tokens2[5])
+                s.maxEbbTime = self._parseTime(tokens2)
             else:
                 s.ebbSpeed = float(tokens1[5])
+                s.maxEbbTime = self._parseTime(tokens1)
                 s.floodSpeed = float(tokens2[5])
+                s.maxFloodTime = self._parseTime(tokens2)
 
             s.time = self._parseTime(lines[i].split())
             slacks.append(s)
@@ -315,10 +328,14 @@ class TBoneSCInterpreter(Interpreter):
 
             if s.slackBeforeEbb:
                 s.floodSpeed = float(tokens1[3])
+                s.maxFloodTime = self._parseTime(tokens1)
                 s.ebbSpeed = float(tokens2[3])
+                s.maxEbbTime = self._parseTime(tokens2)
             else:
                 s.ebbSpeed = float(tokens1[3])
+                s.maxEbbTime = self._parseTime(tokens1)
                 s.floodSpeed = float(tokens2[3])
+                s.maxFloodTime = self._parseTime(tokens2)
 
             s.time = self._parseTime(lines[i].split())
             slacks.append(s)
@@ -404,10 +421,14 @@ class NoaaInterpreter(Interpreter):
 
             if s.slackBeforeEbb:
                 s.floodSpeed = float(tokens1[4])
+                s.maxFloodTime = self._parseTime(tokens1)
                 s.ebbSpeed = float(tokens2[4])
+                s.maxEbbTime = self._parseTime(tokens2)
             else:
                 s.ebbSpeed = float(tokens1[4])
+                s.maxEbbTime = self._parseTime(tokens1)
                 s.floodSpeed = float(tokens2[4])
+                s.maxFloodTime = self._parseTime(tokens2)
 
             s.time = self._parseTime(lines[i].split())
             slacks.append(s)
@@ -468,10 +489,14 @@ class NoaaAPIInterpreter(Interpreter):
 
             if s.slackBeforeEbb:
                 s.floodSpeed = float(tokens1[3])
+                s.maxFloodTime = self._parseTime(tokens1)
                 s.ebbSpeed = float(tokens2[3])
+                s.maxEbbTime = self._parseTime(tokens2)
             else:
                 s.ebbSpeed = float(tokens1[3])
+                s.maxEbbTime = self._parseTime(tokens1)
                 s.floodSpeed = float(tokens2[3])
+                s.maxFloodTime = self._parseTime(tokens2)
 
             s.time = self._parseTime(lines[i].split())
             slacks.append(s)
