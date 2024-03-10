@@ -294,9 +294,9 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2024, 3, 13)
+    args.START = dt(2024, 3, 9)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    args.DAYS_IN_FUTURE = 1
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     args.INCLUDE_NIGHT = True
@@ -332,10 +332,10 @@ def main():
             continue
         station = getStation(data['stations'], siteData['data'])
 
-        m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
-        # m = intp.TBoneSCOfflineInterpreter('dummy', station['name'])
-        m2 = intp.NoaaInterpreter(station['url_noaa'], station['name'])
-        m2 = intp.CanadaAPIInterpreter(intp.CanadaAPIInterpreter.urlFmt, station['name'])
+        m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
+        # m = intp.TBoneSCOfflineInterpreter('dummy', station)
+        # m2 = intp.NoaaInterpreter(station['url_noaa'], station)
+        m2 = intp.CanadaAPIInterpreter(intp.CanadaAPIInterpreter.urlFmt, station)
         # m2 = intp.NoaaAPIInterpreter(station['url_noaa_new'])
 
         print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))
@@ -354,7 +354,7 @@ def main():
             for day in possibleDiveDays:
                 slacks.extend(m2.getSlacks(day, args.INCLUDE_NIGHT))
             slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
-            printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
+            printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA / CA")
         else:
             for day in possibleDiveDays:
                 canDive = False
@@ -366,7 +366,7 @@ def main():
 
                 try:
                     slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
-                    canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA")
+                    canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA / CA")
                 except Exception as e:
                     print('Error fetching and reading slacks from NOAA: ' + repr(e))
 

@@ -64,9 +64,9 @@ class Slack:
 # Base class to download and parse current data from various websites
 class Interpreter:
 
-    def __init__(self, baseUrl, stationName):
+    def __init__(self, baseUrl, station):
         self.baseUrl = baseUrl
-        self.stationName = stationName
+        self.station = station
         self._webLines = None
         # https://astral.readthedocs.io/en/latest
         self._astralCity = LocationInfo("Seattle", "Washington", "America/Los_Angeles", 47.6, -122.3)
@@ -360,7 +360,7 @@ class TBoneSCOfflineInterpreter(TBoneSCInterpreter):
         return 'xtide-offline/' + filename + '.txt'
 
     def _getWebLines(self, url, day):
-        xtideFile = self.__getFileName(self.stationName)
+        xtideFile = self.__getFileName(self.station['name'])
         with open(xtideFile, 'r') as f:
             lines = f.read().splitlines()
         targetDayStr = dt.strftime(day, DATEFMT)
@@ -516,56 +516,84 @@ class CanadaAPIInterpreter(Interpreter):
     @staticmethod
     def getDayUrl(baseUrl, day):
         start = day.strftime("%Y-%m-%d")
-        twoWeeks = (day + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
+        twoWeeks = (day + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
         return baseUrl + '&from={}T00:00:00Z&to={}T00:30:00Z'.format(start, twoWeeks)
 
-    # Returns the noaa current data from the given url
-    def _getWebLines(self, url, day):
-        urlFinal = self.getDayUrl(url, day)
-        response = requests.get(urlFinal)
-        if response.status_code != 200:
-            raise Exception('NOAA API is down')
+    def __getJsonResponse(self, url):
+        r = requests.get(url)
+        if r.status_code != 200:
+            raise Exception('Canada currents API is down')
+        return r.json()
 
-        jsonArray = response.json()['current_predictions']['cp']
+    # compares float directions (use epsilon of 5 since opposite direction is +/- 180)
+    def __floatEqual(self, float1, float2, threshold=5.0):
+        return abs(float1 - float2) <= threshold
 
-        # convert json array to array of weblines - not ideal, fits into existing Interpreter functions better for now
-        weblines = []
-        for event in jsonArray:
-            weblines.append("{} {} {:.2f}".format(event['Time'], event['Type'], event['Velocity_Major']))
-        return weblines
+    def _getAPIResponses(self, day):
+        urlDay = self.getDayUrl(self.urlFmt, day)
+        dir = self.__getJsonResponse(urlDay.format(self.station['ca_id'], 'wcdp-extrema'))
+        speed = self.__getJsonResponse(urlDay.format(self.station['ca_id'], 'wcsp-extrema'))
+        return dir, speed
 
     # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
-    def _getSlackData(self, lines, indexes, sunrise, sunset, moonPhase):
+    def __parseSlacks(self, dirResponse, speedResponse, sunrise, sunset, moonPhase):
+        if len(dirResponse) != len(speedResponse):
+            return None
+        n = len(speedResponse)
         slacks = []
-        for i in indexes:
-            s = Slack()
-            s.sunriseTime = sunrise
-            s.sunsetTime = sunset
-            s.moonPhase = moonPhase
+        for i in range(n):
+            if speedResponse[i]['value'] == 0.0:
+                s = Slack()
+                s.sunriseTime = sunrise
+                s.sunsetTime = sunset
+                s.moonPhase = moonPhase
+                if i + 1 < n:
+                    dirLater = dirResponse[i + 1]['value']
+                    if not (self.__floatEqual(dirLater, self.station['ebb_dir']) or self.__floatEqual(dirLater, self.station['flood_dir'])):
+                        print('error: direction {} does not match expected flood {} or ebb {} direction'.format(dirLater, self.station['flood_dir'], self.station['ebb_dir']))
+                        return None
+                    s.slackBeforeEbb = dirLater == self.station['ebb_dir']  # ebb after this slack means it's a SBE
+                else:
+                    dirBefore = dirResponse[i - 1]['value']
+                    if not (self.__floatEqual(dirBefore, self.station['ebb_dir']) or self.__floatEqual(dirBefore, self.station['flood_dir'])):
+                        print('error: direction {} does not match expected flood {} or ebb {} direction'.format(dirBefore, self.station['flood_dir'], self.station['ebb_dir']))
+                        return None
+                    s.slackBeforeEbb = dirBefore == self.station['flood_dir']  # flood before this slack means it's a SBE
 
-            preMax = self._getCurrentBefore(i, lines)
-            if not preMax:
-                continue
-            tokens1 = preMax.split()
-
-            postMax = self._getCurrentAfter(i, lines)
-            if not postMax:
-                continue
-            tokens2 = postMax.split()
-
-            s.slackBeforeEbb = 'ebb' in postMax
-
-            if s.slackBeforeEbb:
-                s.floodSpeed = float(tokens1[3])
-                s.maxFloodTime = self._parseTime(tokens1)
-                s.ebbSpeed = float(tokens2[3])
-                s.maxEbbTime = self._parseTime(tokens2)
-            else:
-                s.ebbSpeed = float(tokens1[3])
-                s.maxEbbTime = self._parseTime(tokens1)
-                s.floodSpeed = float(tokens2[3])
-                s.maxFloodTime = self._parseTime(tokens2)
-
-            s.time = self._parseTime(lines[i].split())
-            slacks.append(s)
+                # can't get the current before or after slack in this case so ignore these very early or late slacks
+                # todo: support a null value before or after to show all slacks in a day
+                if i - 1 >= 0 and i + 1 < n:
+                    if s.slackBeforeEbb:
+                        s.floodSpeed = speedResponse[i - 1]['value']
+                        s.maxFloodTime = self._parseTime(speedResponse[i - 1]['eventDate'])
+                        s.ebbSpeed = -speedResponse[i + 1]['value']
+                        s.maxEbbTime = self._parseTime(speedResponse[i + 1]['eventDate'])
+                    else:
+                        s.ebbSpeed = -speedResponse[i - 1]['value']
+                        s.maxEbbTime = self._parseTime(speedResponse[i - 1]['eventDate'])
+                        s.floodSpeed = speedResponse[i + 1]['value']
+                        s.maxFloodTime = self._parseTime(speedResponse[i + 1]['eventDate'])
+                    s.time = self._parseTime(speedResponse[i]['eventDate'])
+                    slacks.append(s)
         return slacks
+
+    # Returns a list of slacks for the given day, retrieves new web data if the current data doesn't have info for day.
+    # Includes night slacks if night=True
+    def getSlacks(self, day, night):
+        # todo: save the past speed and direction responses and check them before making new request
+        # Note: astral sunrise and sunset times do account for daylight savings
+        sunData = sun(self._astralCity.observer, date=day, tzinfo=timezone('US/Pacific'))
+        # remove time zone info to compare with other local times
+        sunrise = sunData['sunrise'].replace(tzinfo=None)
+        sunset = sunData['sunset'].replace(tzinfo=None)
+        dir, speed = self._getAPIResponses(day)
+        return self.__parseSlacks(dir, speed, sunrise, sunset, moon.phase(day))
+
+        # if night:
+        #     slackIndexes = self._getAllDaySlacks(self._webLines)
+        # else:
+        #     slackIndexes = self._getDaySlacks(self._webLines, sunrise, sunset)
+        # if not slackIndexes:
+        #     print('ERROR: no slacks for {} found in webLines: {}'.format(day, self._webLines))
+        #     return []
+        # return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset, moon.phase(day))

@@ -72,7 +72,7 @@ def parseSlacks(station, dirResponse, speedResponse):
 
 def checkCurrents(station):
     urlFmt = 'https://api-iwls.dfo-mpo.gc.ca/api/v1/stations/{}/data?time-series-code={}'
-    urlDay = getDayUrl(urlFmt, dt.now() + td(days=3))
+    urlDay = getDayUrl(urlFmt, dt.now() + td(days=-1))
 
     dir = getJsonResponse(urlDay.format('63aef12e84e5432cd3b6db8d', 'wcdp-extrema'))
     speed = getJsonResponse(urlDay.format('63aef12e84e5432cd3b6db8d', 'wcsp-extrema'))
