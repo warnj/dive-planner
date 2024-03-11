@@ -242,8 +242,9 @@ def main():
         # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
-        SITES = append(SITES, 'Gabriola Pass')
+        # SITES = append(SITES, 'Gabriola Pass')
         # SITES = append(SITES, 'Dodd Narrows')
+        # SITES = append(SITES, 'Active Pass')
         # SITES = append(SITES, 'Boat Pass')
         # SITES = append(SITES, 'Ten Mile Point')
         # SITES = append(SITES, 'Sechelt Rapids')
@@ -294,7 +295,7 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2024, 3, 9)
+    args.START = dt(2024, 10, 13)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 1
     args.IGNORE_MAX_SPEED = True
@@ -334,8 +335,10 @@ def main():
 
         m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
         # m = intp.TBoneSCOfflineInterpreter('dummy', station)
-        # m2 = intp.NoaaInterpreter(station['url_noaa'], station)
-        m2 = intp.CanadaAPIInterpreter(intp.CanadaAPIInterpreter.urlFmt, station)
+        if 'british columbia' in station['name'].lower():
+            m2 = intp.CanadaAPIInterpreter("", station)
+        else:
+            m2 = intp.NoaaInterpreter(station['url_noaa'], station)
         # m2 = intp.NoaaAPIInterpreter(station['url_noaa_new'])
 
         print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))

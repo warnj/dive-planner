@@ -8,6 +8,8 @@ from datetime import datetime as dt
 from pytz import timezone
 import requests
 import re
+from dateutil import parser
+import pytz
 
 # https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
 TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
@@ -507,16 +509,23 @@ class NoaaAPIInterpreter(Interpreter):
 # Class to retrieve and parse current data from Canada Currents REST API
 class CanadaAPIInterpreter(Interpreter):
     urlFmt = 'https://api-iwls.dfo-mpo.gc.ca/api/v1/stations/{}/data?time-series-code={}'
+    cachedSlacks = []
 
     # Returns the datetime object from the given time
     def _parseTime(self, timeStr):
-        return dt.strptime(timeStr, TIMEPARSEFMT_CA)
+        # return dt.strptime(timeStr, TIMEPARSEFMT_CA)
+        # convert UTC iso time string to local one
+        parsed = parser.parse(timeStr)
+        # confirmed 3/10/24 that this conversion will account for daylight savings
+        datetime_obj_pacific = parsed.astimezone(pytz.timezone('US/Pacific'))
+        # convert localized datetime object to a naive datetime object
+        return datetime_obj_pacific.replace(tzinfo=None)
 
     # Returns the day-specific URL for the current base URL
     @staticmethod
     def getDayUrl(baseUrl, day):
-        start = day.strftime("%Y-%m-%d")
-        twoWeeks = (day + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        start = (day + datetime.timedelta(days=-1)).strftime("%Y-%m-%d")  # start 1d earlier due to huge utc time zone difference
+        twoWeeks = (day + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
         return baseUrl + '&from={}T00:00:00Z&to={}T00:30:00Z'.format(start, twoWeeks)
 
     def __getJsonResponse(self, url):
@@ -575,11 +584,23 @@ class CanadaAPIInterpreter(Interpreter):
                         s.maxFloodTime = self._parseTime(speedResponse[i + 1]['eventDate'])
                     s.time = self._parseTime(speedResponse[i]['eventDate'])
                     slacks.append(s)
+        self.cachedSlacks.extend(slacks)
         return slacks
+
+    def __getSlacksOnDay(self, day, slacks):
+        daySlacks = []
+        for s in slacks:
+            if dt.strftime(s.time, DATEFMT) == dt.strftime(day, DATEFMT):
+                daySlacks.append(s)
+        return daySlacks
 
     # Returns a list of slacks for the given day, retrieves new web data if the current data doesn't have info for day.
     # Includes night slacks if night=True
     def getSlacks(self, day, night):
+        slacks = self.__getSlacksOnDay(day, self.cachedSlacks)
+        if len(slacks) > 1:
+            return slacks
+
         # todo: save the past speed and direction responses and check them before making new request
         # Note: astral sunrise and sunset times do account for daylight savings
         sunData = sun(self._astralCity.observer, date=day, tzinfo=timezone('US/Pacific'))
@@ -587,7 +608,10 @@ class CanadaAPIInterpreter(Interpreter):
         sunrise = sunData['sunrise'].replace(tzinfo=None)
         sunset = sunData['sunset'].replace(tzinfo=None)
         dir, speed = self._getAPIResponses(day)
-        return self.__parseSlacks(dir, speed, sunrise, sunset, moon.phase(day))
+        allSlacks = self.__parseSlacks(dir, speed, sunrise, sunset, moon.phase(day))
+
+        # time zone difference with utz is so large we get all the slacks 1 day before to 14 days after and then pick the ones on the requested day
+        return self.__getSlacksOnDay(day, allSlacks)
 
         # if night:
         #     slackIndexes = self._getAllDaySlacks(self._webLines)

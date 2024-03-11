@@ -202,6 +202,7 @@
       "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=South+Point%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1603_20&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
+
     {
       "name": "Seymour Narrows, British Columbia Current",
       "coords": "50.1333 N, 125.3500 W",
@@ -209,7 +210,10 @@
       "url": "",
       "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Seymour+Narrows%2C+British+Columbia+Current&glen=14",
       "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Seymour+Narrows%2C+British+Columbia+Current&glen=14",
-      "url_noaa": ""
+      "url_noaa": "",
+      "ca_id": "63aefc7784e5432cd3b6eb1e",
+      "flood_dir": 0.0,
+      "ebb_dir": 180.0
     },
     {
       "name": "Gabriola Passage, British Columbia Current",
@@ -231,8 +235,71 @@
       "url": "",
       "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Dodd+Narrows%2C+British+Columbia+Current&glen=14",
       "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Dodd+Narrows%2C+British+Columbia+Current&glen=14",
+      "url_noaa": "",
+      "ca_id": "63aef1866a2b9417c035030f",
+      "flood_dir": 355.0,
+      "dir_comment": "oddly the directions here seem reversed but it matches xtide, may be error with the api on this station?",
+      "ebb_dir": 155.0
+    },
+    {
+      "name": "Boat Pass, British Columbia Current",
+      "coords": "48.8167,-123.1833",
+      "xtide_limit_2037": true,
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Boat+Passage%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Boat+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": ""
     },
+    {
+      "name": "Weynton Passage, British Columbia Current",
+      "coords": "50.6033,-126.8117",
+      "xtide_limit_2037": true,
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Weynton+Passage%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Weynton+Passage%2C+British+Columbia+Current&glen=14",
+      "url_noaa": "",
+      "ca_id": "63af005f6a2b9417c0353158",
+      "flood_dir": 220.0,
+      "ebb_dir": 40.0
+    },
+    {
+      "name": "Active Passage, British Columbia Current",
+      "coords": "48.8667 N, 123.3000 W",
+      "xtide_limit_2037": true,
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Active+Pass%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Active+Pass%2C+British+Columbia+Current&glen=14",
+      "url_noaa": "",
+      "ca_id": "63aef09f84e5432cd3b6c509",
+      "flood_dir": 220.0,
+      "ebb_dir": 40.0
+    },
+    {
+      "name": "Nakwakto, British Columbia Current",
+      "coords": "",
+      "xtide_limit_2037": true,
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Nakwakto+Rapids%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Nakwakto+Rapids%2C+British+Columbia+Current&glen=14",
+      "url_noaa": "",
+      "ca_id": "63af009f84e5432cd3b71287",
+      "flood_dir": 355.0,
+      "ebb_dir": 175.0
+    },
+    {
+      "name": "Sechelt Rapids, British Columbia Current",
+      "coords": "",
+      "xtide_limit_2037": true,
+      "COMMENT": "doesnt quite match darkiri which also uses xtide, not sure why https://www.dairiki.org/tides/monthly.php/scl",
+      "url": "",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Sechelt+Rapids%2C+British+Columbia+Current+%28use+with+caution%29&glen=14",
+      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Sechelt+Rapids%2C+British+Columbia+Current+%28use+with+caution%29&glen=14",
+      "url_noaa": "",
+      "ca_id": "63aef40a6a2b9417c0350313",
+      "flood_dir": 135.0,
+      "ebb_dir": 315.0
+    },
+
     {
       "name": "San Juan Channel (south entrance), Washington Current",
       "coords": "48.4613 N, 122.9508 W",
@@ -292,24 +359,6 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1737_23&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
-      "name": "Boat Pass, British Columbia Current",
-      "coords": "48.8167,-123.1833",
-      "xtide_limit_2037": true,
-      "url": "",
-      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Boat+Passage%2C+British+Columbia+Current&glen=14",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Boat+Passage%2C+British+Columbia+Current&glen=14",
-      "url_noaa": ""
-    },
-    {
-      "name": "Weynton Passage, British Columbia Current",
-      "coords": "50.6033,-126.8117",
-      "xtide_limit_2037": true,
-      "url": "",
-      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Weynton+Passage%2C+British+Columbia+Current&glen=14",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Weynton+Passage%2C+British+Columbia+Current&glen=14",
-      "url_noaa": ""
-    },
-    {
       "name": "Hazel Point, Hood Canal, Washington Current",
       "coords": "47.6912 N   122.7628 W",
       "url": "",
@@ -334,25 +383,6 @@
       "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Colville+Island%2C+1%2E4+miles+east+of%2C+Washington+Current&glen=14",
       "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Colville+Island%2C+1%2E4+miles+east+of%2C+Washington+Current&glen=14",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1727_30&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
-    },
-    {
-      "name": "Nakwakto",
-      "coords": "",
-      "xtide_limit_2037": true,
-      "url": "",
-      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Nakwakto+Rapids%2C+British+Columbia+Current&glen=14",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Nakwakto+Rapids%2C+British+Columbia+Current&glen=14",
-      "url_noaa": ""
-    },
-    {
-      "name": "Sechelt Rapids, British Columbia Current",
-      "coords": "",
-      "xtide_limit_2037": true,
-      "COMMENT": "doesnt quite match darkiri which also uses xtide, not sure why https://www.dairiki.org/tides/monthly.php/scl",
-      "url": "",
-      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Sechelt+Rapids%2C+British+Columbia+Current+%28use+with+caution%29&glen=14",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Sechelt+Rapids%2C+British+Columbia+Current+%28use+with+caution%29&glen=14",
-      "url_noaa": ""
     },
     {
       "name": "Hawea Point, Hawaii Current",
@@ -896,7 +926,7 @@
     },
     {
       "name": "Nakwakto",
-      "data": "Nakwakto",
+      "data": "Nakwakto, British Columbia Current",
       "COMMENT": "don't trust xtide, verify with Canadian current predictions too and consider slack +/- 1hr",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
@@ -1017,6 +1047,21 @@
     {
       "name": "Boat Pass",
       "data": "Boat Pass, British Columbia Current",
+      "COMMENT": "Use this with Saturna Channel tides for best slack in Saturna Channel, i.e. Jan. 21, 2023",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 5,
+      "max_ebb": 5,
+      "max_total_speed": 8,
+      "dive_duration": 80,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Active Pass",
+      "data": "Active Passage, British Columbia Current",
       "COMMENT": "Use this with Saturna Channel tides for best slack in Saturna Channel, i.e. Jan. 21, 2023",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
