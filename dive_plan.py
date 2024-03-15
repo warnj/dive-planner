@@ -242,7 +242,7 @@ def main():
         # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
-        # SITES = append(SITES, 'Gabriola Pass')
+        SITES = append(SITES, 'Gabriola Pass')
         # SITES = append(SITES, 'Dodd Narrows')
         # SITES = append(SITES, 'Active Pass')
         # SITES = append(SITES, 'Boat Pass')
@@ -295,12 +295,12 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2024, 10, 13)
+    args.START = dt(2024, 3, 19)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 1
-    args.IGNORE_MAX_SPEED = True
+    args.DAYS_IN_FUTURE = 0
+    # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    args.INCLUDE_NIGHT = True
+    # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
 
@@ -375,6 +375,9 @@ def main():
 
                 if not canDive:
                     print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
+
+        if 'british columbia' in station['name'].lower():
+            print('number of API calls: {}'.format(m2.numAPICalls))
 
 if __name__ == '__main__':
     main()

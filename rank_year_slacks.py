@@ -26,9 +26,9 @@ def getDiveableSlacks(slacks, site):
     return diveableSlacks
 
 def main():
-    # SITE = 'Whiskey Point'
+    SITE = 'Whiskey Point'
     # SITE = 'Boat Pass'
-    SITE = 'Gabriola Pass'
+    # SITE = 'Gabriola Pass'
     # SITE = 'Dodd Narrows'
     # SITE = 'Skyline Wall'
     # SITE = 'Deception Pass'
@@ -39,8 +39,8 @@ def main():
     # SITE = 'Sechelt Rapids'
     # SITE = 'Nakwakto'
 
-    # NOAA = True
-    NOAA = False
+    NOAA = True
+    # NOAA = False
 
     # NIGHT = True
     NIGHT = False
@@ -50,13 +50,17 @@ def main():
 
     station = dive_plan.getStation(data['stations'], siteJson['data'])
     if NOAA:
-        m = intp.NoaaInterpreter(station['url_noaa'], station['name'])
+        if 'british columbia' in station['name'].lower():
+            print('using Canadian Currents API')
+            m = intp.CanadaAPIInterpreter("", station)
+        else:
+            m = intp.NoaaInterpreter(station['url_noaa'], station)
     else:
         m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
 
     slacks = []
     days = dive_plan.getAllDays(365, dt(2024, 1, 1))
-    # days = dive_plan.getAllDays(200)
+    # days = dive_plan.getAllDays(290)
     # days = dive_plan.getNonWorkDays(365, dt(2023, 1, 1))
     for day in days:
         slacks.extend(m.getSlacks(day, night=NIGHT))

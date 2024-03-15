@@ -510,6 +510,7 @@ class NoaaAPIInterpreter(Interpreter):
 class CanadaAPIInterpreter(Interpreter):
     urlFmt = 'https://api-iwls.dfo-mpo.gc.ca/api/v1/stations/{}/data?time-series-code={}'
     cachedSlacks = []
+    numAPICalls = 0
 
     # Returns the datetime object from the given time
     def _parseTime(self, timeStr):
@@ -539,13 +540,14 @@ class CanadaAPIInterpreter(Interpreter):
         return abs(float1 - float2) <= threshold
 
     def _getAPIResponses(self, day):
+        self.numAPICalls += 1
         urlDay = self.getDayUrl(self.urlFmt, day)
         dir = self.__getJsonResponse(urlDay.format(self.station['ca_id'], 'wcdp-extrema'))
         speed = self.__getJsonResponse(urlDay.format(self.station['ca_id'], 'wcsp-extrema'))
         return dir, speed
 
     # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
-    def __parseSlacks(self, dirResponse, speedResponse, sunrise, sunset, moonPhase):
+    def __parseSlacks(self, dirResponse, speedResponse, moonPhase):
         if len(dirResponse) != len(speedResponse):
             return None
         n = len(speedResponse)
@@ -553,8 +555,6 @@ class CanadaAPIInterpreter(Interpreter):
         for i in range(n):
             if speedResponse[i]['value'] == 0.0:
                 s = Slack()
-                s.sunriseTime = sunrise
-                s.sunsetTime = sunset
                 s.moonPhase = moonPhase
                 if i + 1 < n:
                     dirLater = dirResponse[i + 1]['value']
@@ -583,41 +583,47 @@ class CanadaAPIInterpreter(Interpreter):
                         s.floodSpeed = speedResponse[i + 1]['value']
                         s.maxFloodTime = self._parseTime(speedResponse[i + 1]['eventDate'])
                     s.time = self._parseTime(speedResponse[i]['eventDate'])
+
+                    # Note: astral sunrise and sunset times do account for daylight savings
+                    sunData = sun(self._astralCity.observer, date=s.time, tzinfo=timezone('US/Pacific'))
+                    # remove time zone info to compare with other local times
+                    sunrise = sunData['sunrise'].replace(tzinfo=None)
+                    sunset = sunData['sunset'].replace(tzinfo=None)
+                    s.sunriseTime = sunrise
+                    s.sunsetTime = sunset
+
                     slacks.append(s)
         self.cachedSlacks.extend(slacks)
         return slacks
 
-    def __getSlacksOnDay(self, day, slacks):
+    def __getSlacksOnDay(self, day, slacks, night):
         daySlacks = []
         for s in slacks:
             if dt.strftime(s.time, DATEFMT) == dt.strftime(day, DATEFMT):
+                if not night and (s.time < s.sunriseTime or s.time > s.sunsetTime):
+                    continue
                 daySlacks.append(s)
+        if self.cachedSlacks and daySlacks and dt.strftime(daySlacks[-1].time, DATEFMT) == dt.strftime(self.cachedSlacks[-1].time, DATEFMT):
+            # cached slacks might not have a clean break at end and only include 1st half of final day, so don't return
+            # cached slacks for the last day in the cache
+            return []
         return daySlacks
 
     # Returns a list of slacks for the given day, retrieves new web data if the current data doesn't have info for day.
     # Includes night slacks if night=True
     def getSlacks(self, day, night):
-        slacks = self.__getSlacksOnDay(day, self.cachedSlacks)
-        if len(slacks) > 1:
+        slacks = self.__getSlacksOnDay(day, self.cachedSlacks, night)
+        if slacks:
             return slacks
-
-        # todo: save the past speed and direction responses and check them before making new request
-        # Note: astral sunrise and sunset times do account for daylight savings
-        sunData = sun(self._astralCity.observer, date=day, tzinfo=timezone('US/Pacific'))
-        # remove time zone info to compare with other local times
-        sunrise = sunData['sunrise'].replace(tzinfo=None)
-        sunset = sunData['sunset'].replace(tzinfo=None)
-        dir, speed = self._getAPIResponses(day)
-        allSlacks = self.__parseSlacks(dir, speed, sunrise, sunset, moon.phase(day))
-
-        # time zone difference with utz is so large we get all the slacks 1 day before to 14 days after and then pick the ones on the requested day
-        return self.__getSlacksOnDay(day, allSlacks)
-
-        # if night:
-        #     slackIndexes = self._getAllDaySlacks(self._webLines)
         # else:
-        #     slackIndexes = self._getDaySlacks(self._webLines, sunrise, sunset)
-        # if not slackIndexes:
-        #     print('ERROR: no slacks for {} found in webLines: {}'.format(day, self._webLines))
-        #     return []
-        # return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset, moon.phase(day))
+        #     print('unable to use cached results for day: {}'.format(dt.strftime(day, DATEFMT)))
+        #     for sl in self.cachedSlacks:
+        #         print("\t{}".format(sl))
+        #         print("\t comparing to: {}".format(dt.strftime(sl.time, DATEFMT)))
+
+        dir, speed = self._getAPIResponses(day)
+        allSlacks = self.__parseSlacks(dir, speed, moon.phase(day))
+
+        # time zone difference with utz is so large we get all the slacks 1 day before to 14 days after and then pick
+        # the ones on the requested day
+        return self.__getSlacksOnDay(day, allSlacks, night)

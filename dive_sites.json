@@ -224,9 +224,9 @@
       "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Gabriola+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aef12e84e5432cd3b6db8d",
-      "flood_dir": 260.0,
-      "dir_comment": "direction the current originates from i.e. here flood runs W to E",
-      "ebb_dir": 80.0
+      "flood_dir": 80.0,
+      "dir_comment": "direction the current flows toward from i.e. here flood runs W to E",
+      "ebb_dir": 260.0
     },
     {
       "name": "Dodd Narrows, British Columbia Current",
