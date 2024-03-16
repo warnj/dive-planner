@@ -242,7 +242,7 @@ def main():
         # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
-        SITES = append(SITES, 'Gabriola Pass')
+        # SITES = append(SITES, 'Gabriola Pass')
         # SITES = append(SITES, 'Dodd Narrows')
         # SITES = append(SITES, 'Active Pass')
         # SITES = append(SITES, 'Boat Pass')
@@ -298,7 +298,7 @@ def main():
     args.START = dt(2024, 3, 19)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
-    # args.IGNORE_MAX_SPEED = True
+    args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True

@@ -212,8 +212,8 @@
       "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Seymour+Narrows%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aefc7784e5432cd3b6eb1e",
-      "flood_dir": 0.0,
-      "ebb_dir": 180.0
+      "flood_dir": 180.0,
+      "ebb_dir": 0.0
     },
     {
       "name": "Gabriola Passage, British Columbia Current",

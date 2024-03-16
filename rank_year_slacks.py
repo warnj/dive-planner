@@ -86,7 +86,12 @@ def main():
     diveableSlacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
 
     for s in diveableSlacks:
-        print('{}\tSpeed sum = {:0.1f}'.format(s, abs(s.ebbSpeed)+abs(s.floodSpeed)))
+        # print('{}\tSpeed sum = {:0.1f}'.format(s, abs(s.ebbSpeed) + abs(s.floodSpeed)))
+        afterSunrise = (s.time - s.sunriseTime).total_seconds() / 60.0
+        beforeSunset = (s.sunsetTime - s.time).total_seconds() / 60.0
+        print('{}\tSpeed sum = {:0.1f}\tTime before/after dark = {:0.0f}min'.format(s, abs(s.ebbSpeed)+abs(s.floodSpeed), min(beforeSunset, afterSunrise)))
 
+    if NOAA and 'british columbia' in station['name'].lower():
+        print('number of api calls: {}'.format(m.numAPICalls))
 if __name__ == '__main__':
     main()
