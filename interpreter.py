@@ -60,6 +60,9 @@ class Slack:
         else:
             return '{}({}) > {} > {}({})'.format(self.ebbSpeed, timeStr(self.maxEbbTime), timeStr(self.time), self.floodSpeed, timeStr(self.maxFloodTime))
 
+    def speedSum(self):
+        return abs(self.floodSpeed) + abs(self.ebbSpeed)
+
     def __repr__(self):
         return self.__str__()
 

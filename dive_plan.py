@@ -125,6 +125,7 @@ def printDive(s: intp.Slack, site: dict, titleMessage: str) -> None:
               .format(Color.UNDERLINE, intp.dateStr(entryTime), Color.END, dt.strftime(exitTime, intp.TIMEFMT)))
         print('\t\t\t{}'.format(s.logString()))
         print('\t\t\t{}'.format(s.logStringWithSpeed()))
+        print('\t\t\tSpeed sum = {:.1f}'.format(s.speedSum()))
         # print('\t\t\tClub Entry Time (60min dive, no surface swim):', intp.dateStr(clubEntryTime))
         # moonAction = "waxing" if s.moonPhase <= 14 else "waning"
         # print('\t\t\tMoon phase: day {} of 28 day lunar month, {:.2f}% {}'
@@ -252,7 +253,7 @@ def main():
         # SITES = append(SITES, 'Sekiu')
         # SITES = append(SITES, 'Salt Creek')
         # SITES = append(SITES, 'Point Hudson')
-        # SITES = append(SITES, 'Reuben Tarte')
+        # SITES = append(SITES, 'Spieden Channel')
         # SITES = append(SITES, 'Lime Kiln Discovery')
         # SITES = append(SITES, 'Lime Kiln Haro')
         # SITES = append(SITES, 'Lime Kiln Admiralty')
@@ -260,7 +261,7 @@ def main():
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
-        # SITES = append(SITES, 'Skyline Wall')
+        SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
         # SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
@@ -295,9 +296,9 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2024, 3, 19)
+    args.START = dt(2024, 4, 14)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    args.DAYS_IN_FUTURE = 3
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True

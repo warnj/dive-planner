@@ -26,9 +26,9 @@ def getDiveableSlacks(slacks, site):
     return diveableSlacks
 
 def main():
-    SITE = 'Whiskey Point'
+    # SITE = 'Whiskey Point'
     # SITE = 'Boat Pass'
-    # SITE = 'Gabriola Pass'
+    SITE = 'Gabriola Pass'
     # SITE = 'Dodd Narrows'
     # SITE = 'Skyline Wall'
     # SITE = 'Deception Pass'
@@ -84,6 +84,8 @@ def main():
 
     # sort by the sum of the max current speeds from weakest to strongest
     diveableSlacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
+    # sort by the min flood speed
+    # diveableSlacks.sort(key=lambda x: abs(x.floodSpeed))
 
     for s in diveableSlacks:
         # print('{}\tSpeed sum = {:0.1f}'.format(s, abs(s.ebbSpeed) + abs(s.floodSpeed)))
