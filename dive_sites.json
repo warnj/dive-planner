@@ -149,6 +149,13 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1530_10&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
+      "name": "Hammersley Inlet, west of Skookum Point, Washington Current",
+      "coords": "47.2070 N, 123.0395 W",
+      "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Hammersley+Inlet%2C+west+of+Skookum+Point%2C+Washington+Current&glen=14",
+      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Hammersley+Inlet%2C+west+of+Skookum+Point%2C+Washington+Current&glen=14",
+      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PCT1896_1&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+    },
+    {
       "name": "Green Point, 0.8 mile northwest of, Rosario Strait, Washington Current",
       "coords": "48.5047 N, 122.7062 W",
       "xtide_limit_2037": false,
@@ -581,11 +588,13 @@
       "data": "Deception Pass (narrows), Washington Current",
       "slack_before_ebb": 0,
       "COMMENT": "Marker Buoy seems to have max_flood = 4.1 and max_ebb = 5.9, however NW Dive Club dives with either flood or ebb max about 5.9 and sum of the two less than 11 kts",
-      "COMMENT2": "North Beach opens somewhere around April 1 and closes somewhere around October 31",
+      "COMMENT2": "North Beach opens somewhere around April 1 and closes somewhere around October 31, nightly gate closure opens ~6:45am in April (maybe earlier in summer?)",
       "COMMENT3": "ALSO CHECK https://www.tides.gc.ca/en/current-predictions-station",
       "COMMENT4": "Jan has dove on 4.7 -> -6.0 NOAA which was 5.6 > -7.0 XTide and currents were strong and swirly but doable with good timing",
       "COMMENT5": "With a large time difference in xtide & noaa (I've seen 50-90min!), reality is in the middle and usually slightly closer to NOAA",
       "COMMENT6": "More time in the best parts east of bridge means error on the early side and shelter from flood once on east side, but it's very committing",
+      "COMMENT7": "May 2024 current limits: >8.0 NOAA and 10.0 XTide going to be 'sporty' but fine, above ~9.0 sum NOAA and ~11.0 sum XTide probably not worth it (i.e. April 14 2024 = 8.55 & 10.26 with good 85min dive but semi-short slack)",
+      "COMMENT8": "A west wind over 15kts in the 24hrs before a dive will result in poor vis as stirred up sand gets funnelled into the pass",
       "max_flood": 5,
       "max_ebb": 6.9,
       "max_total_speed": 10.5,
@@ -739,7 +748,9 @@
       "data": "Point Hudson, 0.5 mile east of, Washington Current",
       "slack_before_flood": -30,
       "COMMENT": "Preferred to dive during flood (especially the first half), ebbs are amplified. Use xtide, ignore noaa",
-      "slack_before_ebb": 0,
+      "COMMENT2": "Like Keystone: slack before flood on a lower exchange day. Don't attempt slack before ebb. It's not actually slack",
+      "COMMENT3": "Xtide better for now (per pnwdivers fb comments on splash time), the NOAA station is very different",
+      "slack_before_ebb": -20,
       "max_flood": 2.5,
       "max_ebb": 2,
       "max_total_speed": 3,
@@ -824,6 +835,21 @@
       "dive_duration": 100,
       "surface_swim_time": 0,
       "diveable_before_flood": false,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Hammersley Inlet",
+      "data": "Hammersley Inlet, west of Skookum Point, Washington Current",
+      "COMMENT": "5/19 NOAA slack before flood correct within 5min, slack before ebb is preferred",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2.6,
+      "max_ebb": 2.6,
+      "max_total_speed": 4.2,
+      "dive_duration": 120,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
@@ -927,6 +953,8 @@
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
+
+
     {
       "name": "Nakwakto",
       "data": "Nakwakto, British Columbia Current",
@@ -1268,6 +1296,7 @@
     {
       "name": "Alki Junkyard",
       "data": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
+      "COMMENT": "Xtide probably more accurate - SBF seems 1hr late on NOAA per 5/4/24",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
       "max_flood": 0.9,

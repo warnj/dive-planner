@@ -78,7 +78,7 @@ def main():
 
     # find_closest_stations((48.425859, -122.675265), 10)
     # find_closest_stations((50.592204, -126.800397), 10)
-    find_closest_stations(( 48.628632, -123.125763), 10)
+    find_closest_stations(( 47.204054, -123.061688), 10)
 
 if __name__ == "__main__":
     main()

@@ -261,9 +261,9 @@ def main():
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
-        SITES = append(SITES, 'Skyline Wall')
+        # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
-        # SITES = append(SITES, 'Deception Pass')
+        SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
@@ -283,6 +283,7 @@ def main():
         # SITES = append(SITES, 'Warren Avenue Bridge North')
         # SITES = append(SITES, 'Warren Avenue Bridge South')
         # SITES = append(SITES, 'Agate Pass')
+        # SITES = append(SITES, 'Hammersley Inlet')
 
         # SITES = append(SITES, 'Hawea Point')
         # SITES = append(SITES, 'Red Hill')
@@ -296,10 +297,10 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2024, 4, 14)
+    args.START = dt(2024,6,1)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 3
-    args.IGNORE_MAX_SPEED = True
+    args.DAYS_IN_FUTURE = 1
+    # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True

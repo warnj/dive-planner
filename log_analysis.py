@@ -30,11 +30,12 @@ def main():
     # SITES = append(SITES, 'Deception')
     # SITES = append(SITES, 'Redondo')
     # SITES = append(SITES, 'Skyline')
+    SITES = append(SITES, 'Lime')
 
-    SITES = append(SITES, 'Brinnon')
-    SITES = append(SITES, 'Flagpole')
-    SITES = append(SITES, 'Sund')
-    SITES = append(SITES, 'Hood')
+    # SITES = append(SITES, 'Brinnon')
+    # SITES = append(SITES, 'Flagpole')
+    # SITES = append(SITES, 'Sund')
+    # SITES = append(SITES, 'Hood')
 
     for entry in filter_by_site('dive_log.csv', SITES):
         print(diveStr(entry))
