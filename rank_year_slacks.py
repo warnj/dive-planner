@@ -10,7 +10,7 @@ import json
 from must_do_dives import getSite
 from datetime import datetime as dt
 
-# returns list of slacks in given list that are divable for the given site, mostly taken from must_do_dives.py
+# returns list of slacks in given list that are dive-able for the given site, mostly taken from must_do_dives.py
 def getDiveableSlacks(slacks, site):
     diveableSlacks = []
     for s in slacks:
@@ -28,11 +28,12 @@ def getDiveableSlacks(slacks, site):
 def main():
     # SITE = 'Whiskey Point'
     # SITE = 'Boat Pass'
-    SITE = 'Gabriola Pass'
+    # SITE = 'Gabriola Pass'
     # SITE = 'Dodd Narrows'
     # SITE = 'Skyline Wall'
     # SITE = 'Deception Pass'
     # SITE = 'Goose Island'
+    SITE = 'Deadman Island'
     # SITE = 'Lime Kiln Haro'
     # SITE = 'Salt Creek'
     # SITE = 'Day Island Wall'

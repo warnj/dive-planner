@@ -20,7 +20,8 @@
       "url": "https://tides.mobilegeographics.com/locations/7867",
       "url_xtide": "http://tbone.biol.sc.edu/tide/tideshow.cgi?site=Strait+of+Juan+de+Fuca+Entrance%2C+Washington+Current&glen=14",
       "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Strait+of+Juan+de+Fuca+Entrance%2C+Washington+Current&glen=14",
-      "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1642_49&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
+      "url_noaa_old": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1642_49&t=am%2fpm&i=&threshold=&thresholdvalue=&d=",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/dpapi/prod/webapi/currentPredictionsDownload?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1642_49&t=am%2fpm&i=&threshold=&thresholdvalue=&d="
     },
     {
       "name": "Juan De Fuca Strait (East), British Columbia Current",
@@ -936,6 +937,22 @@
       "surface_swim_time": 5,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Deadman Island",
+      "data": "San Juan Channel (south entrance), Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2.5,
+      "max_ebb": 2.5,
+      "max_total_speed": 4,
+      "dive_duration": 90,
+      "surface_swim_time": 30,
+      "COMMENT": "want to end this dive at slack so you dont have to fight the angle of flood hitting the island",
+      "COMMENT2": "Xtide was slightly closer to accurate on 7-14-24 and reality was between Xtide and NOAA with slack predictions 1hr apart, error on the early side and wait out the ebb at end if needed",
+      "diveable_before_flood": true,
+      "diveable_before_ebb": false,
       "diveable_off_slack": false
     },
     {
