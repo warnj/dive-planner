@@ -376,71 +376,6 @@ class TBoneSCOfflineInterpreter(TBoneSCInterpreter):
         raise Exception('did not find date {} in offline xtide data'.format(targetDayStr))
 
 
-# Class to retrieve and parse current data from Noaa website
-class NoaaInterpreter(Interpreter):
-
-    # Returns the datetime object parsed from the given data line from Noaa website
-    def _parseTime(self, tokens):
-        dayTimeStr = tokens[0] + ' ' + tokens[1] + tokens[2][:-1]
-        return dt.strptime(dayTimeStr, TIMEPARSEFMT)
-
-    # Returns the day-specific URL for the current base URL
-    @staticmethod
-    def getDayUrl(baseUrl, day):
-        return baseUrl + dt.strftime(day, DATEFMT)
-
-    # Returns the noaa current data from the given url
-    def _getWebLines(self, url, day):
-        with urllib.request.urlopen(url) as response:
-            html = response.read()
-            soup = BeautifulSoup(html, 'html.parser')
-            lines = soup.text.lower().splitlines()
-            # ignore the non-current speed data at the top
-            dayStr = dt.strftime(day, DATEFMT)
-            start = 0
-            for line in lines:
-                if dayStr not in line:
-                    start += 1
-                else:
-                    break
-            return lines[start:]
-
-    # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
-    def _getSlackData(self, lines, indexes, sunrise, sunset, moonPhase):
-        slacks = []
-        for i in indexes:
-            s = Slack()
-            s.sunriseTime = sunrise
-            s.sunsetTime = sunset
-            s.moonPhase = moonPhase
-
-            preMax = self._getCurrentBefore(i, lines)
-            if not preMax:
-                continue
-            tokens1 = preMax.split()
-
-            postMax = self._getCurrentAfter(i, lines)
-            if not postMax:
-                continue
-            tokens2 = postMax.split()
-
-            s.slackBeforeEbb = 'ebb' in postMax
-
-            if s.slackBeforeEbb:
-                s.floodSpeed = float(tokens1[4])
-                s.maxFloodTime = self._parseTime(tokens1)
-                s.ebbSpeed = float(tokens2[4])
-                s.maxEbbTime = self._parseTime(tokens2)
-            else:
-                s.ebbSpeed = float(tokens1[4])
-                s.maxEbbTime = self._parseTime(tokens1)
-                s.floodSpeed = float(tokens2[4])
-                s.maxFloodTime = self._parseTime(tokens2)
-
-            s.time = self._parseTime(lines[i].split())
-            slacks.append(s)
-        return slacks
-
 # Class to retrieve and parse current data from Noaa API
 class NoaaAPIInterpreter(Interpreter):
 
@@ -463,7 +398,7 @@ class NoaaAPIInterpreter(Interpreter):
         urlFinal = self.getDayUrl(url, day)
         response = requests.get(urlFinal)
         if response.status_code != 200:
-            raise Exception('NOAA API is down')
+            raise Exception('NOAA API is down: ' + str(response))
 
         jsonArray = response.json()['current_predictions']['cp']
 
