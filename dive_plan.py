@@ -250,44 +250,45 @@ def main():
         # SITES = append(SITES, 'Ten Mile Point')
         # SITES = append(SITES, 'Sechelt Rapids')
 
-        SITES = append(SITES, 'Sekiu')
-        SITES = append(SITES, 'Salt Creek')
-        SITES = append(SITES, 'Point Hudson')
-        SITES = append(SITES, 'Spieden Channel')
-        SITES = append(SITES, 'Lime Kiln Discovery')
-        SITES = append(SITES, 'Lime Kiln Haro')
-        SITES = append(SITES, 'Lime Kiln Admiralty')
-        SITES = append(SITES, 'Goose Island')
-        SITES = append(SITES, 'Deadman Island')
-        SITES = append(SITES, 'Green Point')
-        SITES = append(SITES, 'Skyline Wall Rosario')
-        SITES = append(SITES, 'Skyline Wall Allan Pass')
-        SITES = append(SITES, 'Skyline Wall')
-        SITES = append(SITES, 'Sares Head')
-        SITES = append(SITES, 'Deception Pass')
-        SITES = append(SITES, 'Keystone Jetty')
-        SITES = append(SITES, 'Possession Point')
-        SITES = append(SITES, 'Mukilteo')
-        SITES = append(SITES, 'Hood Canal Bridge')
-        SITES = append(SITES, 'Misery Point')
-        SITES = append(SITES, 'Edmonds Underwater Park')
-        SITES = append(SITES, 'Alki Junkyard')
-        SITES = append(SITES, 'Saltwater State Park')
-        SITES = append(SITES, 'Sunrise Beach')
-        SITES = append(SITES, 'Day Island Wall')
-        SITES = append(SITES, 'Fox Island Bridge')
-        SITES = append(SITES, 'Fox Island Bridge Hale')
-        SITES = append(SITES, 'Fox Island East Wall')
-        SITES = append(SITES, 'Fox Island East Wall Gibson')
-        SITES = append(SITES, 'Titlow')
-        SITES = append(SITES, 'Waterman Wall')
-        SITES = append(SITES, 'Warren Avenue Bridge North')
-        SITES = append(SITES, 'Warren Avenue Bridge South')
-        SITES = append(SITES, 'Agate Pass')
-        SITES = append(SITES, 'Hammersley Inlet')
-
-        SITES = append(SITES, 'Hawea Point')
-        SITES = append(SITES, 'Red Hill')
+        # SITES = append(SITES, 'Sekiu')
+        # SITES = append(SITES, 'Salt Creek NOAA')
+        SITES = append(SITES, 'Salt Creek XTide')
+        # SITES = append(SITES, 'Point Hudson')
+        # SITES = append(SITES, 'Spieden Channel')
+        # SITES = append(SITES, 'Lime Kiln Discovery')
+        # SITES = append(SITES, 'Lime Kiln Haro')
+        # SITES = append(SITES, 'Lime Kiln Admiralty')
+        # SITES = append(SITES, 'Goose Island')
+        # SITES = append(SITES, 'Deadman Island')
+        # SITES = append(SITES, 'Green Point')
+        # SITES = append(SITES, 'Skyline Wall Rosario')
+        # SITES = append(SITES, 'Skyline Wall Allan Pass')
+        # SITES = append(SITES, 'Skyline Wall')
+        # SITES = append(SITES, 'Sares Head')
+        # SITES = append(SITES, 'Deception Pass')
+        # SITES = append(SITES, 'Keystone Jetty')
+        # SITES = append(SITES, 'Possession Point')
+        # SITES = append(SITES, 'Mukilteo')
+        # SITES = append(SITES, 'Hood Canal Bridge')
+        # SITES = append(SITES, 'Misery Point')
+        # SITES = append(SITES, 'Edmonds Underwater Park')
+        # SITES = append(SITES, 'Alki Junkyard')
+        # SITES = append(SITES, 'Saltwater State Park')
+        # SITES = append(SITES, 'Sunrise Beach')
+        # SITES = append(SITES, 'Day Island Wall')
+        # SITES = append(SITES, 'Fox Island Bridge')
+        # SITES = append(SITES, 'Fox Island Bridge Hale')
+        # SITES = append(SITES, 'Fox Island East Wall')
+        # SITES = append(SITES, 'Fox Island East Wall Gibson')
+        # SITES = append(SITES, 'Titlow')
+        # SITES = append(SITES, 'Waterman Wall')
+        # SITES = append(SITES, 'Warren Avenue Bridge North')
+        # SITES = append(SITES, 'Warren Avenue Bridge South')
+        # SITES = append(SITES, 'Agate Pass')
+        # SITES = append(SITES, 'Hammersley Inlet')
+        #
+        # SITES = append(SITES, 'Hawea Point')
+        # SITES = append(SITES, 'Red Hill')
 
     possibleDiveDays = [  # Specify dates
         # dt(2012, 2, 3),
@@ -300,7 +301,7 @@ def main():
 
     args.START = dt(2024, 9, 7)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    args.DAYS_IN_FUTURE = 1
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
@@ -336,15 +337,22 @@ def main():
             continue
         station = getStation(data['stations'], siteData['data'])
 
-        m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
-        if 'british columbia' in station['name'].lower():
+        if station:
+            m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
+
+        if station and 'british columbia' in station['name'].lower():
             m2 = intp.CanadaAPIInterpreter("", station)
-        else:
+        # elif stationNoaa:
+        #     m2 = intp.NoaaAPIInterpreter(stationNoaa['url_noaa_api'], stationNoaa)
+        elif station:
             m2 = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
 
-        print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))
-        print(m.getDayUrl(m.baseUrl, possibleDiveDays[0]))
-        print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
+        if station and m:
+            print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))
+            print(m.getDayUrl(m.baseUrl, possibleDiveDays[0]))
+        # if stationNoaa and m2:
+        #     print('{} - {} - {}'.format(siteData['name'], siteData['data_noaa'], stationNoaa['coords']))
+            print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
 
         if args.SORT:
             slacks = []

@@ -26,9 +26,15 @@
       "coords": "48.2317 N, 123.5300 W",
       "xtide_limit_2037": true,
       "url": "http://tides.mobilegeographics.com/locations/3775",
-      "COMMENT": "Using Race Rocks NOAA station",
+      "COMMENT": "Using Race Rocks NOAA station - https://tidesandcurrents.noaa.gov/noaacurrents/predictions.html?id=PUG1640_18",
       "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Juan+De+Fuca+Strait+%28East%29%2C+British+Columbia+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1640&bin=18"
+    },
+    {
+      "name": "Angeles Pt., 2 mi. NNE of, Washington Current",
+      "coords": "48.1770 N 123.5269 W",
+      "url_xtide_a": "",
+      "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1639&bin=1"
     },
     {
       "name": "Rosario Strait, Washington Current",
@@ -687,17 +693,33 @@
       "diveable_off_slack": false
     },
     {
-      "name": "Salt Creek",
-      "data": "Juan De Fuca Strait (East), Washington Current",
-      "slack_before_flood": 82,
-      "COMMENT": "Vis is hit-or-miss and tends to be poor in summer: 9-1-18 was amazing, 9-20-19 was terrible, 8-15-20 was poor (busy fishing), 9-10-21 was great, 6-11-22 was ok",
-      "COMMENT1": "Preferred to dive on lee side of Tongue Point (i.e. dive during flood for main entry). These parameters will allow diving continuously without timing entry - the only way the drive is worth it!",
-      "slack_before_ebb": -32,
+      "name": "Salt Creek NOAA",
+      "data": "Angeles Pt., 2 mi. NNE of, Washington Current",
+      "slack_before_flood": 20,
+      "COMMENT": "Vis is hit-or-miss and tends to be poor in summer: 9-1-18 was amazing, 9-20-19 was terrible, 8-15-20 was poor (busy fishing), 9-10-21 was great, 6-11-22 was ok, 9/7/24 was amazing",
+      "COMMENT1": "Preferred to dive on lee side of Tongue Point (i.e. dive during flood for main entry) and with tide > 5ft. These parameters will allow diving continuously without timing entry - the only way the drive is worth it!",
+      "COMMENT2": "NOAA corrections are spot on for Angeles Point, this is preferred prediction source",
+      "slack_before_ebb": 0,
       "max_flood": 1.8,
       "max_ebb": 1.4,
       "max_total_speed": 3,
-      "dive_duration": 110,
-      "surface_swim_time": 10,
+      "dive_duration": 100,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Salt Creek XTide",
+      "data": "Juan De Fuca Strait (East), Washington Current",
+      "COMMENT": "Ignore the NOAA Race Rocks predictions here - Angeles Pt is a much better source",
+      "slack_before_flood": -110,
+      "slack_before_ebb": -20,
+      "max_flood": 1.8,
+      "max_ebb": 1.4,
+      "max_total_speed": 3,
+      "dive_duration": 100,
+      "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
