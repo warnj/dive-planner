@@ -31,9 +31,9 @@ def main():
     # SITE = 'Gabriola Pass'
     # SITE = 'Dodd Narrows'
     # SITE = 'Skyline Wall'
-    # SITE = 'Deception Pass'
+    SITE = 'Deception Pass'
     # SITE = 'Goose Island'
-    SITE = 'Deadman Island'
+    # SITE = 'Deadman Island'
     # SITE = 'Lime Kiln Haro'
     # SITE = 'Salt Creek'
     # SITE = 'Day Island Wall'
@@ -55,12 +55,12 @@ def main():
             print('using Canadian Currents API')
             m = intp.CanadaAPIInterpreter("", station)
         else:
-            m = intp.NoaaInterpreter(station['url_noaa'], station)
+            m = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
     else:
         m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
 
     slacks = []
-    days = dive_plan.getAllDays(365, dt(2024, 1, 1))
+    days = dive_plan.getAllDays(365, dt(2025, 1, 1))
     # days = dive_plan.getAllDays(290)
     # days = dive_plan.getNonWorkDays(365, dt(2023, 1, 1))
     for day in days:

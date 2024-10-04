@@ -190,6 +190,7 @@ class Interpreter:
             if not self.baseUrl:
                 print('Base url empty')  # comment this out if it's annoying
                 return []
+            # print('making another API call')
             url = self.getDayUrl(self.baseUrl, day)
             self._webLines = self._getWebLines(url, day)
         if not self._webLines:
@@ -400,6 +401,8 @@ class NoaaAPIInterpreter(Interpreter):
         if response.status_code != 200:
             raise Exception('NOAA API is down: ' + str(response))
 
+        if 'current_predictions' not in response.json():
+            raise Exception('NOAA API response unexpected format: ' + str(response) + "\n" + str(response.json()))
         jsonArray = response.json()['current_predictions']['cp']
 
         # convert json array to array of weblines - not ideal, fits into existing Interpreter functions better for now

@@ -252,6 +252,7 @@ def main():
 
         # SITES = append(SITES, 'Sekiu')
         # SITES = append(SITES, 'Salt Creek NOAA')
+        # SITES = append(SITES, 'Salt Creek NOAA Shallow')
         SITES = append(SITES, 'Salt Creek XTide')
         # SITES = append(SITES, 'Point Hudson')
         # SITES = append(SITES, 'Spieden Channel')
@@ -299,9 +300,9 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2024, 9, 7)
+    args.START = dt(2024, 10, 5)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 1
+    args.DAYS_IN_FUTURE = 2
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True

@@ -63,14 +63,14 @@ def main():
     # STATIONS.append('Bowman Bay')
     # STATIONS.append('Hanbury Point, North San Juan Island')
     # STATIONS.append('Kanaka Bay, South San Juan Island')
-    # STATIONS.append('Sekiu')
+    STATIONS.append('Sekiu')
     STATIONS.append('Crescent Bay')
     # STATIONS.append('Ayock Point')
     # STATIONS.append('La Push')
     # STATIONS.append('Des Moines')
-    args.START = dt(2024, 9, 7)
+    args.START = dt(2024, 10, 5)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 1
+    args.DAYS_IN_FUTURE = 2
     # ------------------------------------------------------------------------------------------------------------------
 
     # Get tides for each site and each
