@@ -349,6 +349,13 @@
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1601&bin=21"
     },
     {
+      "name": "Ediz Hook Light, 1.2 miles N of, Washington Current",
+      "coords": "48.1667 N 123.4158 W",
+      "url": "",
+      "url_xtide_a": "",
+      "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1638&bin=22"
+    },
+    {
       "name": "Pillar Point, Washington Current",
       "coords": "48.2667 N, 124.0667 W",
       "xtide_limit_2037": false,
@@ -417,6 +424,11 @@
       "name": "Crescent Bay",
       "coords": "48° 9.7 N 123° 43.5 W",
       "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9443826&datum=MLLW"
+    },
+    {
+      "name": "Neah Bay",
+      "coords": "48° 22.2 N 124° 36.1 W",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9443090&datum=MLLW"
     },
     {
       "name": "Des Moines",
@@ -683,7 +695,7 @@
     {
       "name": "Sekiu",
       "data": "Strait of Juan de Fuca Entrance, Washington Current",
-      "COMMENT": "Vis is hit-or-miss and tends to be poor in summer: 9-2-18 was great, 7-2-21 was good (busy fishing), 9-29-22 was amazing, 7-30-23 was good",
+      "COMMENT": "Vis is hit-or-miss and tends to be poor in summer: 9-2-18 was great, 7-2-21 was good (busy fishing), 9-29-22 was amazing, 7-30-23 was good, 10-5-24 was amazing",
       "COMMENT2": "Outer reef is current sensitive. Flood runs across the bay away from exit. Ebb runs out of bay S to N as cross current. Current on far edge of kelp good proxy for further out.",
       "COMMENT3": "Strait entrance seems to be better current predictor than Pillar Point. Pillar station had max flood during slack at Sekiu. Tides at Sekiu also a good approximation for current.",
       "COMMENT4": "Only done the outer reef on SBE as of summer 2023. On low exchange days 2 dives there may be possible with short SI. Vis better on the flood but has outgoing current.",
@@ -694,6 +706,38 @@
       "max_total_speed": 3,
       "dive_duration": 100,
       "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Third Beach Pinnacle",
+      "data": "Strait of Juan de Fuca Entrance, Washington Current",
+      "COMMENT": "SBE (Juan de fuca entrance NOAA current), which was in the middle of a tide height (neah bay) mild ebb, worked well 10/13/2024, error on the flood side since they are weaker and going safer direction",
+      "COMMENT2": "Can plan Cape Flattery dives with this but current there doesn't matter much",
+      "slack_before_flood": 0,
+      "slack_before_ebb": -30,
+      "max_flood": 2,
+      "max_ebb": 2,
+      "max_total_speed": 3,
+      "dive_duration": 90,
+      "surface_swim_time": 15,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Hoko Reef",
+      "data": "Pillar Point, Washington Current",
+      "COMMENT": "NOAA preferred, ignore xtide, predictions only ever tested on SBF and true slack never really experienced, error on the earlier side, but floods tend to be weaker than ebbs",
+      "COMMENT2": "Also check how this compares with Sekiu tides",
+      "slack_before_flood": -25,
+      "slack_before_ebb": 0,
+      "max_flood": 2,
+      "max_ebb": 2,
+      "max_total_speed": 3,
+      "dive_duration": 90,
+      "surface_swim_time": 15,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
@@ -741,6 +785,20 @@
       "max_ebb": 1.4,
       "max_total_speed": 3,
       "dive_duration": 100,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Ediz Hook",
+      "data": "Ediz Hook Light, 1.2 miles N of, Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 1.8,
+      "max_ebb": 1.4,
+      "max_total_speed": 3,
+      "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
@@ -951,7 +1009,7 @@
       "max_total_speed": 4,
       "dive_duration": 90,
       "surface_swim_time": 30,
-      "COMMENT": "want to end this dive at slack so you dont have to fight the angle of flood hitting the island",
+      "COMMENT": "Want to end this dive at slack so you dont have to fight the angle of flood hitting the island. 2000ft gear haul on trail (V and J make trip together, then J makes 1 additional trip)",
       "COMMENT2": "Xtide was slightly closer to accurate on 7-14-24 and reality was between Xtide and NOAA with slack predictions 1hr apart, error on the early side and wait out the ebb at end if needed",
       "diveable_before_flood": true,
       "diveable_before_ebb": false,
