@@ -49,6 +49,7 @@ def ordinal(n: int):
     return str(n) + suffix
 
 # creates events for the given slacks in Google Calendar
+# NOTE: manual deletion of old token.json files is required
 def postToGCal(orderedSlacks, siteName, source):
     # If modifying these scopes, delete the file token.json.
     SCOPES = ['https://www.googleapis.com/auth/calendar.events']
@@ -56,8 +57,7 @@ def postToGCal(orderedSlacks, siteName, source):
 
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
+    # created automatically when the authorization flow completes for the first time.
     if os.path.exists('token.json'):
         print('token exists!')
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
@@ -66,8 +66,7 @@ def postToGCal(orderedSlacks, siteName, source):
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
             creds = flow.run_local_server(port=56584)
         # Save the credentials for the next run
         with open('token.json', 'w') as token:
@@ -114,12 +113,16 @@ def main():
 
     station = dive_plan.getStation(data['stations'], siteJson['data'])
     if NOAA:
-        m = intp.NoaaInterpreter(station['url_noaa'])
+        if 'british columbia' in station['name'].lower():
+            print('using Canadian Currents API')
+            m = intp.CanadaAPIInterpreter("", station)
+        else:
+            m = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
     else:
-        m = intp.TBoneSCInterpreter(station['url_xtide'])
+        m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
 
     slacks = []
-    days = dive_plan.getAllDays(365, dt(2024, 1, 1))
+    days = dive_plan.getAllDays(365, dt(2025, 1, 1))
     # days = dive_plan.getAllDays(230)
     for day in days:
         slacks.extend(m.getSlacks(day, night=NIGHT))
@@ -134,7 +137,7 @@ def main():
         print('{}\tSpeed sum = {:0.1f}'.format(s, abs(s.ebbSpeed)+abs(s.floodSpeed)))
 
     # create gcal events for the top dives over this time period
-    postToGCal(diveableSlacks[:25], SITE, 'NOAA' if NOAA else 'XTide')
+    postToGCal(diveableSlacks[:30], SITE, 'NOAA' if NOAA else 'XTide')
 
 
 if __name__ == '__main__':
