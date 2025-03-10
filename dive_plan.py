@@ -279,7 +279,7 @@ def main():
         # SITES = append(SITES, 'Alki Junkyard')
         # SITES = append(SITES, 'Saltwater State Park')
         # SITES = append(SITES, 'Sunrise Beach')
-        SITES = append(SITES, 'Day Island Wall')
+        # SITES = append(SITES, 'Day Island Wall')
         # SITES = append(SITES, 'Fox Island Bridge')
         # SITES = append(SITES, 'Fox Island Bridge Hale')
         # SITES = append(SITES, 'Fox Island East Wall')
@@ -307,10 +307,10 @@ def main():
     # args.START = dt(2023, 11, 5)
     args.START = dt(2025, 3, 10)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    args.DAYS_IN_FUTURE = 1
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    args.INCLUDE_NIGHT = True
+    # args.INCLUDE_NIGHT = True
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
 

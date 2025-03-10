@@ -4,10 +4,10 @@
       "name": "all",
       "coords": "n/a",
       "url": "https://tides.mobilegeographics.com/index.html",
-      "url_xtide": "http://tide.arthroinfo.org/sites_uswest.html & http://tide.arthroinfo.org/sites_allcurrent.html & http://tide.arthroinfo.org/sites_allalpha.html",
+      "url_xtide": "https://tide.arthroinfo.org/sites_uswest.html & https://tide.arthroinfo.org/sites_allcurrent.html & https://tide.arthroinfo.org/sites_allalpha.html",
       "url_xtide_old": "http://tbone.biol.sc.edu/tide/sites_uswest.html & http://tbone.biol.sc.edu/tide/sites_othernorth.html & http://tbone.biol.sc.edu/tide/index.html",
       "url_xtide_tbone_options": "http://tbone.biol.sc.edu/tide/options.html",
-      "url_xtide_options": "http://tide.arthroinfo.org/options.html",
+      "url_xtide_options": "https://tide.arthroinfo.org/options.html",
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/stations?g=698",
       "url_noaa_map": "https://tidesandcurrents.noaa.gov/map/index.html?type=CurrentPredictions",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/",
@@ -18,7 +18,7 @@
       "coords": "48.4500 N, 124.5833 W",
       "xtide_limit_2037": true,
       "url": "https://tides.mobilegeographics.com/locations/7867",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Strait+of+Juan+de+Fuca+Entrance%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Strait+of+Juan+de+Fuca+Entrance%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1642&bin=49"
     },
     {
@@ -27,7 +27,7 @@
       "xtide_limit_2037": true,
       "url": "http://tides.mobilegeographics.com/locations/3775",
       "COMMENT": "Using Race Rocks NOAA station - https://tidesandcurrents.noaa.gov/noaacurrents/predictions.html?id=PUG1640_18",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Juan+De+Fuca+Strait+%28East%29%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Juan+De+Fuca+Strait+%28East%29%2C+British+Columbia+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1640&bin=18"
     },
     {
@@ -47,7 +47,7 @@
       "coords": "48.4583 N, 122.7833 W",
       "xtide_limit_2037": true,
       "url": "http://tides.mobilegeographics.com/locations/6882",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Rosario+Strait%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Rosario+Strait%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1702&bin=16"
     },
     {
@@ -62,7 +62,7 @@
       "coords": "48.4062 N, 122.6430 W",
       "xtide_limit_2037": false,
       "url": "https://tides.mobilegeographics.com/locations/1955",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Deception+Pass+%28narrows%29%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Deception+Pass+%28narrows%29%2C+Washington+Current&glen=14",
       "url_noaa_old": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1701_24&t=am%2fpm&i=&threshold=&thresholdvalue=&d=",
       "url_noaa_new_does_not_work": "https://api.tidesandcurrents.noaa.gov/dpapi/prod/webapi/currentPredictionsDownload?fmt=csv&r=2&time_zone=LST_LDT&u=1&id=PUG1616_31&date_timeUnits=am/pm&threshold=&thresholdvalue=&start_date=",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1701&bin=24"
@@ -72,7 +72,7 @@
       "coords": "48.0333 N, 122.6333 W",
       "xtide_limit_2037": false,
       "url": "http://tides.mobilegeographics.com/locations/69",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Admiralty+Inlet+%28off+Bush+Point%29%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Admiralty+Inlet+%28off+Bush+Point%29%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1616&bin=31"
     },
     {
@@ -80,7 +80,7 @@
       "coords": "47.2667 N, 122.5333 W",
       "xtide_limit_2037": true,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Discovery+Island%2C+3%2E3+miles+NE+of%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Discovery+Island%2C+3%2E3+miles+NE+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1744&bin=22"
     },
     {
@@ -95,7 +95,7 @@
       "coords": "47.5755 N, 122.4280 W",
       "xtide_limit_2037": true,
       "url": "http://tides.mobilegeographics.com/locations/153",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Alki+Point%2C+0%2E3+miles+W+of%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Alki+Point%2C+0%2E3+miles+W+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1516&bin=17"
     },
     {
@@ -103,7 +103,7 @@
       "coords": "47.5900 N, 122.5622 W",
       "xtide_limit_2037": false,
       "url": "http://tides.mobilegeographics.com/locations/8807",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=West+end%2C+Rich+Passage%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=West+end%2C+Rich+Passage%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1514&bin=1"
     },
     {
@@ -111,7 +111,7 @@
       "coords": "47.7220 N, 122.5550 W",
       "xtide_limit_2037": false,
       "url": "https://tides.mobilegeographics.com/locations/75",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+north+end%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+north+end%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PCT1636&bin=1"
     },
     {
@@ -119,7 +119,7 @@
       "coords": "47.7128 N, 122.5655 W",
       "xtide_limit_2037": false,
       "url": "https://tides.mobilegeographics.com/locations/76",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+south+end%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+south+end%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1501&bin=1"
     },
     {
@@ -127,7 +127,7 @@
       "coords": "47.3062 N, 122.5497 W",
       "xtide_limit_2037": false,
       "url": "http://tides.mobilegeographics.com/locations/8176",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=The+Narrows%2C+north+end+%28midstream%29%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=The+Narrows%2C+north+end+%28midstream%29%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1524&bin=16"
     },
     {
@@ -135,7 +135,7 @@
       "coords": "47.2608 N, 122.5583 W",
       "xtide_limit_2037": false,
       "url": "http://tides.mobilegeographics.com/locations/7626",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=South+end+%28midstream%29%2C+The+Narrows%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=South+end+%28midstream%29%2C+The+Narrows%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1528&bin=13"
     },
     {
@@ -143,13 +143,13 @@
       "coords": "47.2778 N, 122.6622 W",
       "xtide_limit_2037": true,
       "url": "https://tides.mobilegeographics.com/locations/3053",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Hale+Passage%2C+West+end%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Hale+Passage%2C+West+end%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1530&bin=10"
     },
     {
       "name": "Hammersley Inlet, west of Skookum Point, Washington Current",
       "coords": "47.2070 N, 123.0395 W",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Hammersley+Inlet%2C+west+of+Skookum+Point%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Hammersley+Inlet%2C+west+of+Skookum+Point%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PCT1896&bin=1"
     },
     {
@@ -157,7 +157,7 @@
       "coords": "48.5047 N, 122.7062 W",
       "xtide_limit_2037": false,
       "url": "https://tides.mobilegeographics.com/locations/2959",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Green+Point%2C+0%2E8+mile+northwest+of%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Green+Point%2C+0%2E8+mile+northwest+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PCT2026&bin=1"
     },
     {
@@ -165,7 +165,7 @@
       "coords": "48.1167 N, 122.7333 W",
       "xtide_limit_2037": false,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Point+Hudson%2C+0%2E5+mile+east+of%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Point+Hudson%2C+0%2E5+mile+east+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1623&bin=33"
     },
     {
@@ -173,7 +173,7 @@
       "coords": "47.2180 N, 122.5895 W",
       "xtide_limit_2037": false,
       "url": "https://tides.mobilegeographics.com/locations/2786",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Gibson+Point%2C+0%2E8+mile+east+of%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Gibson+Point%2C+0%2E8+mile+east+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1531&bin=18"
     },
     {
@@ -181,7 +181,7 @@
       "coords": "47.6013 N, 122.6617 W",
       "xtide_limit_2037": false,
       "url": "https://tides.mobilegeographics.com/locations/6412",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Port+Washington+Narrows%2C+north+ent%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Port+Washington+Narrows%2C+north+ent%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1510&bin=1"
     },
     {
@@ -189,7 +189,7 @@
       "coords": "47.6013 N, 122.6617 W",
       "xtide_limit_2037": false,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Port+Washington+Narrows%2C+south+ent%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Port+Washington+Narrows%2C+south+ent%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1510&bin=1"
     },
     {
@@ -197,7 +197,7 @@
       "coords": "47.8547 N, 122.6294 W",
       "xtide_limit_2037": true,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=South+Point%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=South+Point%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1603&bin=20"
     },
 
@@ -206,7 +206,7 @@
       "coords": "50.1333 N, 125.3500 W",
       "xtide_limit_2037": true,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Seymour+Narrows%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Seymour+Narrows%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aefc7784e5432cd3b6eb1e",
       "flood_dir": 180.0,
@@ -217,7 +217,7 @@
       "coords": "49.1283 N, 123.7000 W",
       "xtide_limit_2037": true,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Gabriola+Passage%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Gabriola+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aef12e84e5432cd3b6db8d",
       "flood_dir": 80.0,
@@ -229,7 +229,7 @@
       "coords": "49.1367 N, 123.8167 W",
       "xtide_limit_2037": true,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Dodd+Narrows%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Dodd+Narrows%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aef1866a2b9417c035030f",
       "flood_dir": 355.0,
@@ -241,7 +241,7 @@
       "coords": "48.8167,-123.1833",
       "xtide_limit_2037": true,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Boat+Passage%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Boat+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": ""
     },
     {
@@ -249,7 +249,7 @@
       "coords": "50.6033,-126.8117",
       "xtide_limit_2037": true,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Weynton+Passage%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Weynton+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63af005f6a2b9417c0353158",
       "flood_dir": 220.0,
@@ -260,7 +260,7 @@
       "coords": "48.8667 N, 123.3000 W",
       "xtide_limit_2037": true,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Active+Pass%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Active+Pass%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aef09f84e5432cd3b6c509",
       "flood_dir": 220.0,
@@ -271,7 +271,7 @@
       "coords": "",
       "xtide_limit_2037": true,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Nakwakto+Rapids%2C+British+Columbia+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Nakwakto+Rapids%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63af009f84e5432cd3b71287",
       "flood_dir": 355.0,
@@ -283,7 +283,7 @@
       "xtide_limit_2037": true,
       "COMMENT": "doesnt quite match darkiri which also uses xtide, not sure why https://www.dairiki.org/tides/monthly.php/scl",
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Sechelt+Rapids%2C+British+Columbia+Current+%28use+with+caution%29&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Sechelt+Rapids%2C+British+Columbia+Current+%28use+with+caution%29&glen=14",
       "url_noaa": "",
       "ca_id": "63aef40a6a2b9417c0350313",
       "flood_dir": 135.0,
@@ -295,14 +295,14 @@
       "coords": "48.4613 N, 122.9508 W",
       "xtide_limit_2037": false,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=San+Juan+Channel+%28south+entrance%29%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=San+Juan+Channel+%28south+entrance%29%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1703&bin=17"
     },
     {
       "name": "Spieden Channel, north of Limestone Point",
       "coords": "48.6278 N   123.1116 W",
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Limestone+Point%2C+Spieden+Channel%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Limestone+Point%2C+Spieden+Channel%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1719&bin=19"
     },
     {
@@ -338,7 +338,7 @@
       "coords": "48.4717 N, 122.6997 W",
       "xtide_limit_2037": false,
       "url": "https://tides.mobilegeographics.com/locations/1034",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Burrows+I%2E-Allan+I%2E%2C+Passage+between%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Burrows+I%2E-Allan+I%2E%2C+Passage+between%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1737&bin=23"
     },
     {
@@ -360,7 +360,7 @@
       "coords": "48.2667 N, 124.0667 W",
       "xtide_limit_2037": false,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Pillar+Point%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Pillar+Point%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1641&bin=75"
     },
     {
@@ -368,7 +368,7 @@
       "coords": "48.4125 N   122.7403 W",
       "xtide_limit_2037": false,
       "url": "",
-      "url_xtide_a": "http://tide.arthroinfo.org/tideshow.cgi?site=Colville+Island%2C+1%2E4+miles+east+of%2C+Washington+Current&glen=14",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Colville+Island%2C+1%2E4+miles+east+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1727&bin=30"
     },
     {
