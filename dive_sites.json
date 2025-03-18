@@ -289,6 +289,16 @@
       "flood_dir": 135.0,
       "ebb_dir": 315.0
     },
+    {
+      "name": "Tillicum Bridge, British Columbia Current",
+      "coords": "48.446355, -123.400128",
+      "xtide_limit_2037": true,
+      "url": "",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Gorge%2DTillicum+Bridge%2C+British+Columbia+Current&glen=14",
+      "url_noaa": "",
+      "flood_dir": 0,
+      "ebb_dir": 0
+    },
 
     {
       "name": "San Juan Channel (south entrance), Washington Current",
@@ -1238,6 +1248,21 @@
       "max_ebb": 1.5,
       "max_total_speed": 3,
       "dive_duration": 90,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Ogden Breakwater",
+      "data": "Tillicum Bridge, British Columbia Current",
+      "COMMENT": "",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 5,
+      "max_ebb": 5,
+      "max_total_speed": 10,
+      "dive_duration": 100,
       "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,

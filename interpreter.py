@@ -553,6 +553,8 @@ class CanadaAPIInterpreter(Interpreter):
     # Returns a list of slacks for the given day, retrieves new web data if the current data doesn't have info for day.
     # Includes night slacks if night=True
     def getSlacks(self, day, night):
+        if 'ca_id' not in self.station or not self.station['ca_id']:
+            return []
         slacks = self.__getSlacksOnDay(day, self.cachedSlacks, night)
         if slacks:
             return slacks
