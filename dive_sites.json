@@ -256,6 +256,17 @@
       "ebb_dir": 40.0
     },
     {
+      "name": "Race Passage, British Columbia Current",
+      "coords": "48.3, -123.5333",
+      "xtide_limit_2037": true,
+      "url": "",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Race+Passage%2C+British+Columbia+Current&glen=14",
+      "url_noaa": "",
+      "ca_id": "63aeee896a2b9417c034d337",
+      "flood_dir": 50.0,
+      "ebb_dir": 230.0
+    },
+    {
       "name": "Active Passage, British Columbia Current",
       "coords": "48.8667 N, 123.3000 W",
       "xtide_limit_2037": true,
@@ -1225,13 +1236,31 @@
       "diveable_off_slack": false
     },
     {
-      "name": "Ten Mile Point",
+      "name": "Ten Mile Point Discovery",
       "data": "Discovery Island, 3.3 miles NE of, Washington Current",
       "slack_before_flood": 0,
       "slack_before_ebb": 0,
       "max_flood": 2.6,
       "max_ebb": 2.6,
       "max_total_speed": 4.2,
+      "dive_duration": 90,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Ten Mile Point",
+      "data": "Race Passage, British Columbia Current",
+      "COMMENT": "warning: this xtide prediction model is a legacy data model and may not be as dependable",
+      "COMMENT2": "likely best source per https://scubaboard.com/community/threads/best-spot-link-to-get-tide-table-for-10-mile-point.654604/",
+      "COMMENT3": "Baynes Channel (10mi point to Chatham Island) has corrections: Time of max ebb/flood and slack: -15 Min. earlier. Amplitude of max. ebb/flood: 75% of Race Rocks  https://www.tenmilepoint.com/wxtides.php",
+      "COMMENT4": "Assuming slightly more protected from a flood",
+      "slack_before_flood": -15,
+      "slack_before_ebb": -15,
+      "max_flood": 5.0,
+      "max_ebb": 5.0,
+      "max_total_speed": 8,
       "dive_duration": 90,
       "surface_swim_time": 0,
       "diveable_before_flood": true,

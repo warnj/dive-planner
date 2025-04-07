@@ -1,3 +1,4 @@
+import json
 import urllib.request
 from astral.sun import sun
 from astral import LocationInfo
@@ -448,6 +449,7 @@ class NoaaAPIInterpreter(Interpreter):
         return slacks
 
 # Class to retrieve and parse current data from Canada Currents REST API
+# warning: does not identify "min ebb" or "min flood" type slacks as the direction must change for this to locate a slack
 class CanadaAPIInterpreter(Interpreter):
     urlFmt = 'https://api-iwls.dfo-mpo.gc.ca/api/v1/stations/{}/data?time-series-code={}'
     cachedSlacks = []
@@ -490,7 +492,10 @@ class CanadaAPIInterpreter(Interpreter):
     # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
     def __parseSlacks(self, dirResponse, speedResponse, moonPhase):
         if len(dirResponse) != len(speedResponse):
+            print('direction response length does not match speed response length')
             return None
+        # print(json.dumps(dirResponse, indent=2))
+        # print(json.dumps(speedResponse, indent=2))
         n = len(speedResponse)
         slacks = []
         for i in range(n):

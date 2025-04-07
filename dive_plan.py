@@ -248,8 +248,9 @@ def main():
         # SITES = append(SITES, 'Active Pass')
         # SITES = append(SITES, 'Boat Pass')
         # SITES = append(SITES, 'Ten Mile Point')
+        # SITES = append(SITES, 'Ten Mile Point Discovery')
         # SITES = append(SITES, 'Sechelt Rapids')
-        SITES = append(SITES, 'Ogden Breakwater')
+        # SITES = append(SITES, 'Ogden Breakwater')
 
         # SITES = append(SITES, 'Sekiu')
         # SITES = append(SITES, 'Third Beach Pinnacle')
@@ -306,13 +307,13 @@ def main():
 
     # args.START = dt(2024, 10, 31)
     # args.START = dt(2023, 11, 5)
-    args.START = dt(2025, 3, 29)
+    args.START = dt(2025, 4, 8)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 1
-    args.IGNORE_MAX_SPEED = True
+    # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    args.INCLUDE_NIGHT = True
-    # args.SORT = True
+    # args.INCLUDE_NIGHT = True
+    # args.SORT = Truer
     # ------------------------------------------------------------------------------------------------------------------
 
     # Create list of dates based on given start date

@@ -1,5 +1,8 @@
 # dive-planner
 
+## Disclaimer
+Diving is dangerous and can cause injury or death. The data sources and this software may be incorrect. The makers of this software will, in no event, be liable for any personal harm or damage to goods caused by use of this tool. You are responsible for your own safety. Using this tool indicates your acceptance of these terms. 
+
 ## How to run Planner
 * Install Python3
 * `pip install -r requirements.txt`
