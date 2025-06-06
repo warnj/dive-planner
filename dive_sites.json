@@ -200,6 +200,14 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=South+Point%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1603&bin=20"
     },
+    {
+      "name": "Peavine Pass, west entrance, Washington Current",
+      "coords": "48.5870 N, 122.8200 W",
+      "xtide_limit_2037": false,
+      "url": "",
+      "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Peavine+Pass%2C+west+entrance%2C+Washington+Current&glen=14",
+      "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1704&bin=1"
+    },
 
     {
       "name": "Seymour Narrows, British Columbia Current",
@@ -432,9 +440,19 @@
       "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9449828&datum=MLLW"
     },
     {
-      "name": "La Push",
+      "name": "La Push (Quillayute River)",
       "coords": "47° 54.8 N 124° 38.1 W",
       "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9442396&datum=MLLW"
+    },
+    {
+      "name": "James Island (La Push)",
+      "coords": "47° 54.8 N 124° 38.1 W",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9442388&datum=MLLW"
+    },
+    {
+      "name": "Destruction Island",
+      "coords": "47° 54.8 N 124° 38.1 W",
+      "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=TWC0965&datum=MLLW"
     },
     {
       "name": "Sekiu",
@@ -737,6 +755,7 @@
       "data": "Strait of Juan de Fuca Entrance, Washington Current",
       "COMMENT": "SBE (Juan de fuca entrance NOAA current), which was in the middle of a tide height (neah bay) mild ebb, worked well 10/13/2024, error on the flood side since they are weaker and going safer direction",
       "COMMENT2": "Can plan Cape Flattery dives with this but current there doesn't matter much",
+      "COMMENT3": "Slack before ebb may be preferred for Third Beach Pinnacle and Waddah Fingers based on seaotter.com",
       "slack_before_flood": 0,
       "slack_before_ebb": -30,
       "max_flood": 2,
@@ -1039,6 +1058,35 @@
       "diveable_off_slack": false
     },
     {
+      "name": "Peavine Pass",
+      "data": "Peavine Pass, west entrance, Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2.5,
+      "max_ebb": 2.5,
+      "max_total_speed": 4,
+      "dive_duration": 100,
+      "surface_swim_time": 0,
+      "COMMENT": "SBE for a shore dive from the marina best, offslack on <0.5kt flood or ebb probably also ok with dpv",
+      "diveable_before_flood": false,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Kings Point",
+      "data": "San Juan Channel (south entrance), Washington Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 2.5,
+      "max_ebb": 2.5,
+      "max_total_speed": 4,
+      "dive_duration": 85,
+      "surface_swim_time": 15,
+      "diveable_before_flood": false,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
       "name": "Spieden Channel",
       "data": "Spieden Channel, north of Limestone Point",
       "COMMENT": "use for approx Reuben Tarte",
@@ -1115,11 +1163,27 @@
       "COMMENT7": "Argo and Copper cliffs can be dove during ebb",
       "COMMENT8": "Oceanfix boat seems to run dives here even on -12 -> 14kt very large exchange (def wouldn't do from shore), -12 to 9kt also in the envelope for a weekend boat trip (not doing narrows)",
       "COMMENT9": "Could increase the max speeds a little for short dives",
+      "COMMENT10": "SBF numbers may be a bit too late, error on the early side",
       "slack_before_flood": 40,
       "slack_before_ebb": -30,
       "max_flood": 11.2,
       "max_ebb": 9,
       "max_total_speed": 17.5,
+      "dive_duration": 80,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Row and be Dammed",
+      "data": "Seymour Narrows, British Columbia Current",
+      "COMMENT": "Tuned over 2022, 2024, and 2025 - surprised SBF is so different than Whiskey Point but my dive observations are clear",
+      "slack_before_flood": -20,
+      "slack_before_ebb": -35,
+      "max_flood": 11.5,
+      "max_ebb": 9.5,
+      "max_total_speed": 20,
       "dive_duration": 80,
       "surface_swim_time": 0,
       "diveable_before_flood": true,

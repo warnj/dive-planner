@@ -33,7 +33,8 @@ def main():
     # SITE = 'Skyline Wall'
     # SITE = 'Deception Pass'
     # SITE = 'Goose Island'
-    SITE = 'Deadman Island'
+    SITE = 'Peavine Pass'
+    # SITE = 'Deadman Island'
     # SITE = 'Lime Kiln Haro'
     # SITE = 'Salt Creek NOAA'
     # SITE = 'Day Island Wall'
@@ -60,7 +61,7 @@ def main():
         m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
 
     slacks = []
-    days = dive_plan.getAllDays(365, dt(2025, 1, 1))
+    days = dive_plan.getAllDays(140, dt(2025, 6, 5))
     # days = dive_plan.getAllDays(290)
     # days = dive_plan.getNonWorkDays(365, dt(2023, 1, 1))
     for day in days:

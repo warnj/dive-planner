@@ -241,6 +241,7 @@ def main():
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
         # SITES = append(SITES, 'Seymour Narrows')
+        # SITES = append(SITES, 'Row and be Dammed')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
         # SITES = append(SITES, 'Gabriola Pass')
@@ -264,7 +265,9 @@ def main():
         # SITES = append(SITES, 'Lime Kiln Discovery')
         # SITES = append(SITES, 'Lime Kiln Haro')
         # SITES = append(SITES, 'Lime Kiln Admiralty')
+        # SITES = append(SITES, 'Peavine Pass')
         # SITES = append(SITES, 'Goose Island')
+        # SITES = append(SITES, 'Kings Point')
         # SITES = append(SITES, 'Deadman Island')
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
@@ -307,11 +310,11 @@ def main():
 
     # args.START = dt(2024, 10, 31)
     # args.START = dt(2023, 11, 5)
-    args.START = dt(2025, 4, 8)
+    args.START = dt(2025, 6, 7)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 1
+    args.DAYS_IN_FUTURE = 10
     # args.IGNORE_MAX_SPEED = True
-    args.INCLUDE_WORKDAYS = True
+    # args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = Truer
     # ------------------------------------------------------------------------------------------------------------------
