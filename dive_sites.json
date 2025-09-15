@@ -382,7 +382,7 @@
       "coords": "48.1667 N 123.4158 W",
       "url": "",
       "url_xtide_a": "",
-      "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1638&bin=22"
+      "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1638&bin=17"
     },
     {
       "name": "Pillar Point, Washington Current",
@@ -835,8 +835,8 @@
       "name": "Ediz Hook",
       "data": "Ediz Hook Light, 1.2 miles N of, Washington Current",
       "slack_before_flood": 0,
-      "slack_before_ebb": -30,
-      "COMMENT": "SBE comes early according to Eric A's report, maybe earlier than -30, so error on the early side",
+      "slack_before_ebb": -40,
+      "COMMENT": "SBE comes early according to both Justin on 9/13/25 and Eric's report Sept 2024",
       "max_flood": 1.8,
       "max_ebb": 1.4,
       "max_total_speed": 3,
