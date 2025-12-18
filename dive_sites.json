@@ -53,6 +53,7 @@
     {
       "name": "Burrows Pass, Washington Current",
       "coords": "48.4895 N,  122.6867 W",
+      "xtide_name": "Burrows Pass (Depth 28.2ft), Washington Current",
       "url": "",
       "url_xtide_a": "",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1738&bin=23"
@@ -61,6 +62,7 @@
       "name": "Deception Pass (narrows), Washington Current",
       "coords": "48.4062 N, 122.6430 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Deception Pass (Narrows) (Depth 47.1ft), Rosario Strait, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/1955",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Deception+Pass+%28narrows%29%2C+Washington+Current&glen=14",
       "url_noaa_old": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1701_24&t=am%2fpm&i=&threshold=&thresholdvalue=&d=",
@@ -118,6 +120,7 @@
       "name": "Agate Passage south end, Puget Sound, Washington Current",
       "coords": "47.7128 N, 122.5655 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Agate Passage, south end (Depth 25.1ft), Puget Sound, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/76",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+south+end%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1501&bin=1"
@@ -382,7 +385,7 @@
       "coords": "48.1667 N 123.4158 W",
       "url": "",
       "url_xtide_a": "",
-      "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1638&bin=22"
+      "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1638&bin=17"
     },
     {
       "name": "Pillar Point, Washington Current",
@@ -770,15 +773,16 @@
     {
       "name": "Hoko Reef",
       "data": "Pillar Point, Washington Current",
-      "COMMENT": "NOAA preferred, ignore xtide, predictions only ever tested on SBF and true slack never really experienced, error on the earlier side, but floods tend to be weaker than ebbs",
+      "COMMENT": "NOAA preferred, ignore xtide!!!, predictions only tested on SBF never really experienced true slack, error on the earlier side, but floods tend to be weaker than ebbs",
       "COMMENT2": "Also check how this compares with Sekiu tides",
+      "COMMENT3": "True slack before ebb is great and predictable, earlier than Pillar Point current station, occurred near low tide on 9-27 and 9-28-25",
       "slack_before_flood": -25,
-      "slack_before_ebb": 0,
+      "slack_before_ebb": -90,
       "max_flood": 2,
       "max_ebb": 2,
       "max_total_speed": 3,
-      "dive_duration": 90,
-      "surface_swim_time": 15,
+      "dive_duration": 110,
+      "surface_swim_time": 20,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
@@ -836,8 +840,8 @@
       "name": "Ediz Hook",
       "data": "Ediz Hook Light, 1.2 miles N of, Washington Current",
       "slack_before_flood": 0,
-      "slack_before_ebb": -30,
-      "COMMENT": "SBE comes early according to Eric A's report, maybe earlier than -30, so error on the early side",
+      "slack_before_ebb": -40,
+      "COMMENT": "SBE comes early according to both Justin on 9/13/25 and Eric's report Sept 2024",
       "max_flood": 1.8,
       "max_ebb": 1.4,
       "max_total_speed": 3,

@@ -72,8 +72,8 @@ def main():
             m1 = intp.NoaaInterpreter(station1['url_noaa'])
             m2 = intp.NoaaInterpreter(station2['url_noaa'])
         else:
-            m1 = intp.TBoneSCInterpreter(station1['url_xtide'])
-            m2 = intp.TBoneSCInterpreter(station2['url_xtide'])
+            m1 = intp.TBoneSCInterpreter(station1['url_xtide_a'], station1)
+            m2 = intp.TBoneSCInterpreter(station2['url_xtide_a'], station2)
 
 
         print('{} - {}'.format(site1['name'], site2['name']))
