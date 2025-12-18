@@ -1,4 +1,6 @@
 '''
+Delete token.json if it has been a long time since last running this.
+
 This program is used to rank the longest and shortest slack times for a current
 station over a given time interval. Longer slacks are present when the max
 current speed on the exchange before and after slack is smaller.
@@ -101,6 +103,7 @@ def postToGCal(orderedSlacks, siteName, source):
 def main():
     # SITE = 'Whiskey Point'
     SITE = 'Deception Pass'
+    SITE = 'Skyline Wall'
 
     NOAA = True
     # NOAA = False
@@ -122,7 +125,7 @@ def main():
         m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
 
     slacks = []
-    days = dive_plan.getAllDays(365, dt(2025, 1, 1))
+    days = dive_plan.getAllDays(365, dt(2026, 1, 1))
     # days = dive_plan.getAllDays(230)
     for day in days:
         slacks.extend(m.getSlacks(day, night=NIGHT))
