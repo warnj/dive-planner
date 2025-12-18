@@ -63,3 +63,20 @@ These programs automate the process of planning dives at sites with strong curre
 Example would be to find rare days where you can dive both Deception Pass and Skyline. Or do two dives at Day Island.
 * Add desired site pair(s) under `must_do_dives` in `dive_sites.json`
 * Run `must_do_dives.py` over desired time window
+
+## XTide in Docker
+`docker build -f xtide.dockerfile -t xtide .`
+
+## Using XTide Docker
+docker run --rm xtide -m l | grep -i "agate"
+docker run --rm xtide -m l | grep -i "washington current"
+
+docker run --rm xtide -l "Agate Passage, north end, Puget Sound, Washington Current"
+docker run --rm xtide -l "Agate Passage, north end, Puget Sound, Washington Current" -b "2023-12-12 00:00" -e "2023-12-12 23:59"
+
+docker run --rm xtide -l "Rosario Strait (Depth 105.9ft), Washington Current"
+docker run --rm xtide -l "West of Mukilteo (Depth 61.5ft), Washington Current"
+docker run --rm xtide -l "Allan Pass (Depth 92.9ft), Washington Current"
+docker run --rm xtide -l "Agate Passage, south end (Depth 25.1ft), Puget Sound, Washington Current"
+
+docker run --rm xtide -l "Redwood City, Wharf 5, San Francisco Bay, California"

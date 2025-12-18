@@ -53,6 +53,7 @@
     {
       "name": "Burrows Pass, Washington Current",
       "coords": "48.4895 N,  122.6867 W",
+      "xtide_name": "Burrows Pass (Depth 28.2ft), Washington Current",
       "url": "",
       "url_xtide_a": "",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1738&bin=23"
@@ -61,6 +62,7 @@
       "name": "Deception Pass (narrows), Washington Current",
       "coords": "48.4062 N, 122.6430 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Deception Pass (Narrows) (Depth 47.1ft), Rosario Strait, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/1955",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Deception+Pass+%28narrows%29%2C+Washington+Current&glen=14",
       "url_noaa_old": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1701_24&t=am%2fpm&i=&threshold=&thresholdvalue=&d=",
@@ -118,6 +120,7 @@
       "name": "Agate Passage south end, Puget Sound, Washington Current",
       "coords": "47.7128 N, 122.5655 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Agate Passage, south end (Depth 25.1ft), Puget Sound, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/76",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+south+end%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1501&bin=1"

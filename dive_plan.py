@@ -217,6 +217,8 @@ def main():
 
     parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json "
                                                               "({})".format(listDiveSites(data['sites'])))
+    parser.add_argument('--use-xtide-docker', action='store_true', default=True, dest='USE_XTIDE_DOCKER',
+                        help='Use local XTide via Docker instead of TBone web for current predictions')
     args = parser.parse_args()
 
     # Parse site list - allow indeterminate whitespace and capitals
@@ -310,11 +312,11 @@ def main():
 
     # args.START = dt(2024, 10, 31)
     # args.START = dt(2023, 11, 5)
-    args.START = dt(2025, 6, 7)
+    args.START = dt(2025, 12, 1)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 10
+    args.DAYS_IN_FUTURE = 0
     # args.IGNORE_MAX_SPEED = True
-    # args.INCLUDE_WORKDAYS = True
+    args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = Truer
     # ------------------------------------------------------------------------------------------------------------------
@@ -349,7 +351,10 @@ def main():
         station = getStation(data['stations'], siteData['data'])
 
         if station:
-            m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
+            if args.USE_XTIDE_DOCKER:
+                m = intp.XTideDockerInterpreter(station['name'], station)
+            else:
+                m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
 
         if station and 'british columbia' in station['name'].lower():
             m2 = intp.CanadaAPIInterpreter("", station)
@@ -358,7 +363,7 @@ def main():
         elif station:
             m2 = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
 
-        if station and m:
+        if station and m and not args.USE_XTIDE_DOCKER:
             print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))
             print(m.getDayUrl(m.baseUrl, possibleDiveDays[0]))
         # if stationNoaa and m2:

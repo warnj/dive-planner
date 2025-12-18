@@ -122,7 +122,7 @@ def main():
         m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
 
     slacks = []
-    days = dive_plan.getAllDays(365, dt(2025, 1, 1))
+    days = dive_plan.getAllDays(365, dt(2026, 1, 1))
     # days = dive_plan.getAllDays(230)
     for day in days:
         slacks.extend(m.getSlacks(day, night=NIGHT))
