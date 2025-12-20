@@ -41,8 +41,11 @@ def main():
     # SITE = 'Sechelt Rapids'
     # SITE = 'Nakwakto'
 
-    NOAA = True
-    # NOAA = False
+    USE_XTIDE_DOCKER = True
+    # USE_XTIDE_DOCKER = False
+
+    # NOAA = True
+    NOAA = False
 
     # NIGHT = True
     NIGHT = False
@@ -51,7 +54,9 @@ def main():
     siteJson = getSite(data['sites'], SITE)
 
     station = dive_plan.getStation(data['stations'], siteJson['data'])
-    if NOAA:
+    if USE_XTIDE_DOCKER:
+        m = intp.XTideDockerInterpreter(station['name'], station)
+    elif NOAA:
         if 'british columbia' in station['name'].lower():
             print('using Canadian Currents API')
             m = intp.CanadaAPIInterpreter("", station)
@@ -62,6 +67,9 @@ def main():
 
     slacks = []
     days = dive_plan.getAllDays(365, dt(2026, 1, 1))
+    # Preload full range once for XTide Docker to avoid per-day container runs
+    if USE_XTIDE_DOCKER and isinstance(m, intp.XTideDockerInterpreter) and days:
+        m.preload_range(days[0], days[-1])
     # days = dive_plan.getAllDays(290)
     # days = dive_plan.getNonWorkDays(365, dt(2026, 1, 1))
     for day in days:
