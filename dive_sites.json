@@ -932,7 +932,7 @@
       "diveable_off_slack": false
     },
     {
-      "name": "Agate Pass",
+      "name": "Agate Pass Drift",
       "data": "Agate Passage south end, Puget Sound, Washington Current",
       "slack_before_ebb": 40,
       "COMMENT": "Plan to get in 10 min before slack, swim around a bit, then ride the current to the exit",
@@ -943,6 +943,20 @@
       "dive_duration": 100,
       "surface_swim_time": 0,
       "diveable_before_flood": false,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+    {
+      "name": "Agate Pass Bridge",
+      "data": "Agate Passage south end, Puget Sound, Washington Current",
+      "slack_before_ebb": 0,
+      "slack_before_flood": 0,
+      "max_flood": 2,
+      "max_ebb": 2,
+      "max_total_speed": 3.5,
+      "dive_duration": 100,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
