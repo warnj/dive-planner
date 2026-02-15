@@ -310,15 +310,14 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    # args.START = dt(2024, 10, 31)
-    # args.START = dt(2023, 11, 5)
-    args.START = dt(2025, 12, 1)
+    args.START = dt(2026, 2, 14)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
-    # args.IGNORE_MAX_SPEED = True
+    args.DAYS_IN_FUTURE = 1
+    args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
-    # args.SORT = Truer
+    # args.SORT = True
+    # args.USE_XTIDE_DOCKER = False
     # ------------------------------------------------------------------------------------------------------------------
 
     # Create list of dates based on given start date
