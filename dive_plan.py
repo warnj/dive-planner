@@ -217,7 +217,7 @@ def main():
 
     parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json "
                                                               "({})".format(listDiveSites(data['sites'])))
-    parser.add_argument('--use-xtide-docker', action='store_true', default=True, dest='USE_XTIDE_DOCKER',
+    parser.add_argument('--use-xtide-docker', action='store_true', default=False, dest='USE_XTIDE_DOCKER',
                         help='Use local XTide via Docker instead of TBone web for current predictions')
     args = parser.parse_args()
 
@@ -284,6 +284,11 @@ def main():
         # SITES = append(SITES, 'Misery Point')
         # SITES = append(SITES, 'Edmonds Underwater Park')
         # SITES = append(SITES, 'Alki Junkyard')
+        SITES = append(SITES, 'Agate Pass Bridge')
+        # SITES = append(SITES, 'Agate Pass Drift')
+        # SITES = append(SITES, 'Waterman Wall')
+        # SITES = append(SITES, 'Warren Avenue Bridge North')
+        # SITES = append(SITES, 'Warren Avenue Bridge South')
         # SITES = append(SITES, 'Saltwater State Park')
         # SITES = append(SITES, 'Sunrise Beach')
         # SITES = append(SITES, 'Day Island Wall')
@@ -292,10 +297,6 @@ def main():
         # SITES = append(SITES, 'Fox Island East Wall')
         # SITES = append(SITES, 'Fox Island East Wall Gibson')
         # SITES = append(SITES, 'Titlow')
-        # SITES = append(SITES, 'Waterman Wall')
-        # SITES = append(SITES, 'Warren Avenue Bridge North')
-        # SITES = append(SITES, 'Warren Avenue Bridge South')
-        # SITES = append(SITES, 'Agate Pass')
         # SITES = append(SITES, 'Hammersley Inlet')
         #
         # SITES = append(SITES, 'Hawea Point')
@@ -357,17 +358,14 @@ def main():
 
         if station and 'british columbia' in station['name'].lower():
             m2 = intp.CanadaAPIInterpreter("", station)
-        # elif stationNoaa:
-        #     m2 = intp.NoaaAPIInterpreter(stationNoaa['url_noaa_api'], stationNoaa)
         elif station:
             m2 = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
 
         if station and m and not args.USE_XTIDE_DOCKER:
+            # show information only present from web data
             print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))
             print(m.getDayUrl(m.baseUrl, possibleDiveDays[0]))
-        # if stationNoaa and m2:
-        #     print('{} - {} - {}'.format(siteData['name'], siteData['data_noaa'], stationNoaa['coords']))
-            print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
+        print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
 
         if args.SORT:
             slacks = []

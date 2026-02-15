@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from datetime import timedelta, datetime
 import os
 import csv
+from typing import Optional
 
 
 def meters_to_feet(meters: float) -> float:
@@ -43,7 +44,7 @@ def get_total_minutes(seconds: int) -> int:
     return minutes
 
 
-def parse_uddf(file_path: str) -> dict:
+def parse_uddf(file_path: str) -> Optional[dict]:
     """
     Parses a UDDF file and extracts key dive statistics.
 
@@ -117,6 +118,9 @@ def parse_uddf(file_path: str) -> dict:
                 min_temp_k = min(temps_k)
                 # Round to the nearest whole number for Fahrenheit
                 dive_data['Water Temp (F)'] = round(kelvin_to_fahrenheit(min_temp_k))
+                # Average in-water temperature (skip initial surface reading)
+                avg_temp_k = sum(temps_k) / len(temps_k)
+                dive_data['Average Temp (F)'] = round(kelvin_to_fahrenheit(avg_temp_k))
 
         return dive_data
 
@@ -125,7 +129,7 @@ def parse_uddf(file_path: str) -> dict:
 
 
 if __name__ == "__main__":
-    log_directory = '/Users/juwarner/Downloads/april2025'
+    log_directory = '/Users/juwarner/Downloads/shearwater'
     output_csv_file = 'dive_log_summary.csv'
 
     print(f"--- Scanning for dive logs in: '{os.path.abspath(log_directory)}' ---")
@@ -164,6 +168,7 @@ if __name__ == "__main__":
                     print(f"{'Average Depth':<18}: {dive_stats.get('Average Depth (ft)', 'N/A')} ft")
                     print(f"{'Dive Time':<18}: {dive_stats.get('Dive Time (min)', 'N/A')} minutes")
                     print(f"{'Min Temp':<18}: {dive_stats.get('Water Temp (F)', 'N/A')}°F")
+                    print(f"{'Avg Temp':<18}: {dive_stats.get('Average Temp (F)', 'N/A')}°F")
                 else:
                     print("    -> Failed to parse this file.")
                 print("-" * (len(filename) + 24))
@@ -172,7 +177,7 @@ if __name__ == "__main__":
             print(f"\n--- Generating CSV file: {output_csv_file} ---")
             headers = [
                 'date', 'start time', 'location', 'surface interval',
-                'max depth (ft)', 'avg depth (ft)', 'dive time (min)', 'min temp (F)'
+                'max depth (ft)', 'avg depth (ft)', 'dive time (min)', '', 'min temp (F)', 'avg temp (F)'
             ]
             with open(output_csv_file, 'w', newline='', encoding='utf-8') as csvfile:
                 writer = csv.writer(csvfile)
@@ -189,7 +194,9 @@ if __name__ == "__main__":
                             dive_stats.get('Max Depth (ft)', ''),
                             dive_stats.get('Average Depth (ft)', ''),
                             dive_stats.get('Dive Time (min)', ''),
-                            dive_stats.get('Water Temp (F)', '')
+                            '',
+                            dive_stats.get('Water Temp (F)', ''),
+                            dive_stats.get('Average Temp (F)', ''),
                         ]
                         writer.writerow(row)
                     else:

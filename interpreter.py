@@ -578,6 +578,13 @@ class CanadaAPIInterpreter(Interpreter):
         return self.__getSlacksOnDay(day, allSlacks, night)
 
 class XTideDockerInterpreter(Interpreter):
+    def __init__(self, baseUrl, station):
+        super().__init__(baseUrl, station)
+        self._events_cache = None  # list of parsed events across a cached range
+        self._slacks_cache = None  # list[Slack] built from cached events
+        self._cache_start = None   # datetime.date
+        self._cache_end = None     # datetime.date
+
     # Returns the datetime object parsed from a generic "YYYY-MM-DD HH:MM" pair (ignores timezone token)
     def _parseTime(self, tokens):
         # tokens example (split by whitespace):
@@ -591,6 +598,33 @@ class XTideDockerInterpreter(Interpreter):
             return dt.strptime(f"{date_part} {time_part}{ampm}", TIMEPARSEFMT)
         else:
             return dt.strptime(f"{date_part} {time_part}", TIMEPARSEFMT_TBONE)
+
+    def _run_xtide_range(self, start_day, end_day):
+        begin = dt.strftime(start_day, '%Y-%m-%d') + ' 00:00'
+        end = dt.strftime(end_day, '%Y-%m-%d') + ' 23:59'
+        location = self.station['xtide_name'] if 'xtide_name' in self.station else self.station['name']
+        cmd = [
+            'docker', 'run', '--rm',
+            'xtide',
+            '-l', location,
+            '-b', begin,
+            '-e', end
+        ]
+        try:
+            completed = subprocess.run(cmd, capture_output=True, text=False, check=True)
+        except Exception as e:
+            raise Exception('XTide Docker invocation failed: {}'.format(repr(e)))
+        def _safe_decode(b):
+            try:
+                return b.decode('utf-8')
+            except UnicodeDecodeError:
+                try:
+                    return b.decode('latin-1')
+                except Exception:
+                    return b.decode('utf-8', errors='replace')
+        stdout_text = _safe_decode(completed.stdout)
+        _ = _safe_decode(completed.stderr)  # keep for potential debugging
+        return stdout_text.splitlines()
 
     def _run_xtide_for_day(self, day):
         begin = dt.strftime(day, '%Y-%m-%d') + ' 00:00'
@@ -656,47 +690,25 @@ class XTideDockerInterpreter(Interpreter):
                 events.append((idx, 'slack_ebb', timeVal, 0.0))
         return events
 
-    def getSlacks(self, day, night):
-        try:
-            lines = self._run_xtide_for_day(day)
-        except Exception as e:
-            print('Error running XTide via Docker: {}'.format(repr(e)))
-            return []
-        events = self._parse_xtide_events(lines)
-        if not events:
-            print('ERROR: no events parsed for {} from XTide'.format(day))
-            return []
-        
-        # Precompute sunrise/sunset for the day (local tz)
-        sunData = sun(self._astralCity.observer, date=day, tzinfo=timezone('US/Pacific'))
-        sunrise = sunData['sunrise'].replace(tzinfo=None)
-        sunset = sunData['sunset'].replace(tzinfo=None)
-        mphase = moon.phase(day)
-
+    def _build_slacks_from_events(self, events):
+        # Build Slack objects for the whole cached range, computing sunrise/sunset per slack day
         slacks = []
-        # Build Slack objects by pairing slacks with surrounding maxima
         for i, (idx, kind, t, _) in enumerate(events):
             if kind not in ('slack_flood', 'slack_ebb'):
                 continue
-
-            # Find previous and next maxima according to direction switch
             preMax = None
             postMax = None
             if kind == 'slack_ebb':
-                # flood before, ebb after
-                # search backwards for max_flood
                 for j in range(i - 1, -1, -1):
                     if events[j][1] == 'max_flood':
                         preMax = events[j]
                         break
-                # search forwards for max_ebb
                 for j in range(i + 1, len(events)):
                     if events[j][1] == 'max_ebb':
                         postMax = events[j]
                         break
                 slackBeforeEbb = True
             else:
-                # ebb before, flood after
                 for j in range(i - 1, -1, -1):
                     if events[j][1] == 'max_ebb':
                         preMax = events[j]
@@ -706,10 +718,14 @@ class XTideDockerInterpreter(Interpreter):
                         postMax = events[j]
                         break
                 slackBeforeEbb = False
-
             if not preMax or not postMax:
-                # Skip boundary slacks without surrounding maxima
                 continue
+
+            # sunrise/sunset for the slack's calendar day
+            sunData = sun(self._astralCity.observer, date=t, tzinfo=timezone('US/Pacific'))
+            sunrise = sunData['sunrise'].replace(tzinfo=None)
+            sunset = sunData['sunset'].replace(tzinfo=None)
+            mphase = moon.phase(t)
 
             s = Slack()
             s.time = t
@@ -717,10 +733,7 @@ class XTideDockerInterpreter(Interpreter):
             s.sunsetTime = sunset
             s.moonPhase = mphase
             s.slackBeforeEbb = slackBeforeEbb
-
-            # preMax/postMax contain (idx, kind, time, speed)
             if slackBeforeEbb:
-                # flood before, ebb after
                 s.floodSpeed = preMax[3] if preMax[1] == 'max_flood' else abs(preMax[3])
                 s.maxFloodTime = preMax[2]
                 s.ebbSpeed = postMax[3] if postMax[1] == 'max_ebb' else -abs(postMax[3])
@@ -730,11 +743,66 @@ class XTideDockerInterpreter(Interpreter):
                 s.maxEbbTime = preMax[2]
                 s.floodSpeed = postMax[3] if postMax[1] == 'max_flood' else abs(postMax[3])
                 s.maxFloodTime = postMax[2]
-
-            # Daytime filter if requested
-            if night or (s.time >= sunrise and s.time <= sunset):
-                slacks.append(s)
-
-        if not slacks:
-            print('ERROR: no slacks constructed for {} from XTide'.format(day))
+            slacks.append(s)
         return slacks
+
+    def preload_range(self, start_day, end_day):
+        # Normalize to dates without time
+        start = dt(year=start_day.year, month=start_day.month, day=start_day.day)
+        end = dt(year=end_day.year, month=end_day.month, day=end_day.day)
+        lines = self._run_xtide_range(start, end)
+        events = self._parse_xtide_events(lines)
+        if not events:
+            raise Exception('No XTide events parsed for range {} - {}'.format(start, end))
+        self._events_cache = events
+        self._slacks_cache = self._build_slacks_from_events(events)
+        self._cache_start = start
+        self._cache_end = end
+
+    def _covers_date(self, day):
+        if not self._cache_start or not self._cache_end:
+            return False
+        d = dt(year=day.year, month=day.month, day=day.day)
+        return self._cache_start <= d <= self._cache_end
+
+    def _filter_cached_slacks_for_day(self, day, night):
+        if not self._slacks_cache:
+            return []
+        day_str = dt.strftime(day, DATEFMT)
+        result = []
+        for s in self._slacks_cache:
+            if dt.strftime(s.time, DATEFMT) != day_str:
+                continue
+            if night or (s.time >= s.sunriseTime and s.time <= s.sunsetTime):
+                result.append(s)
+        return result
+
+    def getSlacks(self, day, night):
+        # Fast path: if we have a cached range that covers this day, just filter
+        if self._covers_date(day):
+            return self._filter_cached_slacks_for_day(day, night)
+
+        # Fallback: single-day execution (preserves old behavior if preload_range not used)
+        try:
+            lines = self._run_xtide_for_day(day)
+        except Exception as e:
+            print('Error running XTide via Docker: {}'.format(repr(e)))
+            return []
+        events = self._parse_xtide_events(lines)
+        if not events:
+            print('ERROR: no events parsed for {} from XTide'.format(day))
+            return []
+        # Build full-day slacks using the same logic but with day-specific sun times
+        # reuse builder with events from just this day
+        temp_slacks = self._build_slacks_from_events(events)
+        # filter for the requested calendar day and night flag
+        res = []
+        day_str = dt.strftime(day, DATEFMT)
+        for s in temp_slacks:
+            if dt.strftime(s.time, DATEFMT) != day_str:
+                continue
+            if night or (s.time >= s.sunriseTime and s.time <= s.sunsetTime):
+                res.append(s)
+        if not res:
+            print('ERROR: no slacks constructed for {} from XTide'.format(day))
+        return res
