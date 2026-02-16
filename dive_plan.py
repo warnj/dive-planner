@@ -246,7 +246,7 @@ def main():
         # SITES = append(SITES, 'Row and be Dammed')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
-        # SITES = append(SITES, 'Gabriola Pass')
+        SITES = append(SITES, 'Gabriola Pass')
         # SITES = append(SITES, 'Dodd Narrows')
         # SITES = append(SITES, 'Active Pass')
         # SITES = append(SITES, 'Boat Pass')
@@ -284,7 +284,7 @@ def main():
         # SITES = append(SITES, 'Misery Point')
         # SITES = append(SITES, 'Edmonds Underwater Park')
         # SITES = append(SITES, 'Alki Junkyard')
-        SITES = append(SITES, 'Agate Pass Bridge')
+        # SITES = append(SITES, 'Agate Pass Bridge')
         # SITES = append(SITES, 'Agate Pass Drift')
         # SITES = append(SITES, 'Waterman Wall')
         # SITES = append(SITES, 'Warren Avenue Bridge North')
@@ -311,7 +311,7 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2026, 2, 14)
+    args.START = dt(2026, 9, 26)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 1
     args.IGNORE_MAX_SPEED = True
@@ -389,11 +389,11 @@ def main():
                 except Exception as e:
                     print('Error fetching and reading slacks from Xtide: ' + repr(e))
 
-                # try:
-                slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
-                canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA / CA")
-                # except Exception as e:
-                #     print('Error fetching and reading slacks from NOAA: ' + repr(e))
+                try:
+                    slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
+                    canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA / CA")
+                except Exception as e:
+                    print('Error fetching and reading slacks from NOAA/Canada: ' + repr(e))
 
                 if not canDive:
                     print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
