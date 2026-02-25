@@ -59,18 +59,33 @@ MONTH_MAP = {
 }
 
 
-def download_pdf(url: str, output_path: str = None) -> str:
-    """Download PDF from URL and return the local file path."""
-    if output_path is None:
-        output_path = "temp_current_predictions.pdf"
+def download_pdf(url: str, cache_dir: str = "bc-current-pdfs") -> str:
+    """Download PDF from URL and return the local file path.
 
+    Files are cached in the cache_dir directory. If the file already exists
+    locally, it will be used instead of downloading again.
+    """
+    # Create cache directory if it doesn't exist
+    os.makedirs(cache_dir, exist_ok=True)
+
+    # Extract filename from URL (e.g., "08450_2026.pdf")
+    filename = url.split('/')[-1]
+    local_path = os.path.join(cache_dir, filename)
+
+    # Check if file already exists locally
+    if os.path.exists(local_path):
+        print(f"Using cached PDF: {local_path}")
+        return local_path
+
+    # Download the file
+    print(f"Downloading PDF to: {local_path}")
     response = requests.get(url)
     response.raise_for_status()
 
-    with open(output_path, 'wb') as f:
+    with open(local_path, 'wb') as f:
         f.write(response.content)
 
-    return output_path
+    return local_path
 
 
 def extract_year_from_url(url: str) -> int:
@@ -445,17 +460,12 @@ def parse_current_pdf(url: str) -> List[Slack]:
     # Extract year from URL
     year = extract_year_from_url(url)
 
-    # Download PDF
+    # Download PDF (or use cached version)
     pdf_path = download_pdf(url)
 
-    try:
-        # Parse PDF
-        slacks = parse_pdf(pdf_path, year)
-        return slacks
-    finally:
-        # Clean up temporary file
-        if os.path.exists(pdf_path):
-            os.remove(pdf_path)
+    # Parse PDF (file is kept in cache for future use)
+    slacks = parse_pdf(pdf_path, year)
+    return slacks
 
 
 def main():
@@ -486,7 +496,7 @@ def main():
         # url = "https://tides.gc.ca/sites/tides/files/2025-11/08108_2026.pdf" # Seymour
         # url = "https://tides.gc.ca/sites/tides/files/2025-11/07545_2026.pdf" # Gabriola
         # url = "https://tides.gc.ca/sites/tides/files/2025-11/08277_2026.pdf" # Weynton Pass
-        print(f"No URL provided, using default: {url}")
+        # print(f"No URL provided, using default: {url}")
 
     print(f"Parsing PDF from: {url}")
 

@@ -300,7 +300,8 @@ class TBoneSCInterpreter(Interpreter):
 
     # Returns the tbone.biol.sc.edu current data from the given url
     def _getWebLines(self, url, day):
-        with urllib.request.urlopen(url) as response:
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as response:
             html = response.read()
             soup = BeautifulSoup(html, 'html.parser')
             predictions = soup.find('pre')

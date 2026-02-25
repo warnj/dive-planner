@@ -75,6 +75,7 @@
       "name": "Admiralty Inlet (off Bush Point), Washington Current",
       "coords": "48.0333 N, 122.6333 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Admiralty Inlet (off Bush Point)",
       "url": "http://tides.mobilegeographics.com/locations/69",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Admiralty+Inlet+%28off+Bush+Point%29%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1616&bin=31"

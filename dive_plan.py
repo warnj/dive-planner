@@ -217,7 +217,7 @@ def main():
 
     parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json "
                                                               "({})".format(listDiveSites(data['sites'])))
-    parser.add_argument('--use-xtide-docker', action='store_true', default=False, dest='USE_XTIDE_DOCKER',
+    parser.add_argument('--use-xtide-docker', action='store_true', default=True, dest='USE_XTIDE_DOCKER',
                         help='Use local XTide via Docker instead of TBone web for current predictions')
     args = parser.parse_args()
 
@@ -246,7 +246,7 @@ def main():
         # SITES = append(SITES, 'Row and be Dammed')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
-        SITES = append(SITES, 'Gabriola Pass')
+        # SITES = append(SITES, 'Gabriola Pass')
         # SITES = append(SITES, 'Dodd Narrows')
         # SITES = append(SITES, 'Active Pass')
         # SITES = append(SITES, 'Boat Pass')
@@ -277,7 +277,7 @@ def main():
         # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
         # SITES = append(SITES, 'Deception Pass')
-        # SITES = append(SITES, 'Keystone Jetty')
+        SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
         # SITES = append(SITES, 'Hood Canal Bridge')
@@ -311,9 +311,9 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2026, 9, 26)
+    args.START = dt(2026, 2, 28)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 1
+    args.DAYS_IN_FUTURE = 0
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
