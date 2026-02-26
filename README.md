@@ -80,3 +80,16 @@ docker run --rm xtide -l "Allan Pass (Depth 92.9ft), Washington Current"
 docker run --rm xtide -l "Agate Passage, south end (Depth 25.1ft), Puget Sound, Washington Current"
 
 docker run --rm xtide -l "Redwood City, Wharf 5, San Francisco Bay, California"
+
+docker run --rm xtide -l "Deception Pass" 2>&1 | head -30   # station names with prefix
+
+stations=(
+    "The Narrows, north end"
+    "Rosario Strait"
+    "Hale Passage, west end"
+)
+for station in "${stations[@]}"; do
+    echo "=== Querying: $station ==="
+    docker run --rm xtide -l "$station" 2>&1 | grep -A 1 "harmonics-initial.tcd" | tail -1
+    echo ""
+done

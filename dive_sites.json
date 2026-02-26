@@ -19,6 +19,7 @@
       "name": "Strait of Juan de Fuca Entrance, Washington Current",
       "coords": "48.4500 N, 124.5833 W",
       "xtide_limit_2037": true,
+      "xtide_name": "Strait of Juan de Fuca entrance (Depth 88.6ft), Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/7867",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Strait+of+Juan+de+Fuca+Entrance%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1642&bin=49"
@@ -48,6 +49,8 @@
       "name": "Rosario Strait, Washington Current",
       "coords": "48.4583 N, 122.7833 W",
       "xtide_limit_2037": true,
+      "xtide_name": "Rosario Strait (Depth 105.9ft), Washington Current",
+      "NOTE:": "There are a bunch (like 15) of different depths to choose, so play around with this before trusting",
       "url": "http://tides.mobilegeographics.com/locations/6882",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Rosario+Strait%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1702&bin=16"
@@ -99,6 +102,8 @@
       "name": "Alki Point, 0.3 mile west of, Puget Sound, Washington Current",
       "coords": "47.5755 N, 122.4280 W",
       "xtide_limit_2037": true,
+      "xtide_name": "Alki Point, 1 mile west of (Depth 102.4ft), Puget Sound, Washington Current",
+      "NOTE:": "There are a bunch (like 25) of different depths to choose, so play around with this before trusting",
       "url": "http://tides.mobilegeographics.com/locations/153",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Alki+Point%2C+0%2E3+miles+W+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1516&bin=17"
@@ -107,6 +112,7 @@
       "name": "Rich Passage, West end, Puget Sound, Washington Current",
       "coords": "47.5900 N, 122.5622 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Rich Passage, west end (Depth 11.5ft), Puget Sound, Washington Current",
       "url": "http://tides.mobilegeographics.com/locations/8807",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=West+end%2C+Rich+Passage%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1514&bin=1"
@@ -115,6 +121,7 @@
       "name": "Agate Passage north end, Puget Sound, Washington Current",
       "coords": "47.7220 N, 122.5550 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Agate Passage, north end, Puget Sound, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/75",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+north+end%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PCT1636&bin=1"
@@ -132,6 +139,8 @@
       "name": "Tacoma Narrows North, north end (midstream), Washington Current",
       "coords": "47.3062 N, 122.5497 W",
       "xtide_limit_2037": false,
+      "xtide_name": "The Narrows, north end (midstream) (Depth 139.2ft), Puget Sound, Washington Current",
+      "NOTE:": "There are a bunch (like 25) of different depths to choose, so play around with this before trusting",
       "url": "http://tides.mobilegeographics.com/locations/8176",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=The+Narrows%2C+north+end+%28midstream%29%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1524&bin=16"
@@ -140,6 +149,8 @@
       "name": "Tacoma Narrows South, south end (midstream), Washington Current",
       "coords": "47.2608 N, 122.5583 W",
       "xtide_limit_2037": false,
+      "xtide_name": "The Narrows, south end (midstream) (Depth 104.9ft), Puget Sound, Washington Current",
+      "NOTE:": "There are a bunch (like 25) of different depths to choose, so play around with this before trusting",
       "url": "http://tides.mobilegeographics.com/locations/7626",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=South+end+%28midstream%29%2C+The+Narrows%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1528&bin=13"
@@ -148,6 +159,7 @@
       "name": "Hale Passage, west end, Puget Sound, Washington Current",
       "coords": "47.2778 N, 122.6622 W",
       "xtide_limit_2037": true,
+      "xtide_name": "Hale Passage, west end (Depth 10.6ft), Puget Sound, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/3053",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Hale+Passage%2C+West+end%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1530&bin=10"
@@ -155,6 +167,7 @@
     {
       "name": "Hammersley Inlet, west of Skookum Point, Washington Current",
       "coords": "47.2070 N, 123.0395 W",
+      "xtide_name": "Hammersley Inlet, west of Skookum Point (Depth 15ft), Puget Sound, Washington Current",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Hammersley+Inlet%2C+west+of+Skookum+Point%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PCT1896&bin=1"
     },
@@ -162,6 +175,7 @@
       "name": "Green Point, 0.8 mile northwest of, Rosario Strait, Washington Current",
       "coords": "48.5047 N, 122.7062 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Green Point, 0.8 mile northwest of, Rosario Strait, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/2959",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Green+Point%2C+0%2E8+mile+northwest+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PCT2026&bin=1"
@@ -170,6 +184,8 @@
       "name": "Point Hudson, 0.5 mile east of, Washington Current",
       "coords": "48.1167 N, 122.7333 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Harney Channel, north of Point Hudson (Depth 13.2ft), Washington Current",
+      "xtide_name_note": "XTide does not have Point Hudson directly, using nearby Harney Channel station",
       "url": "",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Point+Hudson%2C+0%2E5+mile+east+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1623&bin=33"
@@ -178,6 +194,7 @@
       "name": "Gibson Point, 0.8 mile east of, Puget Sound, Washington Current",
       "coords": "47.2180 N, 122.5895 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Gibson Point, 0.8 miles east of (Depth 100.2ft), Puget Sound, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/2786",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Gibson+Point%2C+0%2E8+mile+east+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1531&bin=18"
@@ -186,6 +203,7 @@
       "name": "Port Washington Narrows North, Washington Current",
       "coords": "47.6013 N, 122.6617 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Port Washington Narrows, Warren Ave. Bridge (Depth 20.5ft), Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/6412",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Port+Washington+Narrows%2C+north+ent%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1510&bin=1"
@@ -194,6 +212,7 @@
       "name": "Port Washington Narrows South, Washington Current",
       "coords": "47.6013 N, 122.6617 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Port Washington Narrows, Warren Ave. Bridge (Depth 20.5ft), Washington Current",
       "url": "",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Port+Washington+Narrows%2C+south+ent%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1510&bin=1"
@@ -202,6 +221,7 @@
       "name": "Hood Canal Bridge, Puget Sound, Washington Current",
       "coords": "47.8547 N, 122.6294 W",
       "xtide_limit_2037": true,
+      "xtide_name": "Hood Canal Bridge (Depth 21.9ft), Washington Current",
       "url": "",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=South+Point%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1603&bin=20"
@@ -210,6 +230,7 @@
       "name": "Peavine Pass, west entrance, Washington Current",
       "coords": "48.5870 N, 122.8200 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Peavine Pass, west entrance (Depth 18.5ft), Rosario Strait, Washington Current",
       "url": "",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Peavine+Pass%2C+west+entrance%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1704&bin=1"
@@ -223,6 +244,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Seymour+Narrows%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aefc7784e5432cd3b6eb1e",
+      "ca_pdf_code": "08108",
       "flood_dir": 180.0,
       "ebb_dir": 0.0
     },
@@ -234,6 +256,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Gabriola+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aef12e84e5432cd3b6db8d",
+      "ca_pdf_code": "07545",
       "flood_dir": 80.0,
       "dir_comment": "direction the current flows toward from i.e. here flood runs W to E",
       "ebb_dir": 260.0
@@ -266,6 +289,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Weynton+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63af005f6a2b9417c0353158",
+      "ca_pdf_code": "08277",
       "flood_dir": 220.0,
       "ebb_dir": 40.0
     },
@@ -299,6 +323,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Nakwakto+Rapids%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63af009f84e5432cd3b71287",
+      "ca_pdf_code": "08450",
       "flood_dir": 355.0,
       "ebb_dir": 175.0
     },
@@ -329,6 +354,7 @@
       "name": "San Juan Channel (south entrance), Washington Current",
       "coords": "48.4613 N, 122.9508 W",
       "xtide_limit_2037": false,
+      "xtide_name": "San Juan Channel, south entrance (Depth 75.4ft), Washington Current",
       "url": "",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=San+Juan+Channel+%28south+entrance%29%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1703&bin=17"
@@ -372,6 +398,7 @@
       "name": "Burrows I. Allan I. Passage between, Washington Current",
       "coords": "48.4717 N, 122.6997 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Allan Pass (Depth 10.9ft), Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/1034",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Burrows+I%2E-Allan+I%2E%2C+Passage+between%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1737&bin=23"
@@ -394,6 +421,7 @@
       "name": "Pillar Point, Washington Current",
       "coords": "48.2667 N, 124.0667 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Pillar Point, 6 mi. NNE of (Depth 296.6ft), Strait of Juan de Fuca, Washington Current",
       "url": "",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Pillar+Point%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1641&bin=75"
@@ -402,6 +430,7 @@
       "name": "Point Colville, 3.0 nm east",
       "coords": "48.4125 N   122.7403 W",
       "xtide_limit_2037": false,
+      "xtide_name": "Point Colville, 3.0 nm E of (Lawson Reef, 1 nm NW of) (Depth 165ft), Washington Current",
       "url": "",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Colville+Island%2C+1%2E4+miles+east+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1727&bin=30"

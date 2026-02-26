@@ -242,7 +242,7 @@ def main():
         # SITES = append(SITES, 'Nakwakto')
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
-        # SITES = append(SITES, 'Seymour Narrows')
+        SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Row and be Dammed')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
@@ -277,7 +277,7 @@ def main():
         # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
         # SITES = append(SITES, 'Deception Pass')
-        SITES = append(SITES, 'Keystone Jetty')
+        # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
         # SITES = append(SITES, 'Hood Canal Bridge')
@@ -357,7 +357,11 @@ def main():
                 m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
 
         if station and 'british columbia' in station['name'].lower():
-            m2 = intp.CanadaAPIInterpreter("", station)
+            # Use CanadaPDFInterpreter if the station has a ca_pdf_code
+            if 'ca_pdf_code' in station and station['ca_pdf_code']:
+                m2 = intp.CanadaPDFInterpreter(station['ca_pdf_code'], station)
+            else:
+                m2 = intp.CanadaAPIInterpreter("", station)
         elif station:
             m2 = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
 
@@ -391,7 +395,7 @@ def main():
 
                 try:
                     slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
-                    canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA / CA")
+                    canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA / Canada")
                 except Exception as e:
                     print('Error fetching and reading slacks from NOAA/Canada: ' + repr(e))
 

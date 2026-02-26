@@ -13,8 +13,10 @@ from dateutil import parser
 import pytz
 import subprocess
 
-# https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
-TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
+# Import the Canada PDF parsing library
+import canada_pdf_lib
+
+
 TIMEPARSEFMT_TBONE = '%Y-%m-%d %H:%M'  # example: 2019-01-18 22:36
 TIMEPARSEFMT_CA = '%Y-%m-%dT%H:%M:%SZ'  # example: 2024-03-13T23:29:00Z
 TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
@@ -807,3 +809,137 @@ class XTideDockerInterpreter(Interpreter):
         if not res:
             print('ERROR: no slacks constructed for {} from XTide'.format(day))
         return res
+
+
+# Class to retrieve and parse current data from Canadian Hydrographic Service (CHS) PDF files
+# These PDFs contain the annual current predictions for Canadian current stations
+class CanadaPDFInterpreter(Interpreter):
+    """
+    Interpreter that downloads and parses CHS current prediction PDFs.
+
+    The PDFs are annual prediction files that contain slack and maximum current data
+    for Canadian current stations. The PDF URL pattern is:
+    https://tides.gc.ca/sites/tides/files/{year-1}-11/{station_code}_{year}.pdf
+
+    Requires the station to have a 'ca_pdf_code' field (e.g., "08108" for Seymour Narrows).
+    """
+
+    def __init__(self, baseUrl, station):
+        super().__init__(baseUrl, station)
+        self._cachedSlacks = []  # Cache of all slacks from the PDF
+        self._cachedYear = None  # Year for which we have cached data
+        self.numAPICalls = 0  # Track number of PDF downloads (for compatibility)
+
+    def _getStationCode(self):
+        """Get the CHS station code for PDF download."""
+        if 'ca_pdf_code' in self.station and self.station['ca_pdf_code']:
+            return self.station['ca_pdf_code']
+        return None
+
+    def _ensureCachedData(self, year):
+        """Ensure we have cached data for the requested year."""
+        if self._cachedYear == year and self._cachedSlacks:
+            return True
+
+        station_code = self._getStationCode()
+        if not station_code:
+            print(f"Error: Station '{self.station.get('name', 'unknown')}' does not have 'ca_pdf_code' configured")
+            return False
+
+        # Build the PDF URL
+        pdf_url = canada_pdf_lib.build_pdf_url(station_code, year)
+        self.numAPICalls += 1  # Count PDF downloads
+
+        try:
+            # Download and parse the PDF
+            slacks = canada_pdf_lib.parse_current_pdf(pdf_url, Slack)
+
+            # Add sunrise/sunset times to each slack
+            for slack in slacks:
+                sunData = sun(self._astralCity.observer, date=slack.time, tzinfo=timezone('US/Pacific'))
+                slack.sunriseTime = sunData['sunrise'].replace(tzinfo=None)
+                slack.sunsetTime = sunData['sunset'].replace(tzinfo=None)
+                slack.moonPhase = moon.phase(slack.time)
+
+            self._cachedSlacks = slacks
+            self._cachedYear = year
+            return True
+
+        except Exception as e:
+            print(f"Error downloading/parsing PDF for station code {station_code}: {e}")
+            return False
+
+    def _parseTime(self, tokens):
+        """Not used for PDF parsing, but required by base class."""
+        raise NotImplementedError("CanadaPDFInterpreter does not use _parseTime")
+
+    @staticmethod
+    def getDayUrl(baseUrl, day):
+        """Return the PDF URL for the year containing the given day."""
+        station_code = baseUrl  # We pass station code as baseUrl for this interpreter
+        if station_code:
+            return canada_pdf_lib.build_pdf_url(station_code, day.year)
+        return ""
+
+    def _getWebLines(self, url, day):
+        """Not used for PDF parsing."""
+        raise NotImplementedError("CanadaPDFInterpreter does not use _getWebLines")
+
+    def _getSlackData(self, lines, indexes, sunrise, sunset, moonPhase):
+        """Not used for PDF parsing."""
+        raise NotImplementedError("CanadaPDFInterpreter does not use _getSlackData")
+
+    def getSlacks(self, day, night):
+        """
+        Returns a list of slacks for the given day.
+
+        Includes night slacks if night=True.
+        """
+        station_code = self._getStationCode()
+        if not station_code:
+            return []
+
+        # Ensure we have cached data for this year
+        if not self._ensureCachedData(day.year):
+            return []
+
+        # Filter slacks for the requested day
+        day_str = dt.strftime(day, DATEFMT)
+        result = []
+
+        for slack in self._cachedSlacks:
+            slack_day_str = dt.strftime(slack.time, DATEFMT)
+            if slack_day_str != day_str:
+                continue
+
+            # Filter for daytime slacks if night=False
+            if not night:
+                if slack.sunriseTime and slack.sunsetTime:
+                    if slack.time < slack.sunriseTime or slack.time > slack.sunsetTime:
+                        continue
+
+            result.append(slack)
+
+        return result
+
+    def allSlacks(self, startDay):
+        """
+        Returns all slacks from the PDF for the year of startDay.
+        """
+        station_code = self._getStationCode()
+        if not station_code:
+            return []
+
+        if not self._ensureCachedData(startDay.year):
+            return []
+
+        # Return slacks starting from startDay
+        start_str = dt.strftime(startDay, DATEFMT)
+        result = []
+        for slack in self._cachedSlacks:
+            if dt.strftime(slack.time, DATEFMT) >= start_str:
+                result.append(slack)
+
+        return result
+
+
