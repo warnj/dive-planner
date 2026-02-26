@@ -452,6 +452,7 @@ class NoaaAPIInterpreter(Interpreter):
             slacks.append(s)
         return slacks
 
+# DEPRECATED:  as of 2026 this Canada api has moved or been removed and does not work
 # Class to retrieve and parse current data from Canada Currents REST API
 # warning: does not identify "min ebb" or "min flood" type slacks as the direction must change for this to locate a slack
 class CanadaAPIInterpreter(Interpreter):
@@ -943,3 +944,332 @@ class CanadaPDFInterpreter(Interpreter):
         return result
 
 
+# Class to retrieve and parse current data from dairiki.org website
+# This interpreter parses the monthly table format from dairiki.org
+class DairikiInterpreter(Interpreter):
+    """
+    Interpreter that downloads and parses current predictions from dairiki.org.
+
+    The URL pattern is: https://www.dairiki.org/tides/monthly.php/{station_code}/{year}-{month}
+    Example: https://www.dairiki.org/tides/monthly.php/nak/2026-10
+
+    The monthly table contains columns:
+    - Turn: slack current time
+    - Max: maximum current time and speed (e.g., "7.5F" for flood, "-6.5E" for ebb)
+
+    Requires the station to have a 'url_dairiki' field.
+    """
+
+    def __init__(self, baseUrl, station):
+        super().__init__(baseUrl, station)
+        self._cachedSlacks = []  # Cache of all slacks from the page
+        self._cachedYearMonth = None  # (year, month) tuple for which we have cached data
+        self.numAPICalls = 0  # Track number of page downloads (for compatibility)
+
+    def _parseTime(self, tokens):
+        """Not used for Dairiki parsing, but required by base class."""
+        raise NotImplementedError("DairikiInterpreter does not use _parseTime")
+
+    @staticmethod
+    def getDayUrl(baseUrl, day):
+        """Return the monthly URL for the given day."""
+        if baseUrl:
+            # baseUrl format: https://www.dairiki.org/tides/monthly.php/nak
+            return f"{baseUrl}/{day.year}-{day.month:02d}"
+        return ""
+
+    def _getWebLines(self, url, day):
+        """Not used for Dairiki parsing."""
+        raise NotImplementedError("DairikiInterpreter does not use _getWebLines")
+
+    def _getSlackData(self, lines, indexes, sunrise, sunset, moonPhase):
+        """Not used for Dairiki parsing."""
+        raise NotImplementedError("DairikiInterpreter does not use _getSlackData")
+
+    def _parseSpeedValue(self, text):
+        """
+        Parse a speed value like '7.5F' (flood) or '-6.5E' (ebb).
+        Returns (speed, is_flood) tuple.
+        Flood speeds are positive, ebb speeds are negative.
+        """
+        text = text.strip()
+        if not text:
+            return None, None
+
+        is_flood = text.endswith('F')
+        is_ebb = text.endswith('E')
+
+        if not is_flood and not is_ebb:
+            return None, None
+
+        try:
+            # Remove the F or E suffix and parse the number
+            speed_str = text[:-1]
+            speed = float(speed_str)
+            # Ensure ebb is negative
+            if is_ebb and speed > 0:
+                speed = -speed
+            return speed, is_flood
+        except ValueError:
+            return None, None
+
+    def _parseTimeStr(self, time_str, date):
+        """
+        Parse a time string like '02:01' or '14:34' with a given date.
+        Returns a datetime object.
+        """
+        time_str = time_str.strip()
+        if not time_str or time_str == '':
+            return None
+
+        try:
+            # Parse HH:MM format
+            parts = time_str.split(':')
+            if len(parts) != 2:
+                return None
+            hour = int(parts[0])
+            minute = int(parts[1])
+            return dt(date.year, date.month, date.day, hour, minute)
+        except (ValueError, TypeError):
+            return None
+
+    def _fetchAndParseMonth(self, year, month):
+        """
+        Fetch the monthly page and parse all slacks for the month.
+        Returns a list of Slack objects.
+        """
+        url = f"{self.baseUrl}/{year}-{month:02d}"
+        self.numAPICalls += 1
+
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req) as response:
+                html = response.read()
+                soup = BeautifulSoup(html, 'html.parser')
+        except Exception as e:
+            print(f"Error fetching Dairiki page {url}: {e}")
+            return []
+
+        # Find the tide table
+        table = soup.find('table', {'class': 'tidetable'})
+        if not table:
+            print(f"Error: Could not find tide table at {url}")
+            return []
+
+        slacks = []
+        current_date = None
+
+        # Each row in tbody contains data
+        tbody = table.find('tbody')
+        if not tbody:
+            print(f"Error: Could not find tbody in tide table at {url}")
+            return []
+
+        rows = tbody.find_all('tr')
+
+        # Group rows by date - each date can have 1-2 rows
+        date_events = {}  # Maps date to list of events (turn times, max times, speeds)
+
+        for row in rows:
+            # Skip info rows
+            if 'info' in row.get('class', []):
+                continue
+
+            cells = row.find_all('td')
+            if not cells:
+                continue
+
+            # First cell contains date link
+            first_cell = cells[0]
+            date_link = first_cell.find('a')
+            if date_link:
+                # Extract date from href like "daily.php/nak/2026-10-01"
+                href = date_link.get('href', '')
+                # Parse date from href
+                date_match = re.search(r'/(\d{4}-\d{2}-\d{2})$', href)
+                if date_match:
+                    date_str = date_match.group(1)
+                    try:
+                        current_date = dt.strptime(date_str, '%Y-%m-%d')
+                    except ValueError:
+                        continue
+
+            if not current_date:
+                continue
+
+            date_key = dt.strftime(current_date, DATEFMT)
+            if date_key not in date_events:
+                date_events[date_key] = {'turns': [], 'maxes': [], 'date': current_date}
+
+            # Parse the cells in this row
+            # Table structure: Date | Turn | Max Time | Max Speed | Turn | Max Time | Max Speed | Turn
+            # Cells have classes: 'first date', '', 'left', 'right', '', 'left', 'right', 'last'
+
+            # Iterate through cells and extract data
+            i = 0
+            while i < len(cells):
+                cell = cells[i]
+                cell_class = ' '.join(cell.get('class', []))
+                cell_text = cell.get_text(strip=True)
+
+                # Skip date cell
+                if 'date' in cell_class or 'first' in cell_class:
+                    i += 1
+                    continue
+
+                # Check if this is a "Turn" column (slack time)
+                # Turn columns don't have 'left' or 'right' class (except 'last')
+                if ('left' not in cell_class and 'right' not in cell_class and
+                    'empty' not in cell_class and cell_text):
+                    # This is a turn (slack) time
+                    time_obj = self._parseTimeStr(cell_text, current_date)
+                    if time_obj:
+                        date_events[date_key]['turns'].append(time_obj)
+                    i += 1
+                    continue
+
+                # Check for max current (left = time, right = speed)
+                if 'left' in cell_class and i + 1 < len(cells):
+                    max_time_str = cell_text
+                    next_cell = cells[i + 1]
+                    speed_text = next_cell.get_text(strip=True)
+
+                    time_obj = self._parseTimeStr(max_time_str, current_date)
+                    speed, is_flood = self._parseSpeedValue(speed_text)
+
+                    if time_obj and speed is not None:
+                        date_events[date_key]['maxes'].append({
+                            'time': time_obj,
+                            'speed': speed,
+                            'is_flood': is_flood
+                        })
+                    i += 2
+                    continue
+
+                i += 1
+
+        # Now build Slack objects from the parsed events
+        # For each slack (turn), find the max current before and after
+        for date_key, events in date_events.items():
+            turns = sorted(events['turns'], key=lambda x: x)
+            maxes = sorted(events['maxes'], key=lambda x: x['time'])
+            current_date = events['date']
+
+            # Get sunrise/sunset for this date
+            sunData = sun(self._astralCity.observer, date=current_date, tzinfo=timezone('US/Pacific'))
+            sunrise = sunData['sunrise'].replace(tzinfo=None)
+            sunset = sunData['sunset'].replace(tzinfo=None)
+            moonPhase = moon.phase(current_date)
+
+            for turn_time in turns:
+                # Find the max current before this slack
+                max_before = None
+                for m in reversed(maxes):
+                    if m['time'] < turn_time:
+                        max_before = m
+                        break
+
+                # Find the max current after this slack
+                max_after = None
+                for m in maxes:
+                    if m['time'] > turn_time:
+                        max_after = m
+                        break
+
+                if not max_before or not max_after:
+                    continue
+
+                s = Slack()
+                s.time = turn_time
+                s.sunriseTime = sunrise
+                s.sunsetTime = sunset
+                s.moonPhase = moonPhase
+
+                # Determine if slack is before ebb (ebb comes after) or before flood
+                s.slackBeforeEbb = not max_after['is_flood']  # If after is ebb, then slack is before ebb
+
+                if s.slackBeforeEbb:
+                    # Before: flood, After: ebb
+                    s.floodSpeed = abs(max_before['speed'])
+                    s.maxFloodTime = max_before['time']
+                    s.ebbSpeed = -abs(max_after['speed'])
+                    s.maxEbbTime = max_after['time']
+                else:
+                    # Before: ebb, After: flood
+                    s.ebbSpeed = -abs(max_before['speed'])
+                    s.maxEbbTime = max_before['time']
+                    s.floodSpeed = abs(max_after['speed'])
+                    s.maxFloodTime = max_after['time']
+
+                slacks.append(s)
+
+        # Sort slacks by time
+        slacks.sort(key=lambda x: x.time)
+        return slacks
+
+    def _ensureCachedData(self, year, month):
+        """Ensure we have cached data for the requested year/month."""
+        if self._cachedYearMonth == (year, month) and self._cachedSlacks:
+            return True
+
+        if not self.baseUrl:
+            print("Error: Station does not have 'url_dairiki' configured")
+            return False
+
+        slacks = self._fetchAndParseMonth(year, month)
+        if slacks:
+            self._cachedSlacks = slacks
+            self._cachedYearMonth = (year, month)
+            return True
+
+        return False
+
+    def getSlacks(self, day, night):
+        """
+        Returns a list of slacks for the given day.
+        Includes night slacks if night=True.
+        """
+        if not self.baseUrl:
+            return []
+
+        # Ensure we have cached data for this month
+        if not self._ensureCachedData(day.year, day.month):
+            return []
+
+        # Filter slacks for the requested day
+        day_str = dt.strftime(day, DATEFMT)
+        result = []
+
+        for slack in self._cachedSlacks:
+            slack_day_str = dt.strftime(slack.time, DATEFMT)
+            if slack_day_str != day_str:
+                continue
+
+            # Filter for daytime slacks if night=False
+            if not night:
+                if slack.sunriseTime and slack.sunsetTime:
+                    if slack.time < slack.sunriseTime or slack.time > slack.sunsetTime:
+                        continue
+
+            result.append(slack)
+
+        return result
+
+    def allSlacks(self, startDay):
+        """
+        Returns all slacks from the page for the month of startDay.
+        """
+        if not self.baseUrl:
+            return []
+
+        if not self._ensureCachedData(startDay.year, startDay.month):
+            return []
+
+        # Return slacks starting from startDay
+        start_str = dt.strftime(startDay, DATEFMT)
+        result = []
+        for slack in self._cachedSlacks:
+            if dt.strftime(slack.time, DATEFMT) >= start_str:
+                result.append(slack)
+
+        return result

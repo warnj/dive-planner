@@ -217,8 +217,6 @@ def main():
 
     parser.add_argument("--sites", default='', type=str, help="Comma-delimited list of dive sites from dive_sites.json "
                                                               "({})".format(listDiveSites(data['sites'])))
-    parser.add_argument('--use-xtide-docker', action='store_true', default=True, dest='USE_XTIDE_DOCKER',
-                        help='Use local XTide via Docker instead of TBone web for current predictions')
     args = parser.parse_args()
 
     # Parse site list - allow indeterminate whitespace and capitals
@@ -242,7 +240,7 @@ def main():
         # SITES = append(SITES, 'Nakwakto')
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
-        SITES = append(SITES, 'Seymour Narrows')
+        # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Row and be Dammed')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
@@ -311,14 +309,13 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2026, 2, 28)
+    args.START = dt(2026, 3, 12)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.INCLUDE_NIGHT = True
     # args.SORT = True
-    # args.USE_XTIDE_DOCKER = False
     # ------------------------------------------------------------------------------------------------------------------
 
     # Create list of dates based on given start date
@@ -350,59 +347,86 @@ def main():
             continue
         station = getStation(data['stations'], siteData['data'])
 
-        if station:
-            if args.USE_XTIDE_DOCKER:
-                m = intp.XTideDockerInterpreter(station['name'], station)
-            else:
-                m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
+        m = None  # Primary interpreter (XTide-based for US, Dairiki for Canada)
+        m2 = None  # Secondary interpreter (NOAA for US, CanadaPDF for Canada)
 
         if station and 'british columbia' in station['name'].lower():
-            # Use CanadaPDFInterpreter if the station has a ca_pdf_code
+            # Canadian station: use DairikiInterpreter and CanadaPDFInterpreter
+            if 'url_dairiki' in station and station['url_dairiki']:
+                m = intp.DairikiInterpreter(station['url_dairiki'], station)
+            else:
+                print(f"Error: Canadian station '{station['name']}' is missing 'url_dairiki' field")
+
             if 'ca_pdf_code' in station and station['ca_pdf_code']:
                 m2 = intp.CanadaPDFInterpreter(station['ca_pdf_code'], station)
             else:
-                m2 = intp.CanadaAPIInterpreter("", station)
-        elif station:
-            m2 = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
+                print(f"Error: Canadian station '{station['name']}' is missing 'ca_pdf_code' field")
 
-        if station and m and not args.USE_XTIDE_DOCKER:
-            # show information only present from web data
-            print('{} - {} - {}'.format(siteData['name'], siteData['data'], station['coords']))
+        elif station:
+            # US station: use XTideDockerInterpreter (or TBoneSCInterpreter fallback) and NoaaAPIInterpreter
+            if 'xtide_name' in station and station['xtide_name']:
+                m = intp.XTideDockerInterpreter(station['name'], station)
+            elif 'url_xtide_a' in station and station['url_xtide_a']:
+                m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
+            else:
+                print(f"Error: US station '{station['name']}' is missing both 'xtide_name' and 'url_xtide_a' fields")
+
+            if 'url_noaa_api' in station and station['url_noaa_api']:
+                m2 = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
+            else:
+                print(f"Error: US station '{station['name']}' is missing 'url_noaa_api' field")
+
+        if not station:
+            print(f"Error: No station found for site '{siteData['name']}'")
+            continue
+
+        # Print URL info
+        if m:
             print(m.getDayUrl(m.baseUrl, possibleDiveDays[0]))
-        print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
+        if m2:
+            print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
+
+        # Determine labels based on station type
+        is_canadian = 'british columbia' in station['name'].lower()
+        m_label = "Dairiki" if is_canadian else "XTide"
+        m2_label = "Canada PDF" if is_canadian else "NOAA"
 
         if args.SORT:
-            slacks = []
-            for day in possibleDiveDays:
-                slacks.extend(m.getSlacks(day, args.INCLUDE_NIGHT))
-            # sort by the sum of the max current speeds from weakest to strongest
-            slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
-            printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "XTide")
+            if m:
+                slacks = []
+                for day in possibleDiveDays:
+                    slacks.extend(m.getSlacks(day, args.INCLUDE_NIGHT))
+                # sort by the sum of the max current speeds from weakest to strongest
+                slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
+                printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, m_label)
 
-            slacks = []
-            for day in possibleDiveDays:
-                slacks.extend(m2.getSlacks(day, args.INCLUDE_NIGHT))
-            slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
-            printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA / CA")
+            if m2:
+                slacks = []
+                for day in possibleDiveDays:
+                    slacks.extend(m2.getSlacks(day, args.INCLUDE_NIGHT))
+                slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
+                printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, m2_label)
         else:
             for day in possibleDiveDays:
                 canDive = False
-                try:
-                    slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
-                    canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "XTide")
-                except Exception as e:
-                    print('Error fetching and reading slacks from Xtide: ' + repr(e))
+                if m:
+                    try:
+                        slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
+                        canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, m_label)
+                    except Exception as e:
+                        print(f'Error fetching and reading slacks from {m_label}: ' + repr(e))
 
-                try:
-                    slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
-                    canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, "NOAA / Canada")
-                except Exception as e:
-                    print('Error fetching and reading slacks from NOAA/Canada: ' + repr(e))
+                if m2:
+                    try:
+                        slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
+                        canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, m2_label)
+                    except Exception as e:
+                        print(f'Error fetching and reading slacks from {m2_label}: ' + repr(e))
 
                 if not canDive:
                     print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
 
-        if 'british columbia' in station['name'].lower():
+        if m2 and hasattr(m2, 'numAPICalls'):
             print('number of API calls: {}'.format(m2.numAPICalls))
 
 if __name__ == '__main__':

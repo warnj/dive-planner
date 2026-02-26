@@ -68,6 +68,7 @@ Example would be to find rare days where you can dive both Deception Pass and Sk
 `docker build -f xtide.dockerfile -t xtide .`
 
 ## Using XTide Docker
+```bash
 docker run --rm xtide -m l | grep -i "agate"
 docker run --rm xtide -m l | grep -i "washington current"
 
@@ -93,3 +94,4 @@ for station in "${stations[@]}"; do
     docker run --rm xtide -l "$station" 2>&1 | grep -A 1 "harmonics-initial.tcd" | tail -1
     echo ""
 done
+```
