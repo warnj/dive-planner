@@ -240,7 +240,8 @@ def main():
         # SITES = append(SITES, 'Nakwakto')
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
-        # SITES = append(SITES, 'Seymour Narrows')
+        # SITES = append(SITES, 'Kelsey Bay')
+        SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Row and be Dammed')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
@@ -252,6 +253,8 @@ def main():
         # SITES = append(SITES, 'Ten Mile Point Discovery')
         # SITES = append(SITES, 'Sechelt Rapids')
         # SITES = append(SITES, 'Ogden Breakwater')
+        # SITES = append(SITES, 'First Narrows Vancouver')
+        # SITES = append(SITES, 'Second Narrows Vancouver')
 
         # SITES = append(SITES, 'Sekiu')
         # SITES = append(SITES, 'Third Beach Pinnacle')

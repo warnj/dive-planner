@@ -4,6 +4,7 @@
       "name": "all",
       "coords": "n/a",
       "url": "https://tides.mobilegeographics.com/index.html",
+      "url_dairiki": "https://www.dairiki.org/tides/map.php/sea:d",
       "url_xtide": "https://tide.arthroinfo.org/sites_uswest.html & https://tide.arthroinfo.org/sites_allcurrent.html & https://tide.arthroinfo.org/sites_allalpha.html",
       "url_xtide_old": "http://tbone.biol.sc.edu/tide/sites_uswest.html & http://tbone.biol.sc.edu/tide/sites_othernorth.html & http://tbone.biol.sc.edu/tide/index.html",
       "url_xtide_tbone_options": "http://tbone.biol.sc.edu/tide/options.html",
@@ -21,6 +22,7 @@
       "xtide_limit_2037": true,
       "xtide_name": "Strait of Juan de Fuca entrance (Depth 88.6ft), Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/7867",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/jdf",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Strait+of+Juan+de+Fuca+Entrance%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1642&bin=49"
     },
@@ -30,6 +32,7 @@
       "xtide_limit_2037": true,
       "url": "http://tides.mobilegeographics.com/locations/3775",
       "COMMENT": "Using Race Rocks NOAA station - https://tidesandcurrents.noaa.gov/noaacurrents/predictions.html?id=PUG1640_18",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/jua",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Juan+De+Fuca+Strait+%28East%29%2C+British+Columbia+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1640&bin=18"
     },
@@ -52,6 +55,7 @@
       "xtide_name": "Rosario Strait (Depth 105.9ft), Washington Current",
       "NOTE:": "There are a bunch (like 15) of different depths to choose, so play around with this before trusting",
       "url": "http://tides.mobilegeographics.com/locations/6882",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/ros",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Rosario+Strait%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1702&bin=16"
     },
@@ -69,6 +73,7 @@
       "xtide_limit_2037": false,
       "xtide_name": "Deception Pass (Narrows) (Depth 47.1ft), Rosario Strait, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/1955",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/dec",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Deception+Pass+%28narrows%29%2C+Washington+Current&glen=14",
       "url_noaa_old": "https://tidesandcurrents.noaa.gov/noaacurrents/DownloadPredictions?fmt=csv&i=&r=2&tz=LST%2fLDT&u=1&id=PUG1701_24&t=am%2fpm&i=&threshold=&thresholdvalue=&d=",
       "url_noaa_new_does_not_work": "https://api.tidesandcurrents.noaa.gov/dpapi/prod/webapi/currentPredictionsDownload?fmt=csv&r=2&time_zone=LST_LDT&u=1&id=PUG1616_31&date_timeUnits=am/pm&threshold=&thresholdvalue=&start_date=",
@@ -80,6 +85,7 @@
       "xtide_limit_2037": false,
       "xtide_name": "Admiralty Inlet (off Bush Point)",
       "url": "http://tides.mobilegeographics.com/locations/69",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/adm",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Admiralty+Inlet+%28off+Bush+Point%29%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1616&bin=31"
     },
@@ -105,6 +111,7 @@
       "xtide_name": "Alki Point, 1 mile west of (Depth 102.4ft), Puget Sound, Washington Current",
       "NOTE:": "There are a bunch (like 25) of different depths to choose, so play around with this before trusting",
       "url": "http://tides.mobilegeographics.com/locations/153",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/alkip",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Alki+Point%2C+0%2E3+miles+W+of%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1516&bin=17"
     },
@@ -114,6 +121,7 @@
       "xtide_limit_2037": false,
       "xtide_name": "Rich Passage, west end (Depth 11.5ft), Puget Sound, Washington Current",
       "url": "http://tides.mobilegeographics.com/locations/8807",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/rchpw",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=West+end%2C+Rich+Passage%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1514&bin=1"
     },
@@ -123,6 +131,7 @@
       "xtide_limit_2037": false,
       "xtide_name": "Agate Passage, north end, Puget Sound, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/75",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/agtpn",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+north+end%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PCT1636&bin=1"
     },
@@ -132,6 +141,7 @@
       "xtide_limit_2037": false,
       "xtide_name": "Agate Passage, south end (Depth 25.1ft), Puget Sound, Washington Current",
       "url": "https://tides.mobilegeographics.com/locations/76",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/agtps",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Agate+Passage%2C+south+end%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1501&bin=1"
     },
@@ -142,6 +152,7 @@
       "xtide_name": "The Narrows, north end (midstream) (Depth 139.2ft), Puget Sound, Washington Current",
       "NOTE:": "There are a bunch (like 25) of different depths to choose, so play around with this before trusting",
       "url": "http://tides.mobilegeographics.com/locations/8176",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/nar",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=The+Narrows%2C+north+end+%28midstream%29%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1524&bin=16"
     },
@@ -364,6 +375,24 @@
       "flood_dir": 0,
       "ebb_dir": 0
     },
+    {
+      "name": "Johnstone Strait Central, British Columbia Current",
+      "coords": "50 28.3 N 126 8.2 W",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/jon",
+      "ca_pdf_code": "08246"
+    },
+    {
+      "name": "First Narrows, British Columbia Current",
+      "coords": "49 19.0 N 123 8.0 W",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/fir",
+      "ca_pdf_code": "07721"
+    },
+    {
+      "name": "Second Narrows, British Columbia Current",
+      "coords": "49 18.0 N 123 1.0 W",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/sec",
+      "ca_pdf_code": "07745"
+    },
 
     {
       "name": "San Juan Channel (south entrance), Washington Current",
@@ -371,6 +400,7 @@
       "xtide_limit_2037": false,
       "xtide_name": "San Juan Channel, south entrance (Depth 75.4ft), Washington Current",
       "url": "",
+      "url_dairiki": "https://www.dairiki.org/tides/monthly.php/sjn",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=San+Juan+Channel+%28south+entrance%29%2C+Washington+Current&glen=14",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=currents_predictions&time_zone=lst_ldt&interval=MAX_SLACK&units=english&application=DataAPI_Sample&format=json&station=PUG1703&bin=17"
     },
@@ -1368,6 +1398,50 @@
       "diveable_before_ebb": true,
       "diveable_off_slack": false
     },
+    {
+      "name": "Kelsey Bay",
+      "data": "Johnstone Strait Central, British Columbia Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 4,
+      "max_ebb": 4,
+      "max_total_speed": 5,
+      "dive_duration": 90,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": true
+    },
+    {
+      "name": "First Narrows Vancouver",
+      "data": "First Narrows, British Columbia Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 4,
+      "max_ebb": 4,
+      "max_total_speed": 5,
+      "dive_duration": 90,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": true
+    },
+    {
+      "name": "Second Narrows Vancouver",
+      "data": "Second Narrows, British Columbia Current",
+      "COMMENT": "Likely the best source (with an unknown offset) for Indian Arm entrance",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 4,
+      "max_ebb": 4,
+      "max_total_speed": 5,
+      "dive_duration": 90,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": true
+    },
+
     {
       "name": "Ten Mile Point Discovery",
       "data": "Discovery Island, 3.3 miles NE of, Washington Current",
