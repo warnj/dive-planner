@@ -1410,7 +1410,7 @@
       "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
-      "diveable_off_slack": true
+      "diveable_off_slack": false
     },
     {
       "name": "First Narrows Vancouver",
@@ -1424,7 +1424,7 @@
       "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
-      "diveable_off_slack": true
+      "diveable_off_slack": false
     },
     {
       "name": "Second Narrows Vancouver",
@@ -1439,7 +1439,7 @@
       "surface_swim_time": 0,
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
-      "diveable_off_slack": true
+      "diveable_off_slack": false
     },
 
     {
@@ -1630,7 +1630,7 @@
       "diveable_before_flood": true,
       "diveable_before_ebb": true,
       "diveable_off_slack": true,
-	    "max_diveable_flood": 4,
+      "max_diveable_flood": 4,
       "max_diveable_ebb": 4
     },
     {

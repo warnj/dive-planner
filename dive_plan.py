@@ -241,7 +241,7 @@ def main():
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
         # SITES = append(SITES, 'Kelsey Bay')
-        SITES = append(SITES, 'Seymour Narrows')
+        # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Row and be Dammed')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
@@ -249,7 +249,7 @@ def main():
         # SITES = append(SITES, 'Dodd Narrows')
         # SITES = append(SITES, 'Active Pass')
         # SITES = append(SITES, 'Boat Pass')
-        # SITES = append(SITES, 'Ten Mile Point')
+        SITES = append(SITES, 'Ten Mile Point')
         # SITES = append(SITES, 'Ten Mile Point Discovery')
         # SITES = append(SITES, 'Sechelt Rapids')
         # SITES = append(SITES, 'Ogden Breakwater')
@@ -312,7 +312,7 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2026, 3, 12)
+    args.START = dt(2026, 2, 12)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
     args.IGNORE_MAX_SPEED = True
@@ -361,6 +361,7 @@ def main():
                 print(f"Error: Canadian station '{station['name']}' is missing 'url_dairiki' field")
 
             if 'ca_pdf_code' in station and station['ca_pdf_code']:
+                # NOTE:  for really good current days, the pdf may have a * for weak current instead of max/turn - then no ouput is provided!
                 m2 = intp.CanadaPDFInterpreter(station['ca_pdf_code'], station)
             else:
                 print(f"Error: Canadian station '{station['name']}' is missing 'ca_pdf_code' field")

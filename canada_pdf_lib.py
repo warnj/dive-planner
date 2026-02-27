@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+NOTE:  for really good current days, the pdf may have a * for weak current instead of max/turn - then no ouput is provided!
+
 Common library for parsing Canadian Hydrographic Service (CHS) current prediction PDFs.
 
 This module contains the shared logic used by both canada_pdf_parser.py and
@@ -108,8 +110,30 @@ def apply_dst_correction(dt_naive: datetime, timezone_str: str = "America/Vancou
 
 
 def parse_time(time_str: str) -> Tuple[int, int]:
-    """Parse time string like '0154' or '0409' into (hour, minute)."""
+    """Parse time string like '0154', '0409', '1:54', '14:09' into (hour, minute).
+
+    Handles various formats:
+    - 4-digit: '0154', '1409'
+    - 3-digit: '154' (interpreted as 01:54)
+    - Colon-separated: '1:54', '14:09'
+    - Space-separated: '1 54', '14 09'
+    """
     time_str = time_str.strip()
+
+    # Handle colon-separated format: "1:54" or "14:09"
+    if ':' in time_str:
+        parts = time_str.split(':')
+        if len(parts) == 2:
+            return int(parts[0]), int(parts[1])
+        raise ValueError(f"Invalid time format: {time_str}")
+
+    # Handle space-separated format: "1 54" (sometimes seen in parsed PDFs)
+    if ' ' in time_str:
+        parts = time_str.split()
+        if len(parts) == 2 and parts[0].isdigit() and parts[1].isdigit():
+            return int(parts[0]), int(parts[1])
+
+    # Handle 3-4 digit format: "0154" or "154"
     if len(time_str) == 3:
         time_str = '0' + time_str
     if len(time_str) != 4:
@@ -121,8 +145,25 @@ def parse_time(time_str: str) -> Tuple[int, int]:
 
 
 def parse_speed(speed_str: str) -> float:
-    """Parse speed string like '+9.5' or '-13.2' into float."""
-    return float(speed_str)
+    """Parse speed string like '+9.5', '-13.2', '0.7F', '0.7E', etc. into float.
+
+    Handles various formats:
+    - Signed: '+9.5', '-13.2', '+0.7', '-0.1'
+    - With direction suffix: '9.5F' (flood, positive), '13.2E' (ebb, negative)
+    - Plain numbers: '9.5', '0.7' (treated as positive)
+    """
+    speed_str = speed_str.strip().upper()
+
+    # Check for F (flood) or E (ebb) suffix
+    if speed_str.endswith('F'):
+        # Flood - positive
+        return abs(float(speed_str[:-1]))
+    elif speed_str.endswith('E'):
+        # Ebb - negative
+        return -abs(float(speed_str[:-1]))
+    else:
+        # Standard signed format or plain number
+        return float(speed_str)
 
 
 def is_day_indicator(token: str) -> bool:
@@ -241,6 +282,10 @@ def parse_cell_data(cell_text: str, year: int, month: int) -> List[CurrentEvent]
     """
     Parse a table cell containing one or more days of data.
     Returns all CurrentEvents found in the cell.
+
+    Expected format for each day:
+    "1 0154 0409 -5.2"  (day_num slack_time max_time speed)
+    "0628 0945 +9.5"    (continuation: slack_time max_time speed)
     """
     if not cell_text:
         return []
@@ -258,24 +303,54 @@ def parse_cell_data(cell_text: str, year: int, month: int) -> List[CurrentEvent]
             continue
 
         tokens = line.split()
+        if not tokens:
+            continue
+
         # Check if this line starts with a new day number
         first_token_idx = 0
         if is_day_indicator(tokens[0]):
             first_token_idx = 1
 
-        if first_token_idx < len(tokens) and tokens[first_token_idx].isdigit() and len(tokens[first_token_idx]) <= 2:
+        # Look for a day number (1-31) at the start
+        found_day = None
+        if first_token_idx < len(tokens):
+            token = tokens[first_token_idx]
+            if token.isdigit() and 1 <= int(token) <= 31:
+                found_day = int(token)
+
+        if found_day is not None:
             # New day starting
             if current_day is not None and current_block:
                 # Process previous day's data
                 day_events = parse_day_data('\n'.join(current_block), year, month, current_day)
                 all_events.extend(day_events)
 
-            current_day = int(tokens[first_token_idx])
+            current_day = found_day
             current_block = [line]
         else:
-            # Continuation of current day
+            # Not a day boundary - could be:
+            # 1. Continuation of current day
+            # 2. Header/label line (if current_day is None)
+
             if current_day is not None:
+                # Continuation of current day
                 current_block.append(line)
+            else:
+                # Try to parse this line as standalone data
+                # This handles cases where the day number might be on a separate line
+                # or the cell structure is different
+
+                # Check if this looks like time data (has 4-digit patterns)
+                has_time_pattern = False
+                for token in tokens:
+                    if re.match(r'^\d{3,4}$', token):
+                        has_time_pattern = True
+                        break
+
+                if has_time_pattern:
+                    # This might be orphaned data - try to infer the day
+                    # For now, skip it but log a warning in debug mode
+                    pass
 
     # Don't forget the last day
     if current_day is not None and current_block:
@@ -354,14 +429,122 @@ def events_to_slacks(events: List[CurrentEvent], Slack) -> list:
     return slacks
 
 
+def parse_text_fallback(text: str, year: int, months: List[int]) -> List[CurrentEvent]:
+    """
+    Parse current data directly from raw text when table extraction fails.
+
+    Looks for patterns like:
+    "1 0154 0409 -5.2" (day slack_time max_time speed)
+    "0628 0945 +9.5" (continuation line)
+
+    This is a fallback for PDFs where pdfplumber's table extraction doesn't work.
+    """
+    all_events = []
+
+    # Pattern to match data lines:
+    # Optional day indicator (TH, FR, etc) + Optional day number (1-31) + time + time + speed
+    # Example: "TH 12 0845 1203 -2.5" or "12 0845 1203 -2.5" or "0845 1203 -2.5"
+
+    lines = text.split('\n')
+    current_day = None
+    current_month_idx = 0
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+
+        tokens = line.split()
+        if len(tokens) < 3:
+            continue
+
+        # Skip day indicators
+        idx = 0
+        while idx < len(tokens) and is_day_indicator(tokens[idx]):
+            idx += 1
+
+        if idx >= len(tokens):
+            continue
+
+        # Check for day number
+        if tokens[idx].isdigit() and 1 <= int(tokens[idx]) <= 31:
+            new_day = int(tokens[idx])
+            # Detect month boundary (day goes back to 1 or lower)
+            if current_day is not None and new_day < current_day - 15:
+                current_month_idx += 1
+            current_day = new_day
+            idx += 1
+
+        if current_day is None:
+            continue
+
+        if idx >= len(tokens):
+            continue
+
+        remaining = tokens[idx:]
+
+        # Need at least 3 tokens: time, time, speed
+        if len(remaining) >= 3:
+            try:
+                slack_h, slack_m = parse_time(remaining[0])
+                max_h, max_m = parse_time(remaining[1])
+                speed = parse_speed(remaining[2])
+
+                # Get month from current position
+                if current_month_idx < len(months):
+                    month = months[current_month_idx]
+                else:
+                    month = months[-1] if months else 1
+
+                # Create slack event
+                slack_time = datetime(year, month, current_day, slack_h, slack_m)
+                all_events.append(CurrentEvent(
+                    time=slack_time,
+                    speed=0.0,
+                    is_slack=True,
+                    is_ebb=speed < 0
+                ))
+
+                # Create max event
+                max_time = datetime(year, month, current_day, max_h, max_m)
+                if max_h < slack_h - 12:
+                    max_time = max_time + timedelta(days=1)
+                all_events.append(CurrentEvent(
+                    time=max_time,
+                    speed=speed,
+                    is_slack=False,
+                    is_ebb=speed < 0
+                ))
+            except (ValueError, IndexError):
+                pass
+
+    return all_events
+
+
 def parse_pdf(pdf_path: str, year: int, Slack) -> list:
     """
     Parse the CHS current predictions PDF and return list of Slack objects.
 
     The Slack class is passed as a parameter to allow usage from both
     canada_pdf_parser.py and interpreter.py.
+
+    CHS PDFs have a consistent structure:
+    - 4 pages total (one per quarter)
+    - Page 1: January, February, March
+    - Page 2: April, May, June
+    - Page 3: July, August, September
+    - Page 4: October, November, December
+    - Each month has 2 columns (days 1-15, days 16-31)
     """
     all_events = []
+
+    # Define months per page based on CHS PDF structure
+    MONTHS_PER_PAGE = {
+        0: [1, 2, 3],    # Page 1: Jan, Feb, Mar
+        1: [4, 5, 6],    # Page 2: Apr, May, Jun
+        2: [7, 8, 9],    # Page 3: Jul, Aug, Sep
+        3: [10, 11, 12], # Page 4: Oct, Nov, Dec
+    }
 
     with pdfplumber.open(pdf_path) as pdf:
         for page_num, page in enumerate(pdf.pages):
@@ -369,42 +552,54 @@ def parse_pdf(pdf_path: str, year: int, Slack) -> list:
             if not text:
                 continue
 
-            # Extract months from the header
-            # Format: "January-janvier February-fvrier March-mars"
-            months_on_page = []
-            for month_name, month_num in MONTH_MAP.items():
-                if month_name.upper() in text.upper():
-                    if month_num not in months_on_page:
-                        months_on_page.append(month_num)
+            # Use page position to determine months instead of text detection
+            # This is more reliable as CHS PDFs have a consistent structure
+            if page_num in MONTHS_PER_PAGE:
+                months_on_page = MONTHS_PER_PAGE[page_num]
+            else:
+                # Fallback for unexpected page numbers - try to detect from text
+                months_on_page = []
+                first_lines = text.split('\n')[:10]
+                header_text = ' '.join(first_lines).upper()
 
-            # Sort months to get them in order
-            months_on_page = sorted(set(months_on_page))[:3]  # Max 3 months per page
+                for month_name, month_num in MONTH_MAP.items():
+                    if month_name.upper() in header_text:
+                        if month_num not in months_on_page:
+                            months_on_page.append(month_num)
+                months_on_page = sorted(set(months_on_page))[:3]
 
             # Extract tables
             tables = page.extract_tables()
+
+            # Try different table extraction settings if default fails
             if not tables:
+                tables = page.extract_tables(table_settings={
+                    "vertical_strategy": "text",
+                    "horizontal_strategy": "text"
+                })
+
+            if not tables:
+                # Try text-based parsing as fallback
+                text_events = parse_text_fallback(text, year, months_on_page)
+                if text_events:
+                    all_events.extend(text_events)
                 continue
 
             # The main data is typically in the first (and often only) table
             for table in tables:
-                # Skip header rows
-                for row in table[2:]:  # Skip first 2 header rows
+                # Skip first 2 header rows (standard CHS PDF format)
+                first_data_row = min(2, len(table))
+
+                for row in table[first_data_row:]:
                     if not row:
                         continue
 
-                    # The row contains data for multiple months
-                    # Structure: for each month there are 2 columns (days 1-15, days 16-31)
-                    # But there are also None columns interspersed
-                    # Pattern: [Month1_col1, None, Month1_col2, None, Month2_col1, None, ...]
-                    # So actual data is at indices 0, 2, 4, 6, 8, 10 (even indices, excluding Nones)
-                    data_col_idx = 0  # Counter for non-None columns
+                    data_col_idx = 0
 
                     for cell in row:
                         if cell is None:
                             continue
 
-                        # Each month has 2 data columns (days 1-15, days 16-31)
-                        # So month index = data_col_idx // 2
                         month_idx = data_col_idx // 2
                         if month_idx < len(months_on_page):
                             month = months_on_page[month_idx]
@@ -415,6 +610,7 @@ def parse_pdf(pdf_path: str, year: int, Slack) -> list:
 
     # Convert events to slacks
     slacks = events_to_slacks(all_events, Slack)
+
 
     return slacks
 
