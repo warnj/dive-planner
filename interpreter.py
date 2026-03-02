@@ -671,8 +671,13 @@ class XTideDockerInterpreter(Interpreter):
         return stdout_text.splitlines()
 
     def _run_xtide_for_day(self, day):
-        begin = dt.strftime(day, '%Y-%m-%d') + ' 00:00'
-        end = dt.strftime(day, '%Y-%m-%d') + ' 23:59'
+        # Query a wider range to ensure we capture max currents that occur just before/after midnight
+        # This handles edge cases like a slack at 3 AM with preMax at 11 PM previous day,
+        # or a slack at 10 PM with postMax at 1 AM next day
+        prev_day = day - td(days=1)
+        next_day = day + td(days=1)
+        begin = dt.strftime(prev_day, '%Y-%m-%d') + ' 12:00'  # Start at noon previous day
+        end = dt.strftime(next_day, '%Y-%m-%d') + ' 12:00'    # End at noon next day
         location = self.station['xtide_name'] if 'xtide_name' in self.station else self.station['name']
         cmd = [
             'docker', 'run', '--rm',
