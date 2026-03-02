@@ -193,8 +193,8 @@ def main():
 
     # Command-line Args
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--night', action='store_true', default=False, dest='INCLUDE_NIGHT',
-                        help='Consider slacks that occur during during the night')
+    parser.add_argument('-t', '--time-filter', choices=['day', 'night', 'all'], default='day', dest='TIME_FILTER',
+                        help='Filter slacks by time of day: day (sunrise to sunset), night (sunset to sunrise), or all')
 
     parser.add_argument('-s', '--ignorespeed', action='store_true', default=False, dest='IGNORE_MAX_SPEED',
                         help='Ignore the max current speeds in dive_sites.json')
@@ -275,7 +275,7 @@ def main():
         # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
         # SITES = append(SITES, 'Deception Pass')
-        # SITES = append(SITES, 'Keystone Jetty')
+        SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
         # SITES = append(SITES, 'Hood Canal Bridge')
@@ -314,7 +314,9 @@ def main():
     args.DAYS_IN_FUTURE = 0
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    # args.INCLUDE_NIGHT = True
+    args.TIME_FILTER = 'all'    # All slacks regardless of time
+    # args.TIME_FILTER = 'day'    # Only daytime slacks (sunrise to sunset)
+    # args.TIME_FILTER = 'night'  # Only nighttime slacks (sunset to sunrise)
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
 
@@ -386,7 +388,7 @@ def main():
             canDive = False
             for interpreter, label in interpreters:
                 try:
-                    slacks = interpreter.getSlacks(day, args.INCLUDE_NIGHT)
+                    slacks = interpreter.getSlacks(day, args.TIME_FILTER)
                     canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, label)
                 except Exception as e:
                     print(f'Error fetching and reading slacks from {label}: ' + repr(e))

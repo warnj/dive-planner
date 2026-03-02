@@ -41,14 +41,13 @@ def main():
     # SITE = 'Sechelt Rapids'
     # SITE = 'Nakwakto'
 
-    USE_XTIDE_DOCKER = True
-    # USE_XTIDE_DOCKER = False
+    # USE_XTIDE_DOCKER = True
+    USE_XTIDE_DOCKER = False
 
-    # NOAA = True
-    NOAA = False
+    NOAA = True
+    # NOAA = False
 
-    # NIGHT = True
-    NIGHT = False
+    TIME_FILTER = intp.TIME_FILTER_DAY
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
     siteJson = getSite(data['sites'], SITE)
@@ -73,7 +72,7 @@ def main():
     # days = dive_plan.getAllDays(290)
     # days = dive_plan.getNonWorkDays(365, dt(2026, 1, 1))
     for day in days:
-        slacks.extend(m.getSlacks(day, night=NIGHT))
+        slacks.extend(m.getSlacks(day, TIME_FILTER))
 
     # filter out the non-diveable slacks
     diveableSlacks = getDiveableSlacks(slacks, siteJson)

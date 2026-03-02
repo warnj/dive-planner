@@ -22,6 +22,37 @@ TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
 DATEFMT = '%Y-%m-%d'  # example 2019-01-18
 TIMEFMT = '%I:%M%p'  # example 09:36AM
 
+# Time filter constants for getSlacks
+TIME_FILTER_DAY = 'day'      # Only daytime slacks (between sunrise and sunset)
+TIME_FILTER_NIGHT = 'night'  # Only nighttime slacks (between sunset and sunrise)
+TIME_FILTER_ALL = 'all'      # All slacks regardless of time
+
+
+def _passesTimeFilter(slack, time_filter):
+    """
+    Returns True if the slack passes the given time filter.
+
+    Args:
+        slack: A Slack object with time, sunriseTime, and sunsetTime attributes
+        time_filter: One of TIME_FILTER_DAY, TIME_FILTER_NIGHT, or TIME_FILTER_ALL
+
+    Returns:
+        True if the slack should be included based on the time filter
+    """
+    if time_filter == TIME_FILTER_ALL:
+        return True
+    # If we don't have sunrise/sunset times, we can't filter properly
+    if not slack.sunriseTime or not slack.sunsetTime:
+        return True
+
+    is_daytime = slack.sunriseTime <= slack.time <= slack.sunsetTime
+
+    if time_filter == TIME_FILTER_DAY:
+        return is_daytime
+    elif time_filter == TIME_FILTER_NIGHT:
+        return not is_daytime
+    return True
+
 def dateStr(date):
     return dt.strftime(date, TIMEPRINTFMT)
 
@@ -187,8 +218,8 @@ class Interpreter:
         return self._getSlackData(lines, slackIndexes, None, None, -1)
 
     # Returns a list of slacks for the given day, retrieves new web data if the current data doesn't have info for day.
-    # Includes night slacks if night=True
-    def getSlacks(self, day, night):
+    # time_filter: 'day' for daytime only, 'night' for nighttime only, 'all' for all times
+    def getSlacks(self, day, time_filter):
         if not self._canReuseWebData(day):
             if not self.baseUrl:
                 print('Base url empty')  # comment this out if it's annoying
@@ -204,14 +235,19 @@ class Interpreter:
         # remove time zone info to compare with other local times
         sunrise = sunData['sunrise'].replace(tzinfo=None)
         sunset = sunData['sunset'].replace(tzinfo=None)
-        if night:
+        if time_filter == TIME_FILTER_ALL:
             slackIndexes = self._getAllDaySlacks(self._webLines)
         else:
-            slackIndexes = self._getDaySlacks(self._webLines, sunrise, sunset)
+            # For both DAY and NIGHT, we get day slacks first, then filter
+            # For DAY_ONLY, we use the existing _getDaySlacks which filters to sunrise-sunset
+            # For NIGHT_ONLY, we get all slacks and filter in _getSlackData
+            slackIndexes = self._getDaySlacks(self._webLines, sunrise, sunset) if time_filter == TIME_FILTER_DAY else self._getAllDaySlacks(self._webLines)
         if not slackIndexes:
             print('ERROR: no slacks for {} found in webLines: {}'.format(day, self._webLines))
             return []
-        return self._getSlackData(self._webLines, slackIndexes, sunrise, sunset, moon.phase(day))
+        slacks = self._getSlackData(self._webLines, slackIndexes, sunrise, sunset, moon.phase(day))
+        # Apply time filter
+        return [s for s in slacks if _passesTimeFilter(s, time_filter)]
 
 
 # Class to retrieve and parse current data from mobilegeographics website
@@ -546,11 +582,11 @@ class CanadaAPIInterpreter(Interpreter):
         self.cachedSlacks.extend(slacks)
         return slacks
 
-    def __getSlacksOnDay(self, day, slacks, night):
+    def __getSlacksOnDay(self, day, slacks, time_filter):
         daySlacks = []
         for s in slacks:
             if dt.strftime(s.time, DATEFMT) == dt.strftime(day, DATEFMT):
-                if not night and (s.time < s.sunriseTime or s.time > s.sunsetTime):
+                if not _passesTimeFilter(s, time_filter):
                     continue
                 daySlacks.append(s)
         if self.cachedSlacks and daySlacks and dt.strftime(daySlacks[-1].time, DATEFMT) == dt.strftime(self.cachedSlacks[-1].time, DATEFMT):
@@ -560,11 +596,11 @@ class CanadaAPIInterpreter(Interpreter):
         return daySlacks
 
     # Returns a list of slacks for the given day, retrieves new web data if the current data doesn't have info for day.
-    # Includes night slacks if night=True
-    def getSlacks(self, day, night):
+    # time_filter: 'day' for daytime only, 'night' for nighttime only, 'all' for all times
+    def getSlacks(self, day, time_filter):
         if 'ca_id' not in self.station or not self.station['ca_id']:
             return []
-        slacks = self.__getSlacksOnDay(day, self.cachedSlacks, night)
+        slacks = self.__getSlacksOnDay(day, self.cachedSlacks, time_filter)
         if slacks:
             return slacks
         # else:
@@ -578,7 +614,7 @@ class CanadaAPIInterpreter(Interpreter):
 
         # time zone difference with utz is so large we get all the slacks 1 day before to 14 days after and then pick
         # the ones on the requested day
-        return self.__getSlacksOnDay(day, allSlacks, night)
+        return self.__getSlacksOnDay(day, allSlacks, time_filter)
 
 class XTideDockerInterpreter(Interpreter):
     def __init__(self, baseUrl, station):
@@ -772,7 +808,7 @@ class XTideDockerInterpreter(Interpreter):
         d = dt(year=day.year, month=day.month, day=day.day)
         return self._cache_start <= d <= self._cache_end
 
-    def _filter_cached_slacks_for_day(self, day, night):
+    def _filter_cached_slacks_for_day(self, day, time_filter):
         if not self._slacks_cache:
             return []
         day_str = dt.strftime(day, DATEFMT)
@@ -780,14 +816,14 @@ class XTideDockerInterpreter(Interpreter):
         for s in self._slacks_cache:
             if dt.strftime(s.time, DATEFMT) != day_str:
                 continue
-            if night or (s.time >= s.sunriseTime and s.time <= s.sunsetTime):
+            if _passesTimeFilter(s, time_filter):
                 result.append(s)
         return result
 
-    def getSlacks(self, day, night):
+    def getSlacks(self, day, time_filter):
         # Fast path: if we have a cached range that covers this day, just filter
         if self._covers_date(day):
-            return self._filter_cached_slacks_for_day(day, night)
+            return self._filter_cached_slacks_for_day(day, time_filter)
 
         # Fallback: single-day execution (preserves old behavior if preload_range not used)
         try:
@@ -802,13 +838,13 @@ class XTideDockerInterpreter(Interpreter):
         # Build full-day slacks using the same logic but with day-specific sun times
         # reuse builder with events from just this day
         temp_slacks = self._build_slacks_from_events(events)
-        # filter for the requested calendar day and night flag
+        # filter for the requested calendar day and time_filter
         res = []
         day_str = dt.strftime(day, DATEFMT)
         for s in temp_slacks:
             if dt.strftime(s.time, DATEFMT) != day_str:
                 continue
-            if night or (s.time >= s.sunriseTime and s.time <= s.sunsetTime):
+            if _passesTimeFilter(s, time_filter):
                 res.append(s)
         if not res:
             print('ERROR: no slacks constructed for {} from XTide'.format(day))
@@ -893,11 +929,11 @@ class CanadaPDFInterpreter(Interpreter):
         """Not used for PDF parsing."""
         raise NotImplementedError("CanadaPDFInterpreter does not use _getSlackData")
 
-    def getSlacks(self, day, night):
+    def getSlacks(self, day, time_filter):
         """
         Returns a list of slacks for the given day.
 
-        Includes night slacks if night=True.
+        time_filter: 'day' for daytime only, 'night' for nighttime only, 'all' for all times
         """
         station_code = self._getStationCode()
         if not station_code:
@@ -916,13 +952,9 @@ class CanadaPDFInterpreter(Interpreter):
             if slack_day_str != day_str:
                 continue
 
-            # Filter for daytime slacks if night=False
-            if not night:
-                if slack.sunriseTime and slack.sunsetTime:
-                    if slack.time < slack.sunriseTime or slack.time > slack.sunsetTime:
-                        continue
-
-            result.append(slack)
+            # Apply time filter
+            if _passesTimeFilter(slack, time_filter):
+                result.append(slack)
 
         return result
 
@@ -1227,10 +1259,10 @@ class DairikiInterpreter(Interpreter):
 
         return False
 
-    def getSlacks(self, day, night):
+    def getSlacks(self, day, time_filter):
         """
         Returns a list of slacks for the given day.
-        Includes night slacks if night=True.
+        time_filter: 'day' for daytime only, 'night' for nighttime only, 'all' for all times
         """
         if not self.baseUrl:
             return []
@@ -1248,13 +1280,9 @@ class DairikiInterpreter(Interpreter):
             if slack_day_str != day_str:
                 continue
 
-            # Filter for daytime slacks if night=False
-            if not night:
-                if slack.sunriseTime and slack.sunsetTime:
-                    if slack.time < slack.sunriseTime or slack.time > slack.sunsetTime:
-                        continue
-
-            result.append(slack)
+            # Apply time filter
+            if _passesTimeFilter(slack, time_filter):
+                result.append(slack)
 
         return result
 

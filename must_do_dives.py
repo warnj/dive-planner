@@ -41,7 +41,7 @@ def main():
     DAYS_IN_FUTURE = 90  # number of days after START to consider
 
     FILTER_NON_WORKDAYS = False  # only consider diving on weekends and holidays
-    FILTER_DAYLIGHT = False  # only consider slacks that occur during daylight hours
+    TIME_FILTER = intp.TIME_FILTER_DAY  # Options: TIME_FILTER_DAY, TIME_FILTER_NIGHT, TIME_FILTER_ALL
 
     possibleDiveDays = [  # Specify dates
         # dt(2019, 3, 31),
@@ -80,16 +80,16 @@ def main():
 
         for day in possibleDiveDays:
             if site1 == site2:
-                slacks = m1.getSlacks(day, not FILTER_DAYLIGHT)
+                slacks = m1.getSlacks(day, TIME_FILTER)
                 diveableSlacks = getDiveable(slacks, site1)
                 if len(diveableSlacks) >= 2:
                     for s, info in diveableSlacks:
                         dive_plan.printDive(s, site1, info)
             else:
-                slacks1 = m1.getSlacks(day, not FILTER_DAYLIGHT)
+                slacks1 = m1.getSlacks(day, TIME_FILTER)
                 diveableSlacks1 = getDiveable(slacks1, site1)
 
-                slacks2 = m2.getSlacks(day, not FILTER_DAYLIGHT)
+                slacks2 = m2.getSlacks(day, TIME_FILTER)
                 diveableSlacks2 = getDiveable(slacks2, site2)
 
                 if len(diveableSlacks2) >= 2 or len(diveableSlacks1) >= 2:

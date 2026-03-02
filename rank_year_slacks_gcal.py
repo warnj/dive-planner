@@ -108,8 +108,8 @@ def main():
     NOAA = True
     # NOAA = False
 
-    # NIGHT = True
-    NIGHT = False
+    # Options: TIME_FILTER_DAY, TIME_FILTER_NIGHT, TIME_FILTER_ALL
+    TIME_FILTER = intp.TIME_FILTER_DAY
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
     siteJson = getSite(data['sites'], SITE)
@@ -128,7 +128,7 @@ def main():
     days = dive_plan.getAllDays(365, dt(2026, 1, 1))
     # days = dive_plan.getAllDays(230)
     for day in days:
-        slacks.extend(m.getSlacks(day, night=NIGHT))
+        slacks.extend(m.getSlacks(day, TIME_FILTER))
 
     # filter out the non-diveable slacks
     diveableSlacks = getDiveableSlacks(slacks, siteJson)

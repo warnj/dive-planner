@@ -16,7 +16,7 @@ import json, csv
 # Slack object with corrected time closest to the given meetup time.
 def getSlackForDive(meetTime, siteData, url):
     m = intp.MobilegeographicsInterpreter(url)
-    slacks = m.getSlacks(meetTime, night=True)
+    slacks = m.getSlacks(meetTime, intp.TIME_FILTER_ALL)
 
     estMeetupTimes = {}  # estimated meetup time for the slack -> slack
     for slack in slacks:
