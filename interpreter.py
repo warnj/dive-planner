@@ -6,6 +6,7 @@ from astral import moon
 from bs4 import BeautifulSoup
 import datetime
 from datetime import datetime as dt
+from datetime import timedelta as td
 from pytz import timezone
 import requests
 import re
@@ -1068,10 +1069,11 @@ class DairikiInterpreter(Interpreter):
         except (ValueError, TypeError):
             return None
 
-    def _fetchAndParseMonth(self, year, month):
+    def _fetchMonthEvents(self, year, month):
         """
-        Fetch the monthly page and parse all slacks for the month.
-        Returns a list of Slack objects.
+        Fetch the monthly page and parse all events (turns and maxes) for the month.
+        Returns a dict mapping date_key to {'turns': [...], 'maxes': [...], 'date': datetime}.
+        This is a lower-level method that doesn't build Slack objects.
         """
         url = f"{self.baseUrl}/{year}-{month:02d}"
         self.numAPICalls += 1
@@ -1083,22 +1085,21 @@ class DairikiInterpreter(Interpreter):
                 soup = BeautifulSoup(html, 'html.parser')
         except Exception as e:
             print(f"Error fetching Dairiki page {url}: {e}")
-            return []
+            return {}
 
         # Find the tide table
         table = soup.find('table', {'class': 'tidetable'})
         if not table:
             print(f"Error: Could not find tide table at {url}")
-            return []
+            return {}
 
-        slacks = []
         current_date = None
 
         # Each row in tbody contains data
         tbody = table.find('tbody')
         if not tbody:
             print(f"Error: Could not find tbody in tide table at {url}")
-            return []
+            return {}
 
         rows = tbody.find_all('tr')
 
@@ -1183,11 +1184,65 @@ class DairikiInterpreter(Interpreter):
 
                 i += 1
 
+        return date_events
+
+    def _getAdjacentMonthMaxes(self, year, month, direction):
+        """
+        Fetch max current data from an adjacent month.
+        direction: 'prev' for previous month, 'next' for next month.
+        Returns a list of max current dicts sorted by time.
+        """
+        if direction == 'prev':
+            if month == 1:
+                adj_year, adj_month = year - 1, 12
+            else:
+                adj_year, adj_month = year, month - 1
+        else:  # next
+            if month == 12:
+                adj_year, adj_month = year + 1, 1
+            else:
+                adj_year, adj_month = year, month + 1
+
+        adj_events = self._fetchMonthEvents(adj_year, adj_month)
+        all_maxes = []
+        for events in adj_events.values():
+            all_maxes.extend(events['maxes'])
+        all_maxes.sort(key=lambda x: x['time'])
+        return all_maxes
+
+    def _fetchAndParseMonth(self, year, month):
+        """
+        Fetch the monthly page and parse all slacks for the month.
+        Returns a list of Slack objects.
+        Handles edge cases where the max current before/after a slack is in an adjacent month.
+        """
+        date_events = self._fetchMonthEvents(year, month)
+        if not date_events:
+            return []
+
+        # Collect all maxes from this month for quick lookup
+        all_month_maxes = []
+        for events in date_events.values():
+            all_month_maxes.extend(events['maxes'])
+        all_month_maxes.sort(key=lambda x: x['time'])
+
+        # Identify the first and last day of the month
+        first_day = dt(year, month, 1)
+        if month == 12:
+            last_day = dt(year + 1, 1, 1) - td(days=1)
+        else:
+            last_day = dt(year, month + 1, 1) - td(days=1)
+
+        # Cache for adjacent month data (lazy load)
+        prev_month_maxes = None
+        next_month_maxes = None
+
+        slacks = []
+
         # Now build Slack objects from the parsed events
         # For each slack (turn), find the max current before and after
         for date_key, events in date_events.items():
             turns = sorted(events['turns'], key=lambda x: x)
-            maxes = sorted(events['maxes'], key=lambda x: x['time'])
             current_date = events['date']
 
             # Get sunrise/sunset for this date
@@ -1199,19 +1254,39 @@ class DairikiInterpreter(Interpreter):
             for turn_time in turns:
                 # Find the max current before this slack
                 max_before = None
-                for m in reversed(maxes):
+                for m in reversed(all_month_maxes):
                     if m['time'] < turn_time:
                         max_before = m
                         break
 
+                # If not found and this is early in the month, check previous month
+                if max_before is None and current_date.day <= 1:
+                    if prev_month_maxes is None:
+                        prev_month_maxes = self._getAdjacentMonthMaxes(year, month, 'prev')
+                    for m in reversed(prev_month_maxes):
+                        if m['time'] < turn_time:
+                            max_before = m
+                            break
+
                 # Find the max current after this slack
                 max_after = None
-                for m in maxes:
+                for m in all_month_maxes:
                     if m['time'] > turn_time:
                         max_after = m
                         break
 
+                # If not found and this is late in the month, check next month
+                if max_after is None and current_date.day >= last_day.day:
+                    if next_month_maxes is None:
+                        next_month_maxes = self._getAdjacentMonthMaxes(year, month, 'next')
+                    for m in next_month_maxes:
+                        if m['time'] > turn_time:
+                            max_after = m
+                            break
+
                 if not max_before or not max_after:
+                    # Still couldn't find required data - skip this slack
+                    print(f"Warning: Could not find max current data for slack at {turn_time}")
                     continue
 
                 s = Slack()
