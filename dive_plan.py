@@ -205,9 +205,6 @@ def main():
     parser.add_argument('-i', '--ignorenondiveable', action='store_true', default=False, dest='IGNORE_NON_DIVEABLE',
                         help='Only print diveable slacks, otherwise non-diveable slack information is printed')
 
-    parser.add_argument("--sort", action='store_true', default=False, dest="SORT",
-                        help="Sort diveable days by from most optimal slack to least optimal slack")
-
     parser.add_argument("-f", "--futuredays", dest="DAYS_IN_FUTURE", default=7, type=int,
                         help="Number of days after start date to consider diving")
 
@@ -249,7 +246,7 @@ def main():
         # SITES = append(SITES, 'Dodd Narrows')
         # SITES = append(SITES, 'Active Pass')
         # SITES = append(SITES, 'Boat Pass')
-        SITES = append(SITES, 'Ten Mile Point')
+        # SITES = append(SITES, 'Ten Mile Point')
         # SITES = append(SITES, 'Ten Mile Point Discovery')
         # SITES = append(SITES, 'Sechelt Rapids')
         # SITES = append(SITES, 'Ogden Breakwater')
@@ -312,7 +309,7 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2026, 2, 12)
+    args.START = dt(2026, 2, 28)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
     args.IGNORE_MAX_SPEED = True
@@ -350,88 +347,56 @@ def main():
             continue
         station = getStation(data['stations'], siteData['data'])
 
-        m = None  # Primary interpreter (XTide-based for US, Dairiki for Canada)
-        m2 = None  # Secondary interpreter (NOAA for US, CanadaPDF for Canada)
-
-        if station and 'british columbia' in station['name'].lower():
-            # Canadian station: use DairikiInterpreter and CanadaPDFInterpreter
-            if 'url_dairiki' in station and station['url_dairiki']:
-                m = intp.DairikiInterpreter(station['url_dairiki'], station)
-            else:
-                print(f"Error: Canadian station '{station['name']}' is missing 'url_dairiki' field")
-
-            if 'ca_pdf_code' in station and station['ca_pdf_code']:
-                # NOTE:  for really good current days, the pdf may have a * for weak current instead of max/turn - then no ouput is provided!
-                m2 = intp.CanadaPDFInterpreter(station['ca_pdf_code'], station)
-            else:
-                print(f"Error: Canadian station '{station['name']}' is missing 'ca_pdf_code' field")
-
-        elif station:
-            # US station: use XTideDockerInterpreter (or TBoneSCInterpreter fallback) and NoaaAPIInterpreter
-            if 'xtide_name' in station and station['xtide_name']:
-                m = intp.XTideDockerInterpreter(station['name'], station)
-            elif 'url_xtide_a' in station and station['url_xtide_a']:
-                m = intp.TBoneSCInterpreter(station['url_xtide_a'], station)
-            else:
-                print(f"Error: US station '{station['name']}' is missing both 'xtide_name' and 'url_xtide_a' fields")
-
-            if 'url_noaa_api' in station and station['url_noaa_api']:
-                m2 = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
-            else:
-                print(f"Error: US station '{station['name']}' is missing 'url_noaa_api' field")
-
         if not station:
             print(f"Error: No station found for site '{siteData['name']}'")
             continue
 
-        # Print URL info
-        if m:
-            print(m.getDayUrl(m.baseUrl, possibleDiveDays[0]))
-        if m2:
-            print(m2.getDayUrl(m2.baseUrl, possibleDiveDays[0]))
+        # Build list of (interpreter, label) tuples based on available configuration
+        interpreters = []
 
-        # Determine labels based on station type
-        is_canadian = 'british columbia' in station['name'].lower()
-        m_label = "Dairiki" if is_canadian else "XTide"
-        m2_label = "Canada PDF" if is_canadian else "NOAA"
+        # Dairiki interpreter - works for both US and Canadian stations if configured
+        if 'url_dairiki' in station and station['url_dairiki']:
+            interpreters.append((intp.DairikiInterpreter(station['url_dairiki'], station), "Dairiki"))
 
-        if args.SORT:
-            if m:
-                slacks = []
-                for day in possibleDiveDays:
-                    slacks.extend(m.getSlacks(day, args.INCLUDE_NIGHT))
-                # sort by the sum of the max current speeds from weakest to strongest
-                slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
-                printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, m_label)
+        # Canadian station: add CanadaPDFInterpreter
+        if 'ca_pdf_code' in station and station['ca_pdf_code']:
+            # NOTE: for really good current days, the pdf may have a * for weak current instead of max/turn - then no output is provided!
+            interpreters.append((intp.CanadaPDFInterpreter(station['ca_pdf_code'], station), "Canada PDF"))
 
-            if m2:
-                slacks = []
-                for day in possibleDiveDays:
-                    slacks.extend(m2.getSlacks(day, args.INCLUDE_NIGHT))
-                slacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
-                printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, m2_label)
-        else:
-            for day in possibleDiveDays:
-                canDive = False
-                if m:
-                    try:
-                        slacks = m.getSlacks(day, args.INCLUDE_NIGHT)
-                        canDive = printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, m_label)
-                    except Exception as e:
-                        print(f'Error fetching and reading slacks from {m_label}: ' + repr(e))
+        # US station: add XTide-based interpreter (TBoneSCInterpreter stopped working in 2025)
+        if 'xtide_name' in station and station['xtide_name']:
+            interpreters.append((intp.XTideDockerInterpreter(station['name'], station), "XTide Docker"))
+        elif 'url_xtide_a' in station and station['url_xtide_a']:
+            interpreters.append((intp.TBoneSCInterpreter(station['url_xtide_a'], station), "XTide"))
 
-                if m2:
-                    try:
-                        slacks = m2.getSlacks(day, args.INCLUDE_NIGHT)
-                        canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, m2_label)
-                    except Exception as e:
-                        print(f'Error fetching and reading slacks from {m2_label}: ' + repr(e))
+        # NOAA interpreter
+        if 'url_noaa_api' in station and station['url_noaa_api']:
+            interpreters.append((intp.NoaaAPIInterpreter(station['url_noaa_api'], station), "NOAA"))
 
-                if not canDive:
-                    print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
+        if not interpreters:
+            print(f"Error: No interpreters could be configured for station '{station['name']}'")
+            continue
 
-        if m2 and hasattr(m2, 'numAPICalls'):
-            print('number of API calls: {}'.format(m2.numAPICalls))
+        for interpreter, label in interpreters:
+            url = interpreter.getDayUrl(interpreter.baseUrl, possibleDiveDays[0])
+            if url:
+                print(url)
+
+        for day in possibleDiveDays:
+            canDive = False
+            for interpreter, label in interpreters:
+                try:
+                    slacks = interpreter.getSlacks(day, args.INCLUDE_NIGHT)
+                    canDive |= printDiveDay(slacks, siteData, not args.IGNORE_NON_DIVEABLE, args.IGNORE_MAX_SPEED, label)
+                except Exception as e:
+                    print(f'Error fetching and reading slacks from {label}: ' + repr(e))
+
+            if not canDive:
+                print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
+
+        for interpreter, label in interpreters:
+            if hasattr(interpreter, 'numAPICalls') and interpreter.numAPICalls > 0:
+                print(f'{label} API calls: {interpreter.numAPICalls}')
 
 if __name__ == '__main__':
     main()

@@ -12,11 +12,10 @@ import re
 from dateutil import parser
 import pytz
 import subprocess
-
-# Import the Canada PDF parsing library
 import canada_pdf_lib
 
-
+# https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
+TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
 TIMEPARSEFMT_TBONE = '%Y-%m-%d %H:%M'  # example: 2019-01-18 22:36
 TIMEPARSEFMT_CA = '%Y-%m-%dT%H:%M:%SZ'  # example: 2024-03-13T23:29:00Z
 TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
@@ -588,6 +587,10 @@ class XTideDockerInterpreter(Interpreter):
         self._slacks_cache = None  # list[Slack] built from cached events
         self._cache_start = None   # datetime.date
         self._cache_end = None     # datetime.date
+
+    @staticmethod
+    def getDayUrl(baseUrl, day):
+        return 'No url for local Docker'
 
     # Returns the datetime object parsed from a generic "YYYY-MM-DD HH:MM" pair (ignores timezone token)
     def _parseTime(self, tokens):
