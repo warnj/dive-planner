@@ -24,9 +24,10 @@ DATEFMT = '%Y-%m-%d'  # example 2019-01-18
 TIMEFMT = '%I:%M%p'  # example 09:36AM
 
 # Time filter constants for getSlacks
-TIME_FILTER_DAY = 'day'      # Only daytime slacks (between sunrise and sunset)
-TIME_FILTER_NIGHT = 'night'  # Only nighttime slacks (between sunset and sunrise)
-TIME_FILTER_ALL = 'all'      # All slacks regardless of time
+TIME_FILTER_DAY = 'day'              # Only daytime slacks (between sunrise and sunset)
+TIME_FILTER_NIGHT = 'night'          # Only nighttime slacks (between sunset and sunrise)
+TIME_FILTER_EARLY_NIGHT = 'early_night'  # Only early night slacks (45min after sunset to 11pm)
+TIME_FILTER_ALL = 'all'              # All slacks regardless of time
 
 
 def _passesTimeFilter(slack, time_filter):
@@ -35,7 +36,7 @@ def _passesTimeFilter(slack, time_filter):
 
     Args:
         slack: A Slack object with time, sunriseTime, and sunsetTime attributes
-        time_filter: One of TIME_FILTER_DAY, TIME_FILTER_NIGHT, or TIME_FILTER_ALL
+        time_filter: One of TIME_FILTER_DAY, TIME_FILTER_NIGHT, TIME_FILTER_EARLY_NIGHT, or TIME_FILTER_ALL
 
     Returns:
         True if the slack should be included based on the time filter
@@ -52,6 +53,11 @@ def _passesTimeFilter(slack, time_filter):
         return is_daytime
     elif time_filter == TIME_FILTER_NIGHT:
         return not is_daytime
+    elif time_filter == TIME_FILTER_EARLY_NIGHT:
+        # Between 45 minutes after sunset and 11pm on the same day
+        early_night_start = slack.sunsetTime + td(minutes=45)
+        eleven_pm = slack.time.replace(hour=23, minute=0, second=0, microsecond=0)
+        return slack.time >= early_night_start and slack.time <= eleven_pm
     return True
 
 def dateStr(date):

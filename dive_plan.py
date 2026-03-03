@@ -193,8 +193,8 @@ def main():
 
     # Command-line Args
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--time-filter', choices=['day', 'night', 'all'], default='day', dest='TIME_FILTER',
-                        help='Filter slacks by time of day: day (sunrise to sunset), night (sunset to sunrise), or all')
+    parser.add_argument('-t', '--time-filter', choices=['day', 'night', 'early_night', 'all'], default='day', dest='TIME_FILTER',
+                        help='Filter slacks by time of day: day (sunrise to sunset), night (sunset to sunrise), early_night (45min after sunset to 11pm), or all')
 
     parser.add_argument('-s', '--ignorespeed', action='store_true', default=False, dest='IGNORE_MAX_SPEED',
                         help='Ignore the max current speeds in dive_sites.json')
@@ -275,7 +275,7 @@ def main():
         # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
         # SITES = append(SITES, 'Deception Pass')
-        SITES = append(SITES, 'Keystone Jetty')
+        # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
         # SITES = append(SITES, 'Hood Canal Bridge')
@@ -309,14 +309,15 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2026, 2, 28)
+    # args.START = dt(2026, 2, 28)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
-    args.IGNORE_MAX_SPEED = True
-    args.INCLUDE_WORKDAYS = True
-    args.TIME_FILTER = 'all'    # All slacks regardless of time
-    # args.TIME_FILTER = 'day'    # Only daytime slacks (sunrise to sunset)
-    # args.TIME_FILTER = 'night'  # Only nighttime slacks (sunset to sunrise)
+    args.DAYS_IN_FUTURE = 60
+    # args.IGNORE_MAX_SPEED = True
+    # args.INCLUDE_WORKDAYS = True
+    # args.TIME_FILTER = 'all'          # All slacks regardless of time
+    # args.TIME_FILTER = 'day'          # Only daytime slacks (sunrise to sunset)
+    # args.TIME_FILTER = 'night'        # Only nighttime slacks (sunset to sunrise)
+    # args.TIME_FILTER = 'early_night'  # Only early night slacks (45min after sunset to 11pm)
     # args.SORT = True
     # ------------------------------------------------------------------------------------------------------------------
 

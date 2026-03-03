@@ -31,12 +31,13 @@ def main():
     # SITE = 'Gabriola Pass'
     # SITE = 'Dodd Narrows'
     # SITE = 'Skyline Wall'
-    SITE = 'Deception Pass'
+    # SITE = 'Deception Pass'
     # SITE = 'Goose Island'
     # SITE = 'Peavine Pass'
     # SITE = 'Deadman Island'
     # SITE = 'Lime Kiln Haro'
     # SITE = 'Salt Creek NOAA'
+    SITE = 'Keystone Jetty'
     # SITE = 'Day Island Wall'
     # SITE = 'Sechelt Rapids'
     # SITE = 'Nakwakto'
@@ -47,7 +48,7 @@ def main():
     NOAA = True
     # NOAA = False
 
-    TIME_FILTER = intp.TIME_FILTER_DAY
+    TIME_FILTER = intp.TIME_FILTER_EARLY_NIGHT
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
     siteJson = getSite(data['sites'], SITE)
@@ -65,7 +66,7 @@ def main():
         m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
 
     slacks = []
-    days = dive_plan.getAllDays(365, dt(2026, 1, 1))
+    days = dive_plan.getAllDays(365, dt(2026, 3, 1))
     # Preload full range once for XTide Docker to avoid per-day container runs
     if USE_XTIDE_DOCKER and isinstance(m, intp.XTideDockerInterpreter) and days:
         m.preload_range(days[0], days[-1])
