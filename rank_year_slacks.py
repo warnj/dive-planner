@@ -4,14 +4,16 @@ station over a given time interval. Longer slacks are present when the max
 current speed on the exchange before and after slack is smaller.
 '''
 
-import dive_plan, data_collect
+import dive_plan
+import data_collect
 import interpreter as intp
 import json
 from must_do_dives import getSite
 from datetime import datetime as dt
 
-# returns list of slacks in given list that are dive-able for the given site, mostly taken from must_do_dives.py
+
 def getDiveableSlacks(slacks, site):
+    """Returns list of slacks that are dive-able for the given site."""
     diveableSlacks = []
     for s in slacks:
         if s.ebbSpeed > 0.0:
@@ -19,13 +21,29 @@ def getDiveableSlacks(slacks, site):
         if s.floodSpeed < 0.0:
             print('WARNING - FLOOD SPEED IS NEGATIVE')
 
-        # Check if diveable or not
         diveable, info = dive_plan.isDiveable(s, site, False)
         if diveable:
             diveableSlacks.append(s)
     return diveableSlacks
 
+
+
+def getInterpreter(station, use_xtide_docker, use_noaa):
+    """Returns the appropriate interpreter for the given station and settings."""
+    if use_xtide_docker:
+        return intp.XTideDockerInterpreter(station['name'], station)
+    elif use_noaa:
+        if 'british columbia' in station['name'].lower():
+            print('using Canadian Currents API')
+            return intp.CanadaAPIInterpreter("", station)
+        else:
+            return intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
+    else:
+        return intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
+
+
 def main():
+    # ---------------------------------- CONFIGURABLE PARAMETERS ------------------------------------------------------
     # SITE = 'Whiskey Point'
     # SITE = 'Boat Pass'
     # SITE = 'Gabriola Pass'
@@ -41,47 +59,40 @@ def main():
     # SITE = 'Day Island Wall'
     # SITE = 'Sechelt Rapids'
     # SITE = 'Nakwakto'
-
-    # USE_XTIDE_DOCKER = True
     USE_XTIDE_DOCKER = False
-
-    NOAA = True
-    # NOAA = False
-
+    USE_NOAA = True
     TIME_FILTER = intp.TIME_FILTER_EARLY_NIGHT
+    DAYS_IN_FUTURE = 365
+    START_DATE = dt(2026, 3, 1)
+    INCLUDE_WORKDAYS = False
+    INCLUDE_FRIDAYS = True
+    # -----------------------------------------------------------------------------------------------------------------
 
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
     siteJson = getSite(data['sites'], SITE)
-
     station = dive_plan.getStation(data['stations'], siteJson['data'])
-    if USE_XTIDE_DOCKER:
-        m = intp.XTideDockerInterpreter(station['name'], station)
-    elif NOAA:
-        if 'british columbia' in station['name'].lower():
-            print('using Canadian Currents API')
-            m = intp.CanadaAPIInterpreter("", station)
-        else:
-            m = intp.NoaaAPIInterpreter(station['url_noaa_api'], station)
-    else:
-        m = intp.TBoneSCInterpreter(station['url_xtide_a'], station['name'])
 
-    slacks = []
-    days = dive_plan.getAllDays(365, dt(2026, 3, 1))
+    m = getInterpreter(station, USE_XTIDE_DOCKER, USE_NOAA)
+
+    days = dive_plan.getDiveDays(DAYS_IN_FUTURE, START_DATE, INCLUDE_WORKDAYS, INCLUDE_FRIDAYS)
+
     # Preload full range once for XTide Docker to avoid per-day container runs
     if USE_XTIDE_DOCKER and isinstance(m, intp.XTideDockerInterpreter) and days:
         m.preload_range(days[0], days[-1])
-    # days = dive_plan.getAllDays(290)
-    # days = dive_plan.getNonWorkDays(365, dt(2026, 1, 1))
+
+    slacks = []
     for day in days:
         slacks.extend(m.getSlacks(day, TIME_FILTER))
 
-    # filter out the non-diveable slacks
+    # Filter out the non-diveable slacks
     diveableSlacks = getDiveableSlacks(slacks, siteJson)
 
-    # calc stats
+    # Calculate and print stats
     if len(slacks) > 0:
         percentSlacksDiveable = float(len(diveableSlacks)) / len(slacks) * 100
-        print('{:0.2f}% of all slacks are diveable ({}/{})'.format(percentSlacksDiveable, len(diveableSlacks), len(slacks)))
+        print('{:0.2f}% of all slacks are diveable ({}/{})'.format(
+            percentSlacksDiveable, len(diveableSlacks), len(slacks)))
+
     diveableDays = 0
     prevDay = ''
     for s in diveableSlacks:
@@ -89,21 +100,22 @@ def main():
         if prevDay != curDay:
             prevDay = curDay
             diveableDays += 1
+
     percentDaysDiveable = float(diveableDays) / len(days) * 100
-    print('{:0.2f}% of all days are diveable ({}/{})'.format(percentDaysDiveable, diveableDays, len(days)))
+    print('{:0.2f}% of all days are diveable ({}/{})'.format(
+        percentDaysDiveable, diveableDays, len(days)))
 
-    # sort by the sum of the max current speeds from weakest to strongest
-    diveableSlacks.sort(key=lambda x: abs(x.ebbSpeed)+abs(x.floodSpeed))
-    # sort by the min flood speed
-    # diveableSlacks.sort(key=lambda x: abs(x.floodSpeed))
+    # Sort by the sum of the max current speeds from weakest to strongest
+    diveableSlacks.sort(key=lambda x: abs(x.ebbSpeed) + abs(x.floodSpeed))
 
+    # Print results
     for s in diveableSlacks:
-        # print('{}\tSpeed sum = {:0.1f}'.format(s, abs(s.ebbSpeed) + abs(s.floodSpeed)))
         afterSunrise = (s.time - s.sunriseTime).total_seconds() / 60.0
         beforeSunset = (s.sunsetTime - s.time).total_seconds() / 60.0
-        print('{}\tSpeed sum = {:0.1f}\tTime before/after dark = {:0.0f}min'.format(s, abs(s.ebbSpeed)+abs(s.floodSpeed), min(beforeSunset, afterSunrise)))
+        print('{}\tSpeed sum = {:0.1f}\tTime before/after dark = {:0.0f}min'.format(
+            s, abs(s.ebbSpeed) + abs(s.floodSpeed), min(beforeSunset, afterSunrise)))
 
-    if NOAA and 'british columbia' in station['name'].lower():
+    if USE_NOAA and 'british columbia' in station['name'].lower():
         print('number of api calls: {}'.format(m.numAPICalls))
 if __name__ == '__main__':
     main()

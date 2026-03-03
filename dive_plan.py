@@ -6,7 +6,6 @@ specified by dive_sites.json
 import data_collect
 import interpreter as intp
 import argparse
-
 from pandas.tseries.holiday import USFederalHolidayCalendar
 from datetime import datetime as dt
 from datetime import timedelta as td
@@ -80,6 +79,44 @@ def getAllDays(futureDays: int, start=dt.now()) -> list[dt]:
         days.append(d)
         d += delta
     return days
+
+
+def getDiveDays(futureDays: int, start=dt.now(), include_workdays: bool = True,
+                include_fridays: bool = False) -> list[dt]:
+    """
+    Returns list of days to consider for diving.
+
+    Args:
+        futureDays: Number of days in the future to consider
+        start: Start date
+        include_workdays: If True, include all days
+        include_fridays: If True and include_workdays is False, also include Fridays
+                        (useful for night dives since the next day is Saturday)
+    """
+    if include_workdays:
+        return getAllDays(futureDays, start)
+
+    # Get non-work days (weekends + holidays)
+    start = dt(start.year, start.month, start.day)
+    end = start + td(days=futureDays)
+
+    cal = USFederalHolidayCalendar()
+    holidays = cal.holidays(start=start, end=end).to_pydatetime()
+
+    # Weekdays to exclude: Mon=0, Tue=1, Wed=2, Thu=3, Fri=4
+    # If include_fridays, only exclude Mon-Thu
+    workdays_to_exclude = {0, 1, 2, 3} if include_fridays else {0, 1, 2, 3, 4}
+
+    delta = td(days=1)
+    d = start
+    diveDays = []
+    while d <= end:
+        if d.weekday() not in workdays_to_exclude:
+            diveDays.append(d)
+        elif d in holidays:
+            diveDays.append(d)
+        d += delta
+    return diveDays
 
 
 # Returns [mincurrenttime, clubentrytime, myentrytime] for the given slack at the given site
