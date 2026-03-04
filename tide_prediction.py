@@ -30,9 +30,20 @@ def main():
 
     # ---------------------------------- MANUALLY CONFIGURABLE PARAMETERS ---------------------------------------------
     STATIONS = []
+    # STATIONS.append('Walker Group')
+    # STATIONS.append('Port Hardy')
+    # STATIONS.append('Alert Bay')
+    # STATIONS.append('Kelsey Bay')
+    # STATIONS.append('Gold River')
+    # STATIONS.append('Seymour Narrows')
+    # STATIONS.append('Campbell River')
+    STATIONS.append('Northwest Bay')
+    # STATIONS.append('Nanaimo')
+    # STATIONS.append('Brentwood Bay')
+
     # STATIONS.append('Bowman Bay')
-    STATIONS.append('Hanbury Point, North San Juan Island')
-    STATIONS.append('Kanaka Bay, South San Juan Island')
+    # STATIONS.append('Hanbury Point, North San Juan Island')
+    # STATIONS.append('Kanaka Bay, South San Juan Island')
     # STATIONS.append('Neah Bay')
     # STATIONS.append('Sekiu')
     # STATIONS.append('Crescent Bay')

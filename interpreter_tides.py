@@ -243,19 +243,174 @@ class NoaaTideInterpreter(TideInterpreter):
 
 class CanadaTideInterpreter(TideInterpreter):
     """
-    Placeholder interpreter for Canadian tide predictions from tides.gc.ca.
+    Interpreter for Canadian tide predictions from Canadian Hydrographic Service (CHS) IWLS API.
 
-    This class is a placeholder for future implementation of Canadian tide data.
-    Potential data sources:
-    - Canadian Hydrographic Service REST API
-    - PDF predictions from tides.gc.ca
+    Uses the official Canadian tide prediction API at api-sine.dfo-mpo.gc.ca.
+    API documentation: https://api-sine.dfo-mpo.gc.ca/swagger-ui/index.html
+
+    Station codes can be found at https://tides.gc.ca/en/stations
     """
 
+    CANADA_API_BASE_URL = "https://api-sine.dfo-mpo.gc.ca/api/v1"
+    METERS_TO_FEET = 3.28084
+
+    def __init__(self, base_url: str, station: StationConfig) -> None:
+        """
+        Initialize the Canadian tide interpreter.
+
+        Args:
+            base_url: Not used for Canada API (we use the standard base URL)
+            station: Station config dict from dive_sites.json (tide_stations array)
+                     Must contain 'ca_tide_id' with the station code (e.g., "08426")
+        """
+        # Pass the Canada API base URL to parent so base class getTides check passes
+        super().__init__(CanadaTideInterpreter.CANADA_API_BASE_URL, station)
+        self.station_code = station.get('ca_tide_id', '')
+        self._internal_station_id: Optional[str] = None
+        self._astral_city = LocationInfo("Vancouver", "BC", "America/Vancouver", 49.28, -123.12)
+
+    # todo: this could be done locally by looking up the ID in the giant JSON file from canada_stations.json
+    def _get_internal_station_id(self) -> Optional[str]:
+        """
+        Look up the internal station ID from the station code.
+
+        The Canada API uses MongoDB-style internal IDs for data requests,
+        but we configure stations using their human-readable codes (e.g., "08426").
+        This method queries the API to get the internal ID.
+
+        Returns:
+            Internal station ID string, or None if not found
+        """
+        if self._internal_station_id:
+            return self._internal_station_id
+
+        if not self.station_code:
+            return None
+
+        try:
+            url = f"{self.CANADA_API_BASE_URL}/stations?code={self.station_code}"
+            response = requests.get(url)
+            if response.status_code != 200:
+                station_name = self.station.get('name', 'unknown')
+                print(f"Warning: Failed to look up Canadian station '{station_name}' (code={self.station_code}): {response.status_code}")
+                return None
+
+            stations = response.json()
+            if not stations:
+                station_name = self.station.get('name', 'unknown')
+                print(f"Warning: Canadian station '{station_name}' (code={self.station_code}) not found")
+                return None
+
+            # The API returns an array; take the first matching station
+            self._internal_station_id = stations[0].get('id')
+            return self._internal_station_id
+
+        except requests.RequestException as e:
+            station_name = self.station.get('name', 'unknown')
+            print(f"Error looking up Canadian station '{station_name}': {e}")
+            return None
+
     def _fetchTides(self, start_day: dt, days_in_future: int) -> list[Tide]:
-        """Placeholder - not yet implemented."""
-        station_name = self.station.get('name', 'unknown')
-        print(f"Warning: Canadian tide data not yet implemented for station '{station_name}'")
-        return []
+        """
+        Fetch tides from Canadian Hydrographic Service API.
+
+        Uses the wlp-hilo time series code to get high/low tide predictions.
+
+        Args:
+            start_day: datetime for the start of the range
+            days_in_future: Number of days to fetch
+
+        Returns:
+            List of Tide objects
+        """
+        if not self.station_code:
+            station_name = self.station.get('name', 'unknown')
+            print(f"Warning: No ca_tide_id configured for Canadian station '{station_name}'")
+            return []
+
+        # Get the internal station ID
+        internal_id = self._get_internal_station_id()
+        if not internal_id:
+            return []
+
+        # Build the API URL for tide predictions
+        # Format dates as ISO 8601 for the API
+        start_str = start_day.strftime("%Y-%m-%dT00:00:00Z")
+        end_day = start_day + datetime.timedelta(days=days_in_future+1)
+        end_str = end_day.strftime("%Y-%m-%dT23:59:59Z")
+
+        url = (
+            f"{self.CANADA_API_BASE_URL}/stations/{internal_id}/data"
+            f"?time-series-code=wlp-hilo"
+            f"&from={start_str}"
+            f"&to={end_str}"
+        )
+
+        try:
+            response = requests.get(url)
+            if response.status_code != 200:
+                raise Exception(f'Canada Tide API request failed: {response.status_code} - {response.text}')
+
+            json_data = response.json()
+
+            # Parse the response into Tide objects
+            tides: list[Tide] = []
+            for entry in json_data:
+                tide = Tide()
+                # Parse the timestamp - API returns ISO 8601 format
+                # Example: "2026-03-04T05:30:00Z"
+                time_str_raw = entry.get('eventDate', '')
+                if not time_str_raw:
+                    continue
+
+                # Parse as UTC then convert to Pacific time
+                utc_time = dt.strptime(time_str_raw, "%Y-%m-%dT%H:%M:%SZ")
+                utc_tz = timezone('UTC')
+                pacific_tz = timezone('US/Pacific')
+                utc_time = utc_tz.localize(utc_time)
+                local_time = utc_time.astimezone(pacific_tz)
+                tide.time = local_time.replace(tzinfo=None)
+
+                # Height is in meters, convert to feet
+                height_meters = float(entry.get('value', 0))
+                tide.height = height_meters * self.METERS_TO_FEET
+
+                # The wlp-hilo API doesn't provide explicit H/L markers,
+                # so we'll determine high/low from heights after collecting all tides
+                tide.isHighTide = False  # Will be set by _infer_high_low_tides
+                tides.append(tide)
+
+            # If we couldn't determine high/low from qcFlagCode, infer from heights
+            self._infer_high_low_tides(tides)
+            return tides
+
+        except requests.RequestException as e:
+            station_name = self.station.get('name', 'unknown')
+            print(f"Error fetching Canadian tide data for '{station_name}': {e}")
+            return []
+        except Exception as e:
+            station_name = self.station.get('name', 'unknown')
+            print(f"Error parsing Canadian tide data for '{station_name}': {e}")
+            return []
+
+    def _infer_high_low_tides(self, tides: list[Tide]) -> None:
+        """
+        Infer high/low tide status from height values if not provided by API.
+
+        For a series of tide events, alternating high/low, we compare each
+        tide to its neighbors to determine if it's a local max or min.
+        """
+        if len(tides) < 2:
+            return
+
+        for i, tide in enumerate(tides):
+            if i == 0:
+                tide.isHighTide = tide.height > tides[i + 1].height
+            elif i == len(tides) - 1:
+                tide.isHighTide = tide.height > tides[i - 1].height
+            else:
+                # Compare to both neighbors
+                tide.isHighTide = tide.height > tides[i - 1].height and tide.height > tides[i + 1].height
 
 
 def get_tide_interpreter(station_config: StationConfig) -> TideInterpreter:
@@ -268,10 +423,8 @@ def get_tide_interpreter(station_config: StationConfig) -> TideInterpreter:
     Returns:
         TideInterpreter subclass instance appropriate for the station's data source
     """
-    source_type = station_config.get('source_type', 'noaa')
 
-    if source_type == 'canada_api' or 'ca_tide_id' in station_config:
+    if 'ca_tide_id' in station_config:
         return CanadaTideInterpreter(station_config.get('url_canada_tide', ''), station_config)
     else:
-        # Default to NOAA
         return NoaaTideInterpreter(station_config.get('url_noaa', ''), station_config)

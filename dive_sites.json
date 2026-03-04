@@ -553,6 +553,61 @@
       "name": "Des Moines",
       "coords": "47° 24.0 N 122° 19.7 W",
       "url_noaa": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&time_zone=lst_ldt&units=english&format=json&interval=hilo&station=9446248&datum=MLLW"
+    },
+
+    {
+      "name": "Walker Group",
+      "canada_api_docs": "https://api-sine.dfo-mpo.gc.ca/swagger-ui/index.html",
+      "all_bc_tide_listings": "curl 'https://api-sine.dfo-mpo.gc.ca/api/v1/stations?chs-region-code=PAC' | python3 -m json.tool",
+      "one_bc_tide_listing_to_get_id": "curl 'https://api-sine.dfo-mpo.gc.ca/api/v1/stations?code=08426'",
+      "get_predictions_for_tide_id": "curl 'https://api-sine.dfo-mpo.gc.ca/api/v1/stations/5cebf1de3d0f4a073c4bb9c9/data?time-series-code=wlp-hilo&from=2026-03-04T00:00:00Z&to=2026-03-07T23:59:59Z'",
+      "coords": "50.899, -127.526",
+      "ca_tide_id": "08426"
+    },
+    {
+      "name": "Port Hardy",
+      "coords": "50.722, -127.489",
+      "ca_tide_id": "08408"
+    },
+    {
+      "name": "Alert Bay",
+      "coords": "50.587, -126.931",
+      "ca_tide_id": "08280"
+    },
+    {
+      "name": "Kelsey Bay",
+      "coords": "50.398, -125.961",
+      "ca_tide_id": "08215"
+    },
+    {
+      "name": "Gold River",
+      "coords": "49.679, -126.126",
+      "ca_tide_id": "08650"
+    },
+    {
+      "name": "Seymour Narrows",
+      "coords": "50.133333, -125.35",
+      "ca_tide_id": "08105"
+    },
+    {
+      "name": "Campbell River",
+      "coords": "50.042, -125.247",
+      "ca_tide_id": "08074"
+    },
+    {
+      "name": "Northwest Bay",
+      "coords": "49.303, -124.202",
+      "ca_tide_id": "07938"
+    },
+    {
+      "name": "Nanaimo",
+      "coords": "49.1628, -123.9235",
+      "ca_tide_id": "07917"
+    },
+    {
+      "name": "Brentwood Bay",
+      "coords": "48.578, -123.467",
+      "ca_tide_id": "07280"
     }
   ],
 
