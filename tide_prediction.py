@@ -1,61 +1,31 @@
 '''
-This program prints tides for NOAA stations on given date ranges
+This program prints tides for NOAA stations on given date ranges.
+
+Uses the TideInterpreter abstraction layer for fetching tide predictions
+from various sources (currently NOAA, with placeholder for Canadian tides).
 '''
 
 import argparse
-import datetime
 import json
 from datetime import datetime as dt
-import requests
 import data_collect
+from interpreter_tides import get_tide_interpreter, print_tides_dive_fmt, TIME_FILTER_ALL
 
-DATEFMT = '%Y-%m-%d'  # example 2019-01-18
-TIMEPARSEFMT_TBONE = '%Y-%m-%d %H:%M'  # example: 2019-01-18 22:36
-TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
-TIMEFMT = '%I:%M%p'  # example 09:36AM
 
-def getDayUrl(baseUrl, day, daysInFuture):
-    today = day.strftime(DATEFMT).replace("-", "")
-    future = (day + datetime.timedelta(days=daysInFuture)).strftime(DATEFMT).replace("-", "")
-    return baseUrl + f'&begin_date={today}&end_date={future}'
-
-def printTides(apiTideLines):
-    for tide in apiTideLines:
-        datet = dt.strptime(tide['t'], TIMEPARSEFMT_TBONE)
-        typet = 'Low' if tide['type']=='L' else 'High'
-        print('{}: {} tide {:.1f} ft'.format(dt.strftime(datet, TIMEPRINTFMT), typet, float(tide['v'])))
-
-# prints the tides of each day in the format "time (height) > time (height)"
-def printTideDiveFmt(apiTideLines):
-    prevTide = None
-    for tide in apiTideLines:
-        datet = dt.strptime(tide['t'], TIMEPARSEFMT_TBONE)
-        if prevTide and prevTide['t'][:10] == tide['t'][:10]:  # same day
-            print(' > {} ({:.1f} ft)'.format(dt.strftime(datet, TIMEFMT).lstrip('0'), float(tide['v'])), end='')
-        else:
-            if prevTide: print()  # end previous day
-            print('\t{}: '.format(dt.strftime(datet, DATEFMT)), end='')  # start new day
-            print('{} ({:.1f} ft)'.format(dt.strftime(datet, TIMEFMT).lstrip('0'), float(tide['v'])), end='')
-        prevTide = tide
-    print()
-
-def getAndPrintTides(tideStationConfig, args):
-    url = getDayUrl(tideStationConfig['url_noaa'], args.START, args.DAYS_IN_FUTURE)
-    response = requests.get(url)
-    if response.status_code != 200:
-        raise Exception('NOAA API is down')
-
-    jsonArray = response.json()['predictions']
-    # printTides(jsonArray)
-    printTideDiveFmt(jsonArray)
+def getAndPrintTides(tideStationConfig, startDay, daysInFuture, timeFilter=TIME_FILTER_ALL):
+    interpreter = get_tide_interpreter(tideStationConfig)
+    tides = interpreter.getTides(startDay, days_in_future=daysInFuture, time_filter=timeFilter)
+    print_tides_dive_fmt(tides)
 
 def main():
     data = json.loads(open(data_collect.absName('dive_sites.json')).read())
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='Print tide predictions for specified stations')
     parser.add_argument("-d", "--start-date", dest="START", default=dt.now(),
-                        type=lambda d: dt.strptime(d, '%Y-%m-%d').date(),
-                        help="Start date to begin considering diveable conditions in the format yyyy-mm-dd")
+                        type=lambda d: dt.strptime(d, '%Y-%m-%d'),
+                        help="Start date to begin tide predictions in the format yyyy-mm-dd")
+    parser.add_argument("-n", "--days", dest="DAYS_IN_FUTURE", default=3, type=int,
+                        help="Number of days to fetch (default: 3)")
     args = parser.parse_args()
 
     # ---------------------------------- MANUALLY CONFIGURABLE PARAMETERS ---------------------------------------------
@@ -71,17 +41,17 @@ def main():
     # STATIONS.append('James Island (La Push)')
     # STATIONS.append('Destruction Island')
     # STATIONS.append('Des Moines')
-    args.START = dt(2025, 6, 19)
-    # args.START = dt.now()
+    # args.START = dt(2025, 6, 19)
+    args.START = dt.now()
     args.DAYS_IN_FUTURE = 3
     # ------------------------------------------------------------------------------------------------------------------
 
-    # Get tides for each site and each
+    # Get tides for each station
     for tideStation in STATIONS:
         print('Tides for {}'.format(tideStation))
         for tideStationConfig in data['tide_stations']:
             if tideStation == tideStationConfig['name']:
-                getAndPrintTides(tideStationConfig, args)
+                getAndPrintTides(tideStationConfig, args.START, args.DAYS_IN_FUTURE)
 
 
 if __name__ == '__main__':

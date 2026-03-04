@@ -14,60 +14,38 @@ from dateutil import parser
 import pytz
 import subprocess
 import canada_pdf_lib
-
-# https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
-TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
-TIMEPARSEFMT_TBONE = '%Y-%m-%d %H:%M'  # example: 2019-01-18 22:36
-TIMEPARSEFMT_CA = '%Y-%m-%dT%H:%M:%SZ'  # example: 2024-03-13T23:29:00Z
-TIMEPRINTFMT = '%a %Y-%m-%d %I:%M%p'  # example: Fri 2019-01-18 09:36AM
-DATEFMT = '%Y-%m-%d'  # example 2019-01-18
-TIMEFMT = '%I:%M%p'  # example 09:36AM
-
-# Time filter constants for getSlacks
-TIME_FILTER_DAY = 'day'              # Only daytime slacks (between sunrise and sunset)
-TIME_FILTER_NIGHT = 'night'          # Only nighttime slacks (between sunset and sunrise)
-TIME_FILTER_EARLY_NIGHT = 'early_night'  # Only early night slacks (45min after sunset to 11pm)
-TIME_FILTER_ALL = 'all'              # All slacks regardless of time
+from interpreter_common import (
+    TIMEPARSEFMT,
+    TIMEPARSEFMT_TBONE,
+    TIMEPARSEFMT_CA,
+    TIMEPRINTFMT,
+    DATEFMT,
+    TIMEFMT,
+    TIME_FILTER_DAY,
+    TIME_FILTER_NIGHT,
+    TIME_FILTER_EARLY_NIGHT,
+    TIME_FILTER_ALL,
+    passes_time_filter,
+    date_str,
+    time_str,
+)
 
 
 def _passesTimeFilter(slack, time_filter):
     """
     Returns True if the slack passes the given time filter.
 
-    Args:
-        slack: A Slack object with time, sunriseTime, and sunsetTime attributes
-        time_filter: One of TIME_FILTER_DAY, TIME_FILTER_NIGHT, TIME_FILTER_EARLY_NIGHT, or TIME_FILTER_ALL
-
-    Returns:
-        True if the slack should be included based on the time filter
+    Wrapper around passes_time_filter that extracts fields from Slack object.
     """
-    if time_filter == TIME_FILTER_ALL:
-        return True
-    # If we don't have sunrise/sunset times, we can't filter properly
-    if not slack.sunriseTime or not slack.sunsetTime:
-        return True
+    return passes_time_filter(slack.time, slack.sunriseTime, slack.sunsetTime, time_filter)
 
-    is_daytime = slack.sunriseTime <= slack.time <= slack.sunsetTime
 
-    if time_filter == TIME_FILTER_DAY:
-        return is_daytime
-    elif time_filter == TIME_FILTER_NIGHT:
-        return not is_daytime
-    elif time_filter == TIME_FILTER_EARLY_NIGHT:
-        # Between 45 minutes after sunset and 11pm on the same day
-        early_night_start = slack.sunsetTime + td(minutes=45)
-        eleven_pm = slack.time.replace(hour=23, minute=0, second=0, microsecond=0)
-        return slack.time >= early_night_start and slack.time <= eleven_pm
-    return True
-
+# Legacy function names for backward compatibility
 def dateStr(date):
-    return dt.strftime(date, TIMEPRINTFMT)
+    return date_str(date)
 
 def timeStr(date):
-    result = dt.strftime(date, TIMEFMT)
-    if result.startswith('0'):
-        return result[1:]  # remove leading 0 (i.e. 9:02AM instead of 09:02AM)
-    return result
+    return time_str(date)
 
 class Slack:
     time = None

@@ -311,7 +311,7 @@ def main():
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
         # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
-        # SITES = append(SITES, 'Deception Pass')
+        SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
@@ -347,8 +347,8 @@ def main():
     ]
 
     # args.START = dt(2026, 2, 28)
-    # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 60
+    args.START = dt.now()
+    args.DAYS_IN_FUTURE = 14
     # args.IGNORE_MAX_SPEED = True
     # args.INCLUDE_WORKDAYS = True
     # args.TIME_FILTER = 'all'          # All slacks regardless of time
