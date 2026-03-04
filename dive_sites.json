@@ -14,6 +14,7 @@
       "url_noaa": "https://tidesandcurrents.noaa.gov/noaacurrents/stations?g=698",
       "url_noaa_map": "https://tidesandcurrents.noaa.gov/map/index.html?type=CurrentPredictions",
       "url_noaa_api": "https://api.tidesandcurrents.noaa.gov/api/prod/",
+      "url_canada": "see Walker Group tide links:  curl 'https://api-sine.dfo-mpo.gc.ca/api/v1/stations?chs-region-code=PAC' | jq",
       "url_interactive_map": "http://deepzoom.com/"
     },
     {
