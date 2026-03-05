@@ -28,9 +28,11 @@ from interpreter_common import (
     TIMEPARSEFMT_TBONE,
     DATEFMT,
     TIME_FILTER_ALL,
+    CANADA_API_BASE_URL,
     passes_time_filter,
     date_str,
     time_str,
+    get_canada_station_id,
 )
 
 # Re-export time filter constants for consumers of this module
@@ -251,7 +253,6 @@ class CanadaTideInterpreter(TideInterpreter):
     Station codes can be found at https://tides.gc.ca/en/stations
     """
 
-    CANADA_API_BASE_URL = "https://api-sine.dfo-mpo.gc.ca/api/v1"
     METERS_TO_FEET = 3.28084
 
     def __init__(self, base_url: str, station: StationConfig) -> None:
@@ -261,54 +262,21 @@ class CanadaTideInterpreter(TideInterpreter):
         Args:
             base_url: Not used for Canada API (we use the standard base URL)
             station: Station config dict from dive_sites.json (tide_stations array)
-                     Must contain 'ca_tide_id' with the station code (e.g., "08426")
+                     Must contain 'ca_code' with the station code (e.g., "08426")
         """
         # Pass the Canada API base URL to parent so base class getTides check passes
-        super().__init__(CanadaTideInterpreter.CANADA_API_BASE_URL, station)
-        self.station_code = station.get('ca_tide_id', '')
+        super().__init__(CANADA_API_BASE_URL, station)
+        self.station_code = station.get('ca_code', '')
         self._internal_station_id: Optional[str] = None
         self._astral_city = LocationInfo("Vancouver", "BC", "America/Vancouver", 49.28, -123.12)
 
-    # todo: this could be done locally by looking up the ID in the giant JSON file from canada_stations.json
-    def _get_internal_station_id(self) -> Optional[str]:
-        """
-        Look up the internal station ID from the station code.
+    def _get_station_id(self) -> Optional[str]:
+        """Look up the internal station ID from the station code."""
+        if not self._internal_station_id:
+            result = get_canada_station_id(self.station)
+            self._internal_station_id = result
+        return self._internal_station_id
 
-        The Canada API uses MongoDB-style internal IDs for data requests,
-        but we configure stations using their human-readable codes (e.g., "08426").
-        This method queries the API to get the internal ID.
-
-        Returns:
-            Internal station ID string, or None if not found
-        """
-        if self._internal_station_id:
-            return self._internal_station_id
-
-        if not self.station_code:
-            return None
-
-        try:
-            url = f"{self.CANADA_API_BASE_URL}/stations?code={self.station_code}"
-            response = requests.get(url)
-            if response.status_code != 200:
-                station_name = self.station.get('name', 'unknown')
-                print(f"Warning: Failed to look up Canadian station '{station_name}' (code={self.station_code}): {response.status_code}")
-                return None
-
-            stations = response.json()
-            if not stations:
-                station_name = self.station.get('name', 'unknown')
-                print(f"Warning: Canadian station '{station_name}' (code={self.station_code}) not found")
-                return None
-
-            # The API returns an array; take the first matching station
-            self._internal_station_id = stations[0].get('id')
-            return self._internal_station_id
-
-        except requests.RequestException as e:
-            station_name = self.station.get('name', 'unknown')
-            print(f"Error looking up Canadian station '{station_name}': {e}")
-            return None
 
     def _fetchTides(self, start_day: dt, days_in_future: int) -> list[Tide]:
         """
@@ -325,11 +293,11 @@ class CanadaTideInterpreter(TideInterpreter):
         """
         if not self.station_code:
             station_name = self.station.get('name', 'unknown')
-            print(f"Warning: No ca_tide_id configured for Canadian station '{station_name}'")
+            print(f"Warning: No ca_code configured for Canadian station '{station_name}'")
             return []
 
         # Get the internal station ID
-        internal_id = self._get_internal_station_id()
+        internal_id = self._get_station_id()
         if not internal_id:
             return []
 
@@ -340,7 +308,7 @@ class CanadaTideInterpreter(TideInterpreter):
         end_str = end_day.strftime("%Y-%m-%dT23:59:59Z")
 
         url = (
-            f"{self.CANADA_API_BASE_URL}/stations/{internal_id}/data"
+            f"{CANADA_API_BASE_URL}/stations/{internal_id}/data"
             f"?time-series-code=wlp-hilo"
             f"&from={start_str}"
             f"&to={end_str}"
@@ -424,7 +392,7 @@ def get_tide_interpreter(station_config: StationConfig) -> TideInterpreter:
         TideInterpreter subclass instance appropriate for the station's data source
     """
 
-    if 'ca_tide_id' in station_config:
+    if 'ca_code' in station_config:
         return CanadaTideInterpreter(station_config.get('url_canada_tide', ''), station_config)
     else:
         return NoaaTideInterpreter(station_config.get('url_noaa', ''), station_config)

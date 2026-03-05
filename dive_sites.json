@@ -257,7 +257,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Seymour+Narrows%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aefc7784e5432cd3b6eb1e",
-      "ca_pdf_code": "08108",
+      "ca_code": "08108",
       "flood_dir": 180.0,
       "ebb_dir": 0.0
     },
@@ -270,7 +270,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Gabriola+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aef12e84e5432cd3b6db8d",
-      "ca_pdf_code": "07545",
+      "ca_code": "07545",
       "flood_dir": 80.0,
       "dir_comment": "direction the current flows toward i.e. here flood runs W to E",
       "ebb_dir": 260.0
@@ -284,7 +284,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Dodd+Narrows%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aef1866a2b9417c035030f",
-      "ca_pdf_code": "07487",
+      "ca_code": "07487",
       "flood_dir": 355.0,
       "dir_comment": "oddly the directions here seem reversed but it matches xtide, may be error with the api on this station?",
       "ebb_dir": 155.0
@@ -307,7 +307,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Weynton+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63af005f6a2b9417c0353158",
-      "ca_pdf_code": "08277",
+      "ca_code": "08277",
       "flood_dir": 220.0,
       "ebb_dir": 40.0
     },
@@ -320,7 +320,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Race+Passage%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aeee896a2b9417c034d337",
-      "ca_pdf_code": "07090",
+      "ca_code": "07090",
       "flood_dir": 50.0,
       "ebb_dir": 230.0
     },
@@ -333,7 +333,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Active+Pass%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63aef09f84e5432cd3b6c509",
-      "ca_pdf_code": "07527",
+      "ca_code": "07527",
       "flood_dir": 220.0,
       "ebb_dir": 40.0
     },
@@ -346,7 +346,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Nakwakto+Rapids%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
       "ca_id": "63af009f84e5432cd3b71287",
-      "ca_pdf_code": "08450",
+      "ca_code": "08450",
       "flood_dir": 355.0,
       "ebb_dir": 175.0
     },
@@ -360,7 +360,7 @@
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Sechelt+Rapids%2C+British+Columbia+Current+%28use+with+caution%29&glen=14",
       "url_noaa": "",
       "ca_id": "63aef40a6a2b9417c0350313",
-      "ca_pdf_code": "07845",
+      "ca_code": "07845",
       "flood_dir": 135.0,
       "ebb_dir": 315.0
     },
@@ -372,7 +372,7 @@
       "url_dairiki": "https://www.dairiki.org/tides/monthly.php/til",
       "url_xtide_a": "https://tide.arthroinfo.org/tideshow.cgi?site=Gorge%2DTillicum+Bridge%2C+British+Columbia+Current&glen=14",
       "url_noaa": "",
-      "ca_pdf_code": "07129",
+      "ca_code": "07129",
       "flood_dir": 0,
       "ebb_dir": 0
     },
@@ -380,19 +380,19 @@
       "name": "Johnstone Strait Central, British Columbia Current",
       "coords": "50 28.3 N 126 8.2 W",
       "url_dairiki": "https://www.dairiki.org/tides/monthly.php/jon",
-      "ca_pdf_code": "08246"
+      "ca_code": "08246"
     },
     {
       "name": "First Narrows, British Columbia Current",
       "coords": "49 19.0 N 123 8.0 W",
       "url_dairiki": "https://www.dairiki.org/tides/monthly.php/fir",
-      "ca_pdf_code": "07721"
+      "ca_code": "07721"
     },
     {
       "name": "Second Narrows, British Columbia Current",
       "coords": "49 18.0 N 123 1.0 W",
       "url_dairiki": "https://www.dairiki.org/tides/monthly.php/sec",
-      "ca_pdf_code": "07745"
+      "ca_code": "07745"
     },
 
     {
@@ -563,52 +563,53 @@
       "one_bc_tide_listing_to_get_id": "curl 'https://api-sine.dfo-mpo.gc.ca/api/v1/stations?code=08426'",
       "get_predictions_for_tide_id": "curl 'https://api-sine.dfo-mpo.gc.ca/api/v1/stations/5cebf1de3d0f4a073c4bb9c9/data?time-series-code=wlp-hilo&from=2026-03-04T00:00:00Z&to=2026-03-07T23:59:59Z'",
       "coords": "50.899, -127.526",
-      "ca_tide_id": "08426"
+      "ca_code": "08426",
+      "ideally_add_ca_id": "It saves an extra API call or json file parsing to add the id here, but I have not done so yet"
     },
     {
       "name": "Port Hardy",
       "coords": "50.722, -127.489",
-      "ca_tide_id": "08408"
+      "ca_code": "08408"
     },
     {
       "name": "Alert Bay",
       "coords": "50.587, -126.931",
-      "ca_tide_id": "08280"
+      "ca_code": "08280"
     },
     {
       "name": "Kelsey Bay",
       "coords": "50.398, -125.961",
-      "ca_tide_id": "08215"
+      "ca_code": "08215"
     },
     {
       "name": "Gold River",
       "coords": "49.679, -126.126",
-      "ca_tide_id": "08650"
+      "ca_code": "08650"
     },
     {
       "name": "Seymour Narrows",
       "coords": "50.133333, -125.35",
-      "ca_tide_id": "08105"
+      "ca_code": "08105"
     },
     {
       "name": "Campbell River",
       "coords": "50.042, -125.247",
-      "ca_tide_id": "08074"
+      "ca_code": "08074"
     },
     {
       "name": "Northwest Bay",
       "coords": "49.303, -124.202",
-      "ca_tide_id": "07938"
+      "ca_code": "07938"
     },
     {
       "name": "Nanaimo",
       "coords": "49.1628, -123.9235",
-      "ca_tide_id": "07917"
+      "ca_code": "07917"
     },
     {
       "name": "Brentwood Bay",
       "coords": "48.578, -123.467",
-      "ca_tide_id": "07280"
+      "ca_code": "07280"
     }
   ],
 

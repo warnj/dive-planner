@@ -275,7 +275,7 @@ def main():
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
         # SITES = append(SITES, 'Kelsey Bay')
-        # SITES = append(SITES, 'Seymour Narrows')
+        SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Row and be Dammed')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
@@ -311,7 +311,7 @@ def main():
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
         # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
-        SITES = append(SITES, 'Deception Pass')
+        # SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
@@ -398,13 +398,13 @@ def main():
         if 'url_dairiki' in station and station['url_dairiki']:
             interpreters.append((intp.DairikiInterpreter(station['url_dairiki'], station), "Dairiki"))
 
-        # Canadian station: add CanadaPDFInterpreter
-        if 'ca_pdf_code' in station and station['ca_pdf_code']:
+        # Canadian station: add Canada interpreters
+        if 'ca_code' in station and station['ca_code']:
             # NOTE: for really good current days, the pdf may have a * for weak current instead of max/turn - then no output is provided!
-            interpreters.append((intp.CanadaPDFInterpreter(station['ca_pdf_code'], station), "Canada PDF"))
-
-        # US station: add XTide-based interpreter (TBoneSCInterpreter stopped working in 2025)
-        if 'xtide_name' in station and station['xtide_name']:
+            interpreters.append((intp.CanadaPDFInterpreter(station['ca_code'], station), "Canada PDF"))
+            interpreters.append((intp.CanadaAPIInterpreter('', station), "Canada API"))
+        # US station: add XTide-based interpreter (only if not a Canadian station)
+        elif 'xtide_name' in station and station['xtide_name']:
             interpreters.append((intp.XTideDockerInterpreter(station['name'], station), "XTide Docker"))
         elif 'url_xtide_a' in station and station['url_xtide_a']:
             interpreters.append((intp.TBoneSCInterpreter(station['url_xtide_a'], station), "XTide"))

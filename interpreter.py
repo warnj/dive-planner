@@ -25,9 +25,11 @@ from interpreter_common import (
     TIME_FILTER_NIGHT,
     TIME_FILTER_EARLY_NIGHT,
     TIME_FILTER_ALL,
+    CANADA_API_BASE_URL,
     passes_time_filter,
     date_str,
     time_str,
+    get_canada_station_id,
 )
 
 
@@ -472,17 +474,27 @@ class NoaaAPIInterpreter(Interpreter):
             slacks.append(s)
         return slacks
 
-# DEPRECATED:  as of 2026 this Canada api has moved or been removed and does not work
 # Class to retrieve and parse current data from Canada Currents REST API
-# warning: does not identify "min ebb" or "min flood" type slacks as the direction must change for this to locate a slack
+# Uses the wcp1-events time series which provides SLACK, EXTREMA_FLOOD, and EXTREMA_EBB events
 class CanadaAPIInterpreter(Interpreter):
-    urlFmt = 'https://api-iwls.dfo-mpo.gc.ca/api/v1/stations/{}/data?time-series-code={}'
-    cachedSlacks = []
     numAPICalls = 0
+
+    def __init__(self, baseUrl, station):
+        super().__init__(baseUrl, station)
+        self._internal_station_id = None  # Cache for station ID lookup
+        self._cached_slacks = []  # All slacks fetched from API
+        self._cache_start = None  # Start date of cached range (datetime.date)
+        self._cache_end = None    # End date of cached range (datetime.date)
+
+    def _get_station_id(self):
+        """Get the internal station ID, looking it up from ca_code if needed."""
+        if not self._internal_station_id:
+            result = get_canada_station_id(self.station)
+            self._internal_station_id = result
+        return self._internal_station_id
 
     # Returns the datetime object from the given time
     def _parseTime(self, timeStr):
-        # return dt.strptime(timeStr, TIMEPARSEFMT_CA)
         # convert UTC iso time string to local one
         parsed = parser.parse(timeStr)
         # confirmed 3/10/24 that this conversion will account for daylight savings
@@ -493,113 +505,140 @@ class CanadaAPIInterpreter(Interpreter):
     # Returns the day-specific URL for the current base URL
     @staticmethod
     def getDayUrl(baseUrl, day):
-        start = (day + datetime.timedelta(days=-1)).strftime("%Y-%m-%d")  # start 1d earlier due to huge utc time zone difference
+        start = (day + datetime.timedelta(days=-1)).strftime("%Y-%m-%d")
         twoWeeks = (day + datetime.timedelta(days=14)).strftime("%Y-%m-%d")
         return baseUrl + '&from={}T00:00:00Z&to={}T00:30:00Z'.format(start, twoWeeks)
 
     def __getJsonResponse(self, url):
         r = requests.get(url)
         if r.status_code != 200:
-            raise Exception('Canada currents API is down')
+            raise Exception(f'Canada currents API request failed: {r.status_code} - {r.text[:200]}')
         return r.json()
 
-    # compares float directions (use epsilon of 5 since opposite direction is +/- 180)
-    def __floatEqual(self, float1, float2, threshold=5.0):
-        return abs(float1 - float2) <= threshold
+    def _cache_covers_day(self, day):
+        """Check if the cache already has data for the given day."""
+        if not self._cached_slacks or not self._cache_start or not self._cache_end:
+            return False
+        day_date = day.date() if hasattr(day, 'date') else day
+        # Don't use the last day in cache as it may be incomplete
+        return self._cache_start <= day_date < self._cache_end
 
-    def _getAPIResponses(self, day):
-        self.numAPICalls += 1
-        urlDay = self.getDayUrl(self.urlFmt, day)
-        dir = self.__getJsonResponse(urlDay.format(self.station['ca_id'], 'wcdp-extrema'))
-        speed = self.__getJsonResponse(urlDay.format(self.station['ca_id'], 'wcsp-extrema'))
-        return dir, speed
+    def _fetchAndCacheSlacks(self, day):
+        """Fetch slacks from API for a 14-day window starting from day-1 and cache them."""
+        station_id = self._get_station_id()
+        if not station_id:
+            return
 
-    # Returns a list of Slack objects corresponding to the slack indexes within the list of data lines
-    def __parseSlacks(self, dirResponse, speedResponse, moonPhase):
-        if len(dirResponse) != len(speedResponse):
-            print('direction response length does not match speed response length')
-            return None
-        # print(json.dumps(dirResponse, indent=2))
-        # print(json.dumps(speedResponse, indent=2))
-        n = len(speedResponse)
+        CanadaAPIInterpreter.numAPICalls += 1
+        start = (day + datetime.timedelta(days=-1))
+        end = (day + datetime.timedelta(days=14))
+
+        url = (
+            f"{CANADA_API_BASE_URL}/stations/{station_id}/data"
+            f"?time-series-code=wcp1-events"
+            f"&from={start.strftime('%Y-%m-%d')}T00:00:00Z"
+            f"&to={end.strftime('%Y-%m-%d')}T00:30:00Z"
+        )
+
+        eventsResponse = self.__getJsonResponse(url)
+        slacks = self.__parseSlacks(eventsResponse, moon.phase(day))
+
+        # Update cache
+        self._cached_slacks = slacks
+        if slacks:
+            self._cache_start = slacks[0].time.date()
+            self._cache_end = slacks[-1].time.date()
+
+    def __parseSlacks(self, eventsResponse, moonPhase):
+        """
+        Parse the wcp1-events response into Slack objects.
+
+        The response contains events with qualifier: SLACK, EXTREMA_FLOOD, EXTREMA_EBB
+        Events are in chronological order, so we can find the flood/ebb before and after each slack.
+        """
+        if not eventsResponse:
+            return []
+
         slacks = []
-        for i in range(n):
-            if speedResponse[i]['value'] == 0.0:
-                s = Slack()
-                s.moonPhase = moonPhase
-                if i + 1 < n:
-                    dirLater = dirResponse[i + 1]['value']
-                    if not (self.__floatEqual(dirLater, self.station['ebb_dir']) or self.__floatEqual(dirLater, self.station['flood_dir'])):
-                        print('error: direction {} does not match expected flood {} or ebb {} direction'.format(dirLater, self.station['flood_dir'], self.station['ebb_dir']))
-                        return None
-                    s.slackBeforeEbb = dirLater == self.station['ebb_dir']  # ebb after this slack means it's a SBE
-                else:
-                    dirBefore = dirResponse[i - 1]['value']
-                    if not (self.__floatEqual(dirBefore, self.station['ebb_dir']) or self.__floatEqual(dirBefore, self.station['flood_dir'])):
-                        print('error: direction {} does not match expected flood {} or ebb {} direction'.format(dirBefore, self.station['flood_dir'], self.station['ebb_dir']))
-                        return None
-                    s.slackBeforeEbb = dirBefore == self.station['flood_dir']  # flood before this slack means it's a SBE
+        n = len(eventsResponse)
 
-                # can't get the current before or after slack in this case so ignore these very early or late slacks
-                # todo: support a null value before or after to show all slacks in a day
-                if i - 1 >= 0 and i + 1 < n:
-                    if s.slackBeforeEbb:
-                        s.floodSpeed = speedResponse[i - 1]['value']
-                        s.maxFloodTime = self._parseTime(speedResponse[i - 1]['eventDate'])
-                        s.ebbSpeed = -speedResponse[i + 1]['value']
-                        s.maxEbbTime = self._parseTime(speedResponse[i + 1]['eventDate'])
-                    else:
-                        s.ebbSpeed = -speedResponse[i - 1]['value']
-                        s.maxEbbTime = self._parseTime(speedResponse[i - 1]['eventDate'])
-                        s.floodSpeed = speedResponse[i + 1]['value']
-                        s.maxFloodTime = self._parseTime(speedResponse[i + 1]['eventDate'])
-                    s.time = self._parseTime(speedResponse[i]['eventDate'])
+        for i, event in enumerate(eventsResponse):
+            if event.get('qualifier') != 'SLACK':
+                continue
 
-                    # Note: astral sunrise and sunset times do account for daylight savings
-                    sunData = sun(self._astralCity.observer, date=s.time, tzinfo=timezone('US/Pacific'))
-                    # remove time zone info to compare with other local times
-                    sunrise = sunData['sunrise'].replace(tzinfo=None)
-                    sunset = sunData['sunset'].replace(tzinfo=None)
-                    s.sunriseTime = sunrise
-                    s.sunsetTime = sunset
+            s = Slack()
+            s.moonPhase = moonPhase
+            s.time = self._parseTime(event['eventDate'])
 
-                    slacks.append(s)
-        self.cachedSlacks.extend(slacks)
+            # Find the previous extrema (flood or ebb)
+            prevExtrema = None
+            for j in range(i - 1, -1, -1):
+                if eventsResponse[j].get('qualifier') in ('EXTREMA_FLOOD', 'EXTREMA_EBB'):
+                    prevExtrema = eventsResponse[j]
+                    break
+
+            # Find the next extrema (flood or ebb)
+            nextExtrema = None
+            for j in range(i + 1, n):
+                if eventsResponse[j].get('qualifier') in ('EXTREMA_FLOOD', 'EXTREMA_EBB'):
+                    nextExtrema = eventsResponse[j]
+                    break
+
+            # Need both previous and next to calculate slack properly
+            if not prevExtrema or not nextExtrema:
+                continue
+
+            # Determine if this is slack before ebb (SBE) or slack before flood (SBF)
+            # If next extrema is ebb, this is SBE
+            s.slackBeforeEbb = nextExtrema.get('qualifier') == 'EXTREMA_EBB'
+
+            if s.slackBeforeEbb:
+                # Previous was flood, next is ebb
+                s.floodSpeed = prevExtrema['value']
+                s.maxFloodTime = self._parseTime(prevExtrema['eventDate'])
+                s.ebbSpeed = -nextExtrema['value']  # Ebb speeds are stored as negative
+                s.maxEbbTime = self._parseTime(nextExtrema['eventDate'])
+            else:
+                # Previous was ebb, next is flood
+                s.ebbSpeed = -prevExtrema['value']  # Ebb speeds are stored as negative
+                s.maxEbbTime = self._parseTime(prevExtrema['eventDate'])
+                s.floodSpeed = nextExtrema['value']
+                s.maxFloodTime = self._parseTime(nextExtrema['eventDate'])
+
+            # Add sunrise/sunset data
+            sunData = sun(self._astralCity.observer, date=s.time, tzinfo=timezone('US/Pacific'))
+            s.sunriseTime = sunData['sunrise'].replace(tzinfo=None)
+            s.sunsetTime = sunData['sunset'].replace(tzinfo=None)
+
+            slacks.append(s)
+
         return slacks
 
-    def __getSlacksOnDay(self, day, slacks, time_filter):
-        daySlacks = []
-        for s in slacks:
-            if dt.strftime(s.time, DATEFMT) == dt.strftime(day, DATEFMT):
-                if not _passesTimeFilter(s, time_filter):
-                    continue
-                daySlacks.append(s)
-        if self.cachedSlacks and daySlacks and dt.strftime(daySlacks[-1].time, DATEFMT) == dt.strftime(self.cachedSlacks[-1].time, DATEFMT):
-            # cached slacks might not have a clean break at end and only include 1st half of final day, so don't return
-            # cached slacks for the last day in the cache
-            return []
-        return daySlacks
+    def _getSlacksOnDay(self, day, time_filter):
+        """Get slacks from cache for the specified day, applying time filter."""
+        day_str = dt.strftime(day, DATEFMT)
+        result = []
+        for s in self._cached_slacks:
+            if dt.strftime(s.time, DATEFMT) == day_str:
+                if _passesTimeFilter(s, time_filter):
+                    result.append(s)
+        return result
 
-    # Returns a list of slacks for the given day, retrieves new web data if the current data doesn't have info for day.
-    # time_filter: 'day' for daytime only, 'night' for nighttime only, 'all' for all times
     def getSlacks(self, day, time_filter):
-        if 'ca_id' not in self.station or not self.station['ca_id']:
+        """
+        Returns a list of slacks for the given day.
+
+        Uses cached data if available, otherwise fetches a 14-day window from the API.
+        """
+        station_id = self._get_station_id()
+        if not station_id:
             return []
-        slacks = self.__getSlacksOnDay(day, self.cachedSlacks, time_filter)
-        if slacks:
-            return slacks
-        # else:
-        #     print('unable to use cached results for day: {}'.format(dt.strftime(day, DATEFMT)))
-        #     for sl in self.cachedSlacks:
-        #         print("\t{}".format(sl))
-        #         print("\t comparing to: {}".format(dt.strftime(sl.time, DATEFMT)))
 
-        dir, speed = self._getAPIResponses(day)
-        allSlacks = self.__parseSlacks(dir, speed, moon.phase(day))
+        # Fetch new data if cache doesn't cover the requested day
+        if not self._cache_covers_day(day):
+            self._fetchAndCacheSlacks(day)
 
-        # time zone difference with utz is so large we get all the slacks 1 day before to 14 days after and then pick
-        # the ones on the requested day
-        return self.__getSlacksOnDay(day, allSlacks, time_filter)
+        return self._getSlacksOnDay(day, time_filter)
 
 class XTideDockerInterpreter(Interpreter):
     def __init__(self, baseUrl, station):
@@ -851,7 +890,7 @@ class CanadaPDFInterpreter(Interpreter):
     for Canadian current stations. The PDF URL pattern is:
     https://tides.gc.ca/sites/tides/files/{year-1}-11/{station_code}_{year}.pdf
 
-    Requires the station to have a 'ca_pdf_code' field (e.g., "08108" for Seymour Narrows).
+    Requires the station to have a 'ca_code' field (e.g., "08108" for Seymour Narrows).
     """
 
     def __init__(self, baseUrl, station):
@@ -862,8 +901,8 @@ class CanadaPDFInterpreter(Interpreter):
 
     def _getStationCode(self):
         """Get the CHS station code for PDF download."""
-        if 'ca_pdf_code' in self.station and self.station['ca_pdf_code']:
-            return self.station['ca_pdf_code']
+        if 'ca_code' in self.station and self.station['ca_code']:
+            return self.station['ca_code']
         return None
 
     def _ensureCachedData(self, year):
@@ -873,7 +912,7 @@ class CanadaPDFInterpreter(Interpreter):
 
         station_code = self._getStationCode()
         if not station_code:
-            print(f"Error: Station '{self.station.get('name', 'unknown')}' does not have 'ca_pdf_code' configured")
+            print(f"Error: Station '{self.station.get('name', 'unknown')}' does not have 'ca_code' configured")
             return False
 
         # Build the PDF URL
