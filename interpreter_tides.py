@@ -32,7 +32,7 @@ from interpreter_common import (
     passes_time_filter,
     date_str,
     time_str,
-    get_canada_station_id,
+    get_canada_station_id_local,
 )
 
 # Re-export time filter constants for consumers of this module
@@ -273,7 +273,7 @@ class CanadaTideInterpreter(TideInterpreter):
     def _get_station_id(self) -> Optional[str]:
         """Look up the internal station ID from the station code."""
         if not self._internal_station_id:
-            result = get_canada_station_id(self.station)
+            result = get_canada_station_id_local(self.station)
             self._internal_station_id = result
         return self._internal_station_id
 

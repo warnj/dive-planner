@@ -6,6 +6,8 @@ from datetime import datetime as dt
 from datetime import timedelta as td
 from typing import Optional, Any
 import requests
+import json
+import os
 
 # https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
 TIMEPARSEFMT = '%Y-%m-%d %I:%M%p'  # example: 2019-01-18 09:36AM
@@ -69,6 +71,58 @@ def get_canada_station_id(
 
     except requests.RequestException as e:
         print(f"Error looking up Canadian station '{station_name}': {e}")
+        return None
+
+
+def get_canada_station_id_local(
+    station: dict[str, Any]
+) -> Optional[str]:
+    """
+    Look up the internal station ID for a Canadian station from the local JSON file.
+
+    This is a local alternative to get_canada_station_id that reads from
+    canada_stations.json instead of making an API call, reducing load on the
+    remote API.
+
+    The Canada API uses MongoDB-style internal IDs for data requests,
+    but we configure stations using human-readable codes (e.g., "08426").
+    This function searches the local JSON file to get the internal ID.
+
+    Args:
+        station: Station config dict from dive_sites.json
+
+    Returns:
+        Internal station ID string, or None if not found
+    """
+    # First try ca_id directly (already an internal ID)
+    if station.get('ca_id'):
+        return station['ca_id']
+
+    # Fall back to ca_code for lookup
+    station_code = station.get('ca_code')
+    if not station_code:
+        return None
+    station_name = station.get('name', 'unknown')
+
+    try:
+        # Load the canada_stations.json file from the same directory as this script
+        json_path = os.path.join(os.path.dirname(__file__), 'canada_stations.json')
+        with open(json_path, 'r') as f:
+            stations = json.load(f)
+
+        # Iterate through stations to find the matching code
+        for s in stations:
+            if s.get('code') == station_code:
+                return s.get('id')
+
+        print(f"Warning: Canadian station '{station_name}' (code={station_code}) not found in local JSON")
+        return None
+
+    except FileNotFoundError:
+        print(f"Error: canada_stations.json not found")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"Error parsing canada_stations.json: {e}")
         return None
 
 
