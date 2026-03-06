@@ -26,8 +26,7 @@ TIME_FILTER_ALL = 'all'              # All times
 
 
 def get_canada_station_id(
-    station: dict[str, Any],
-    station_code: Optional[str] = None
+    station: dict[str, Any]
 ) -> Optional[str]:
     """
     Look up the internal station ID for a Canadian station from the CHS API.
@@ -43,17 +42,14 @@ def get_canada_station_id(
     Returns:
         Internal station ID string, or None if not found
     """
-    # If no explicit station_code provided, try to get it from the station config
-    if not station_code:
-        # First try ca_id directly (already an internal ID)
-        if station.get('ca_id'):
-            return station['ca_id']
-        # Fall back to ca_code or ca_code for lookup
-        station_code = station.get('ca_code')
+    # First try ca_id directly (already an internal ID)
+    if station.get('ca_id'):
+        return station['ca_id']
 
+    # Fall back to ca_code or ca_code for lookup
+    station_code = station.get('ca_code')
     if not station_code:
         return None
-
     station_name = station.get('name', 'unknown')
 
     try:

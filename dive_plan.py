@@ -275,7 +275,7 @@ def main():
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
         # SITES = append(SITES, 'Kelsey Bay')
-        SITES = append(SITES, 'Seymour Narrows')
+        # SITES = append(SITES, 'Seymour Narrows')
         # SITES = append(SITES, 'Row and be Dammed')
         # SITES = append(SITES, 'Whiskey Point')
         # SITES = append(SITES, 'Argonaut Wharf')
@@ -309,9 +309,9 @@ def main():
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
-        # SITES = append(SITES, 'Skyline Wall')
+        SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
-        # SITES = append(SITES, 'Deception Pass')
+        SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
@@ -346,11 +346,11 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    # args.START = dt(2026, 2, 28)
-    args.START = dt.now()
-    args.DAYS_IN_FUTURE = 14
-    # args.IGNORE_MAX_SPEED = True
-    # args.INCLUDE_WORKDAYS = True
+    args.START = dt(2026, 3, 13)
+    # args.START = dt.now()
+    args.DAYS_IN_FUTURE = 2
+    args.IGNORE_MAX_SPEED = True
+    args.INCLUDE_WORKDAYS = True
     # args.TIME_FILTER = 'all'          # All slacks regardless of time
     # args.TIME_FILTER = 'day'          # Only daytime slacks (sunrise to sunset)
     # args.TIME_FILTER = 'night'        # Only nighttime slacks (sunset to sunrise)
@@ -386,10 +386,10 @@ def main():
         if SITES and siteData['name'] not in SITES:
             continue
         station = getStation(data['stations'], siteData['data'])
-
         if not station:
             print(f"Error: No station found for site '{siteData['name']}'")
             continue
+        print(siteData['name'])
 
         # Build list of (interpreter, label) tuples based on available configuration
         interpreters = []
