@@ -37,10 +37,11 @@ def main():
     # STATIONS.append('Gold River')
     # STATIONS.append('Seymour Narrows')
     # STATIONS.append('Campbell River')
-    STATIONS.append('Northwest Bay')
+    # STATIONS.append('Northwest Bay')
     # STATIONS.append('Nanaimo')
     # STATIONS.append('Brentwood Bay')
 
+    # STATIONS.append('Burrows Bay')
     # STATIONS.append('Bowman Bay')
     # STATIONS.append('Hanbury Point, North San Juan Island')
     # STATIONS.append('Kanaka Bay, South San Juan Island')
