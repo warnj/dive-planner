@@ -27,12 +27,14 @@ from pytz import timezone
 from interpreter_common import (
     TIMEPARSEFMT_TBONE,
     DATEFMT,
+    TIMEFMT,
     TIME_FILTER_ALL,
     CANADA_API_BASE_URL,
     passes_time_filter,
     date_str,
     time_str,
     get_canada_station_id_local,
+    DiveWindow,
 )
 
 # Re-export time filter constants for consumers of this module
@@ -96,6 +98,134 @@ class Tide:
 
     def __repr__(self) -> str:
         return self.__str__()
+
+
+class TideDiveWindow(DiveWindow):
+    """
+    A dive window derived from tide height predictions.
+
+    Maps tide concepts onto the DiveWindow interface:
+    - slackBeforeEbb = isHighTide (high tide → water ebbs/drops next)
+    - magnitude = height change between this tide and its neighbors
+    - max_flood/max_ebb in site config = max allowed height change (feet)
+    - max_total_height in site config = max allowed sum of rise + fall height change
+    """
+
+    def __init__(self, tide: 'Tide', prev_tide: Optional['Tide'] = None,
+                 next_tide: Optional['Tide'] = None) -> None:
+        super().__init__()
+        self.tide = tide
+        self.time = tide.time
+        self.sunriseTime = tide.sunriseTime
+        self.sunsetTime = tide.sunsetTime
+        self.moonPhase = tide.moonPhase
+        # High tide = slack before ebb (water will drop); Low tide = slack before flood (water will rise)
+        self.slackBeforeEbb = tide.isHighTide
+
+        # Height changes to neighboring tides
+        self.prevTide: Optional['Tide'] = prev_tide
+        self.nextTide: Optional['Tide'] = next_tide
+
+        # Compute height changes
+        # "rise" = height change on the flood (rising) side
+        # "fall" = height change on the ebb (falling) side
+        if tide.isHighTide:
+            # High tide: prior was rising (flood side), next is falling (ebb side)
+            self.riseHeight: float = abs(tide.height - prev_tide.height) if prev_tide else 0.0
+            self.fallHeight: float = abs(tide.height - next_tide.height) if next_tide else 0.0
+        else:
+            # Low tide: prior was falling (ebb side), next is rising (flood side)
+            self.fallHeight = abs(prev_tide.height - tide.height) if prev_tide else 0.0
+            self.riseHeight = abs(next_tide.height - tide.height) if next_tide else 0.0
+
+    def __str__(self) -> str:
+        if self.slackBeforeEbb:
+            # High tide: show rise → HIGH → fall
+            return '{:.1f}ft rise -> {} -> {:.1f}ft fall'.format(
+                self.riseHeight, date_str(self.time), self.fallHeight)
+        else:
+            # Low tide: show fall → LOW → rise
+            return '{:.1f}ft fall -> {} -> {:.1f}ft rise'.format(
+                self.fallHeight, date_str(self.time), self.riseHeight)
+
+    def logString(self) -> str:
+        """Compact string with tide type and height."""
+        tide_type = 'High' if self.slackBeforeEbb else 'Low'
+        return '{} {} ({:.1f} ft)'.format(tide_type, time_str(self.time), self.tide.height)
+
+    def logStringWithSpeed(self) -> str:
+        """Show height changes with neighboring tide times."""
+        parts = []
+        if self.prevTide:
+            prev_type = 'H' if self.prevTide.isHighTide else 'L'
+            parts.append('{}{:.1f}ft({})'.format(prev_type, self.prevTide.height, time_str(self.prevTide.time)))
+        parts.append('{:.1f}ft({})'.format(self.tide.height, time_str(self.time)))
+        if self.nextTide:
+            next_type = 'H' if self.nextTide.isHighTide else 'L'
+            parts.append('{}{:.1f}ft({})'.format(next_type, self.nextTide.height, time_str(self.nextTide.time)))
+        return ' > '.join(parts)
+
+    def magnitude(self) -> float:
+        """Total height change (rise + fall) around this tide event."""
+        return self.riseHeight + self.fallHeight
+
+    def isDiveable(self, site: dict, ignoreMaxMagnitude: bool) -> tuple[bool, str]:
+        """
+        Check if this tide window is diveable at the given tide-based site.
+
+        For tide sites:
+        - slackBeforeEbb (high tide): diveable_before_ebb check
+        - not slackBeforeEbb (low tide): diveable_before_flood check
+        - max_flood = max allowed rise height (low→high change in feet)
+        - max_ebb = max allowed fall height (high→low change in feet)
+        - max_total_height = max allowed total height change
+        """
+        if self.slackBeforeEbb and not site['diveable_before_ebb']:
+            return False, 'Not diveable at high tide'
+        elif not self.slackBeforeEbb and not site['diveable_before_flood']:
+            return False, 'Not diveable at low tide'
+        elif not ignoreMaxMagnitude:
+            if self.riseHeight > site['max_flood']:
+                return False, 'Rise too large ({:.1f}ft > {:.1f}ft max)'.format(
+                    self.riseHeight, site['max_flood'])
+            if self.fallHeight > site['max_ebb']:
+                return False, 'Fall too large ({:.1f}ft > {:.1f}ft max)'.format(
+                    self.fallHeight, site['max_ebb'])
+            max_total = site.get('max_total_height', site.get('max_total_speed', float('inf')))
+            if self.riseHeight + self.fallHeight > max_total:
+                return False, 'Total height change too large ({:.1f}ft > {:.1f}ft max)'.format(
+                    self.riseHeight + self.fallHeight, max_total)
+        return True, 'Diveable'
+
+    def printDive(self, site: dict, titleMessage: str, Color) -> None:
+        """Print detailed dive plan for this tide window."""
+        from interpreter import _getEntryTimes
+        times = _getEntryTimes(self, site)
+        if not times:
+            print('ERROR: a json key was expected that was not found')
+        else:
+            minCurrentTime, clubEntryTime, entryTime, exitTime = times
+            if self.sunriseTime:
+                warning = ''
+                if entryTime < self.sunriseTime:
+                    warning = 'BEFORE'
+                elif entryTime - datetime.timedelta(minutes=30) < self.sunriseTime:
+                    warning = 'near'
+                if warning:
+                    print('\t\tWARNING: entry time of {} is {} sunrise at {}'.format(date_str(entryTime),
+                        warning, date_str(self.sunriseTime)))
+
+            tide_label = 'High Tide' if self.slackBeforeEbb else 'Low Tide'
+            print('\t\t{}: {}'.format(titleMessage, self))
+            print('\t\t\t{} at {}, Height = {:.1f} ft, Duration = {}, SurfaceSwim = {}'
+                  .format(tide_label, date_str(minCurrentTime), self.tide.height,
+                          site['dive_duration'], site['surface_swim_time']))
+            print('\t\t\t{}Entry Time: {}{}\t(Exit time: {})'
+                  .format(Color.UNDERLINE, date_str(entryTime), Color.END, dt.strftime(exitTime, TIMEFMT)))
+            print('\t\t\t{}'.format(self.logString()))
+            print('\t\t\t{}'.format(self.logStringWithSpeed()))
+            print('\t\t\tHeight change = {:.1f} ft (rise={:.1f}, fall={:.1f})'.format(
+                self.magnitude(), self.riseHeight, self.fallHeight))
 
 
 class TideInterpreter:
@@ -202,6 +332,50 @@ class TideInterpreter:
             result.append(tide)
 
         return result
+
+    def getSlacks(self, day: dt, time_filter: str = TIME_FILTER_ALL) -> list[TideDiveWindow]:
+        """
+        Get dive windows for a single day, matching the Interpreter.getSlacks() signature.
+
+        Fetches tides for the day (plus neighbors for height-change calculation),
+        then wraps each tide into a TideDiveWindow.
+
+        Args:
+            day: datetime for the day to get dive windows for
+            time_filter: One of TIME_FILTER_DAY, TIME_FILTER_NIGHT, TIME_FILTER_ALL
+
+        Returns:
+            List of TideDiveWindow objects for the given day
+        """
+        # Fetch a wider range so we have neighboring tides for height change calculation
+        # We need at least the day before and after for accurate prev/next tide references
+        all_tides = self.getTides(day - datetime.timedelta(days=1), days_in_future=3, time_filter=TIME_FILTER_ALL)
+        if not all_tides:
+            return []
+
+        day_str = dt.strftime(day, DATEFMT)
+
+        # Build TideDiveWindows for tides on the requested day
+        windows: list[TideDiveWindow] = []
+        for i, tide in enumerate(all_tides):
+            tide_date_str = dt.strftime(tide.time, DATEFMT)
+            if tide_date_str != day_str:
+                continue
+
+            # Apply time filter
+            if not passes_time_filter(tide.time, tide.sunriseTime, tide.sunsetTime, time_filter):
+                continue
+
+            prev_tide = all_tides[i - 1] if i > 0 else None
+            next_tide = all_tides[i + 1] if i < len(all_tides) - 1 else None
+            windows.append(TideDiveWindow(tide, prev_tide, next_tide))
+
+        return windows
+
+    @staticmethod
+    def getDayUrl(baseUrl, day) -> Optional[str]:
+        """TideInterpreters don't have per-day URLs; return None."""
+        return None
 
 
 class NoaaTideInterpreter(TideInterpreter):

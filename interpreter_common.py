@@ -2,6 +2,7 @@
 Common constants and utilities shared between interpreter.py and interpreter_tides.py.
 """
 
+from abc import ABC, abstractmethod
 from datetime import datetime as dt
 from datetime import timedelta as td
 from typing import Optional, Any
@@ -170,4 +171,87 @@ def time_str(date):
     if result.startswith('0'):
         return result[1:]  # remove leading 0 (i.e. 9:02AM instead of 09:02AM)
     return result
+
+
+class DiveWindow(ABC):
+    """
+    Abstract base class representing a diveable window of time.
+
+    A DiveWindow is a point in time (slack current or high/low tide) around which
+    a dive can be planned. Subclasses represent different types of predictions:
+    - Slack: based on current speed predictions (knots)
+    - TideDiveWindow: based on tide height predictions (feet)
+
+    Common fields:
+        time: datetime of the event (slack current or high/low tide)
+        sunriseTime: datetime of sunrise on this day
+        sunsetTime: datetime of sunset on this day
+        moonPhase: moon phase 0-27, -1 if not set
+        slackBeforeEbb: True if this window is before ebb
+            For currents: slack before ebb current
+            For tides: high tide (water will ebb/drop after this)
+    """
+
+    def __init__(self) -> None:
+        self.time: Optional[dt] = None
+        self.sunriseTime: Optional[dt] = None
+        self.sunsetTime: Optional[dt] = None
+        self.moonPhase: float = -1
+        self.slackBeforeEbb: bool = False
+
+    @abstractmethod
+    def __str__(self) -> str:
+        """Full string representation including date."""
+        ...
+
+    @abstractmethod
+    def logString(self) -> str:
+        """Compact string without date info (only time) for logbook entry."""
+        ...
+
+    @abstractmethod
+    def logStringWithSpeed(self) -> str:
+        """Compact string with timing of max speed/height change."""
+        ...
+
+    @abstractmethod
+    def magnitude(self) -> float:
+        """
+        Overall magnitude of the exchange around this dive window.
+
+        For currents: sum of absolute flood + ebb speeds (knots).
+        For tides: height change between adjacent high and low tides (feet).
+        """
+        ...
+
+    @abstractmethod
+    def isDiveable(self, site: dict, ignoreMaxMagnitude: bool) -> tuple[bool, str]:
+        """
+        Returns (diveable, reason) for this window at the given site config.
+
+        Args:
+            site: Site config dict from dive_sites.json
+            ignoreMaxMagnitude: If True, skip max speed/height checks
+
+        Returns:
+            Tuple of (is_diveable, human-readable reason string)
+        """
+        ...
+
+    @abstractmethod
+    def printDive(self, site: dict, titleMessage: str, Color) -> None:
+        """
+        Print detailed dive information for this window at the given site.
+
+        Args:
+            site: Site config dict from dive_sites.json
+            titleMessage: Label to print (e.g. "Diveable" or "Diveable off slack")
+            Color: Color class with ANSI escape code attributes
+        """
+        ...
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+
 
