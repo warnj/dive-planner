@@ -304,12 +304,12 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2026, 3, 13)
+    args.START = dt(2023, 9, 23)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 2
-    args.IGNORE_MAX_SPEED = True
+    args.DAYS_IN_FUTURE = 0
+    # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    # args.TIME_FILTER = 'all'          # All slacks regardless of time
+    args.TIME_FILTER = 'all'          # All slacks regardless of time
     # args.TIME_FILTER = 'day'          # Only daytime slacks (sunrise to sunset)
     # args.TIME_FILTER = 'night'        # Only nighttime slacks (sunset to sunrise)
     # args.TIME_FILTER = 'early_night'  # Only early night slacks (45min after sunset to 11pm)
