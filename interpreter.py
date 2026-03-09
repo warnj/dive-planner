@@ -966,7 +966,12 @@ class XTideDockerInterpreter(Interpreter):
 
     def _parse_xtide_events(self, lines):
         # Return list of tuples (index, kind, time, speed)
-        # kind in {'max_flood','max_ebb','slack_flood','slack_ebb'}
+        # kind in {'max_flood','max_ebb','slack_flood','slack_ebb','min_ebb','min_flood'}
+        #
+        # 'min_ebb' and 'min_flood' are pseudo-slack events that XTide reports when the
+        # current slows to a minimum but never fully reaches zero (no true slack).
+        # Example: on some days at Admiralty Inlet, the ebb current slows from -1.3 to -0.4
+        # then increases to -2.4 without ever reaching slack. XTide reports this as 'Min Ebb'.
         events = []
         for idx, line in enumerate(lines):
             if 'knots' not in line:
@@ -995,13 +1000,22 @@ class XTideDockerInterpreter(Interpreter):
                 events.append((idx, 'slack_flood', timeVal, 0.0))
             elif 'slack' in lower and 'ebb begins' in lower:
                 events.append((idx, 'slack_ebb', timeVal, 0.0))
+            elif 'min ebb' in lower:
+                # Pseudo-slack: ebb current at its weakest but never reaches zero
+                events.append((idx, 'min_ebb', timeVal, -abs(speed)))
+            elif 'min flood' in lower:
+                # Pseudo-slack: flood current at its weakest but never reaches zero
+                events.append((idx, 'min_flood', timeVal, abs(speed)))
         return events
 
     def _build_slacks_from_events(self, events):
-        # Build Slack objects for the whole cached range, computing sunrise/sunset per slack day
+        # Build Slack objects for the whole cached range, computing sunrise/sunset per slack day.
+        # Handles both true slacks (slack_flood, slack_ebb) and pseudo-slacks (min_ebb, min_flood)
+        # where the current slows to a minimum but never fully reaches zero.
         slacks = []
-        for i, (idx, kind, t, _) in enumerate(events):
-            if kind not in ('slack_flood', 'slack_ebb'):
+        slack_kinds = ('slack_flood', 'slack_ebb', 'min_ebb', 'min_flood')
+        for i, (idx, kind, t, spd) in enumerate(events):
+            if kind not in slack_kinds:
                 continue
             preMax = None
             postMax = None
@@ -1015,9 +1029,37 @@ class XTideDockerInterpreter(Interpreter):
                         postMax = events[j]
                         break
                 slackBeforeEbb = True
-            else:
+            elif kind == 'slack_flood':
+                # True slack before flood: previous max was ebb, next max is flood
                 for j in range(i - 1, -1, -1):
                     if events[j][1] == 'max_ebb':
+                        preMax = events[j]
+                        break
+                for j in range(i + 1, len(events)):
+                    if events[j][1] == 'max_flood':
+                        postMax = events[j]
+                        break
+                slackBeforeEbb = False
+            elif kind == 'min_ebb':
+                # Pseudo-slack during ebb: current is ebbing throughout but reaches a minimum.
+                # Previous max ebb is the "pre" speed, next max ebb is the "post" speed.
+                # This replaces what would normally be slack_flood + max_flood + slack_ebb.
+                # Treat as slackBeforeEbb since ebb resumes after this minimum.
+                for j in range(i - 1, -1, -1):
+                    if events[j][1] == 'max_ebb':
+                        preMax = events[j]
+                        break
+                for j in range(i + 1, len(events)):
+                    if events[j][1] == 'max_ebb':
+                        postMax = events[j]
+                        break
+                slackBeforeEbb = True
+            elif kind == 'min_flood':
+                # Pseudo-slack during flood: current is flooding throughout but reaches a minimum.
+                # Previous max flood is the "pre" speed, next max flood is the "post" speed.
+                # Treat as slackBeforeEbb=False since flood resumes after this minimum.
+                for j in range(i - 1, -1, -1):
+                    if events[j][1] == 'max_flood':
                         preMax = events[j]
                         break
                 for j in range(i + 1, len(events)):
@@ -1488,6 +1530,38 @@ class DairikiInterpreter(Interpreter):
         for events in date_events.values():
             all_month_maxes.extend(events['maxes'])
         all_month_maxes.sort(key=lambda x: x['time'])
+
+        # Collect all turns across the month for pseudo-turn detection
+        all_month_turns = []
+        for events in date_events.values():
+            all_month_turns.extend(events['turns'])
+        all_month_turns.sort()
+        # Detect pseudo-turns: when consecutive maxes are the same direction (both ebb
+        # or both flood) with no real turn between them, the weaker max is a pseudo-slack
+        # (equivalent to XTide's "Min Ebb" / "Min Flood"). Promote these to turns.
+        # Example: on days with no true slack, Dairiki shows: -1.2E, -0.1E, -2.3E
+        # The -0.1E is nearly slack water and should be treated as a turn.
+        promoted_indices = set()
+        for i in range(len(all_month_maxes) - 1):
+            if i in promoted_indices:
+                continue
+            m1 = all_month_maxes[i]
+            m2 = all_month_maxes[i + 1]
+            # Check if same direction (both ebb or both flood)
+            if m1['is_flood'] == m2['is_flood']:
+                # Check no real turn exists between them
+                has_turn_between = any(m1['time'] < t < m2['time'] for t in all_month_turns)
+                if not has_turn_between:
+                    # Promote the weaker max to a turn (pseudo-slack)
+                    if abs(m1['speed']) <= abs(m2['speed']):
+                        pseudo = m1
+                        promoted_indices.add(i)
+                    else:
+                        pseudo = m2
+                        promoted_indices.add(i + 1)
+                    pseudo_date_key = dt.strftime(pseudo['time'], DATEFMT)
+                    if pseudo_date_key in date_events:
+                        date_events[pseudo_date_key]['turns'].append(pseudo['time'])
 
         # Identify the first and last day of the month
         first_day = dt(year, month, 1)

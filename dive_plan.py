@@ -228,7 +228,7 @@ def main():
     if not SITES:
         SITES = []  # Consider all sites
         # SITES = append(SITES, 'Nakwakto')
-        # SITES = append(SITES, 'Browning Pass')
+        SITES = append(SITES, 'Browning Pass')
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
         # SITES = append(SITES, 'Kelsey Bay')
@@ -270,7 +270,7 @@ def main():
         # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
         # SITES = append(SITES, 'Deception Pass')
-        SITES = append(SITES, 'Keystone Jetty')
+        # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
         # SITES = append(SITES, 'Hood Canal Bridge')
