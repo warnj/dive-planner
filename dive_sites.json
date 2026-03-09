@@ -1588,6 +1588,23 @@
     },
 
 
+    {
+      "name": "Browning Pass",
+      "data_tides": "Walker Group",
+      "COMMENT": "",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 10,
+      "max_ebb": 10,
+      "max_total_height": 20,
+      "dive_duration": 80,
+      "surface_swim_time": 0,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": true,
+      "diveable_off_slack": false
+    },
+
+
 
     {
       "name": "Saltwater State Park",

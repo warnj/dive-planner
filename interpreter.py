@@ -30,6 +30,7 @@ from interpreter_common import (
     date_str,
     time_str,
     get_canada_station_id_local,
+    DiveWindow,
 )
 
 
@@ -49,16 +50,36 @@ def dateStr(date):
 def timeStr(date):
     return time_str(date)
 
-class Slack:
-    time = None
-    sunriseTime = None
-    sunsetTime = None  # this is never used, but might be interesting to print it sometimes
-    moonPhase = -1
-    slackBeforeEbb = False
-    ebbSpeed = 0.0  # negative number
-    floodSpeed = 0.0  # positive number
-    maxEbbTime = None
-    maxFloodTime = None
+
+def _getEntryTimes(s, site):
+    """
+    Compute entry/exit times for a dive window (slack or tide) at a site.
+
+    Returns (minCurrentTime, clubEntryTime, entryTime, exitTime) or None on KeyError.
+    Works for both Slack and TideDiveWindow since both have slackBeforeEbb/time fields,
+    and both site types have slack_before_ebb/slack_before_flood/dive_duration/surface_swim_time.
+    """
+    try:
+        if s.slackBeforeEbb:
+            delta = td(minutes=site['slack_before_ebb'])
+        else:
+            delta = td(minutes=site['slack_before_flood'])
+        minCurrentTime = s.time + delta
+        entryTime = minCurrentTime - td(minutes=site['dive_duration'] / 2) - td(minutes=site['surface_swim_time'])
+        exitTime = entryTime + 2 * td(minutes=site['surface_swim_time']) + td(minutes=site['dive_duration'])
+        clubEntryTime = minCurrentTime - td(minutes=30)
+        return minCurrentTime, clubEntryTime, entryTime, exitTime
+    except KeyError:
+        return None
+
+
+class Slack(DiveWindow):
+    def __init__(self):
+        super().__init__()
+        self.ebbSpeed: float = 0.0  # negative number
+        self.floodSpeed: float = 0.0  # positive number
+        self.maxEbbTime = None
+        self.maxFloodTime = None
 
     def __str__(self):
         if self.slackBeforeEbb:
@@ -84,8 +105,49 @@ class Slack:
     def speedSum(self):
         return abs(self.floodSpeed) + abs(self.ebbSpeed)
 
-    def __repr__(self):
-        return self.__str__()
+    def magnitude(self):
+        return self.speedSum()
+
+    def isDiveable(self, site: dict, ignoreMaxMagnitude: bool) -> tuple[bool, str]:
+        """Check if this slack is diveable at the given current-based site."""
+        if self.slackBeforeEbb and not site['diveable_before_ebb']:
+            return False, 'Not diveable before ebb'
+        elif not self.slackBeforeEbb and not site['diveable_before_flood']:
+            return False, 'Not diveable before flood'
+        elif site['diveable_off_slack'] and \
+                (self.floodSpeed < site['max_diveable_flood'] or abs(self.ebbSpeed) < site['max_diveable_ebb']):
+            return True, 'Diveable off slack'
+        elif not ignoreMaxMagnitude and (self.floodSpeed > site['max_flood'] or abs(self.ebbSpeed) > abs(site['max_ebb']) or
+                                     self.floodSpeed + abs(self.ebbSpeed) > site['max_total_speed']):
+            return False, 'Current too strong'
+        else:
+            return True, 'Diveable'
+
+    def printDive(self, site: dict, titleMessage: str, Color) -> None:
+        """Print detailed dive plan for this slack current window."""
+        times = _getEntryTimes(self, site)
+        if not times:
+            print('ERROR: a json key was expected that was not found')
+        else:
+            minCurrentTime, clubEntryTime, entryTime, exitTime = times
+            if self.sunriseTime:
+                warning = ''
+                if entryTime < self.sunriseTime:
+                    warning = 'BEFORE'
+                elif entryTime - td(minutes=30) < self.sunriseTime:
+                    warning = 'near'
+                if warning:
+                    print('\t\tWARNING: entry time of {} is {} sunrise at {}'.format(dateStr(entryTime),
+                        warning, dateStr(self.sunriseTime)))
+
+            print('\t\t{}: {}'.format(titleMessage, self))
+            print('\t\t\tMinCurrentTime = {}, Duration = {}, SurfaceSwim = {}'
+                  .format(dateStr(minCurrentTime), site['dive_duration'], site['surface_swim_time']))
+            print('\t\t\t{}Entry Time: {}{}\t(Exit time: {})'
+                  .format(Color.UNDERLINE, dateStr(entryTime), Color.END, dt.strftime(exitTime, TIMEFMT)))
+            print('\t\t\t{}'.format(self.logString()))
+            print('\t\t\t{}'.format(self.logStringWithSpeed()))
+            print('\t\t\tSpeed sum = {:.1f}'.format(self.speedSum()))
 
 # Base class to download and parse current data from various websites
 class Interpreter:
@@ -533,15 +595,43 @@ class CanadaAPIInterpreter(Interpreter):
         start = (day + datetime.timedelta(days=-1))
         end = (day + datetime.timedelta(days=14))
 
+        from_str = f"{start.strftime('%Y-%m-%d')}T00:00:00Z"
+        to_str = f"{end.strftime('%Y-%m-%d')}T00:30:00Z"
+
         url = (
             f"{CANADA_API_BASE_URL}/stations/{station_id}/data"
             f"?time-series-code=wcp1-events"
-            f"&from={start.strftime('%Y-%m-%d')}T00:00:00Z"
-            f"&to={end.strftime('%Y-%m-%d')}T00:30:00Z"
+            f"&from={from_str}"
+            f"&to={to_str}"
         )
 
         eventsResponse = self.__getJsonResponse(url)
-        slacks = self.__parseSlacks(eventsResponse, moon.phase(day))
+
+        # Also fetch direction data to determine flood vs ebb when qualifiers are missing
+        directionData = None
+        has_qualifiers = any(e.get('qualifier') for e in eventsResponse) if eventsResponse else False
+        if not has_qualifiers and eventsResponse:
+            # Find the first extrema event to center our direction query around
+            first_extrema = next((e for e in eventsResponse if e['value'] > 0.0), None)
+            if first_extrema:
+                CanadaAPIInterpreter.numAPICalls += 1
+                # Fetch just one day of direction data around the first extrema
+                # (the wcdp1 API limits continuous data queries to short windows)
+                extrema_date = first_extrema['eventDate'][:10]  # e.g. "2026-03-12"
+                dir_from = f"{extrema_date}T00:00:00Z"
+                dir_to = f"{extrema_date}T23:59:00Z"
+                dir_url = (
+                    f"{CANADA_API_BASE_URL}/stations/{station_id}/data"
+                    f"?time-series-code=wcdp1"
+                    f"&from={dir_from}"
+                    f"&to={dir_to}"
+                )
+                try:
+                    directionData = self.__getJsonResponse(dir_url)
+                except Exception as e:
+                    print(f"Warning: Could not fetch direction data: {e}")
+
+        slacks = self.__parseSlacks(eventsResponse, moon.phase(day), directionData)
 
         # Update cache
         self._cached_slacks = slacks
@@ -549,16 +639,28 @@ class CanadaAPIInterpreter(Interpreter):
             self._cache_start = slacks[0].time.date()
             self._cache_end = slacks[-1].time.date()
 
-    def __parseSlacks(self, eventsResponse, moonPhase):
+    def __parseSlacks(self, eventsResponse, moonPhase, directionData=None):
         """
         Parse the wcp1-events response into Slack objects.
 
-        The response contains events with qualifier: SLACK, EXTREMA_FLOOD, EXTREMA_EBB
-        Events are in chronological order, so we can find the flood/ebb before and after each slack.
+        Supports two API formats:
+        1. Old format: events have 'qualifier' field (SLACK, EXTREMA_FLOOD, EXTREMA_EBB)
+        2. New format: no qualifiers; slacks have value==0.0, extrema have value>0.0.
+           Flood vs ebb is determined from the wcdp1 direction data.
         """
         if not eventsResponse:
             return []
 
+        # Check if old-style qualifiers are present
+        has_qualifiers = any(e.get('qualifier') for e in eventsResponse)
+
+        if has_qualifiers:
+            return self.__parseSlacksWithQualifiers(eventsResponse, moonPhase)
+        else:
+            return self.__parseSlacksFromValues(eventsResponse, moonPhase, directionData)
+
+    def __parseSlacksWithQualifiers(self, eventsResponse, moonPhase):
+        """Parse slacks using the old qualifier-based API format."""
         slacks = []
         n = len(eventsResponse)
 
@@ -613,6 +715,139 @@ class CanadaAPIInterpreter(Interpreter):
             slacks.append(s)
 
         return slacks
+
+    def __parseSlacksFromValues(self, eventsResponse, moonPhase, directionData=None):
+        """
+        Parse slacks from the new API format (no qualifiers).
+
+        Slacks are identified by value == 0.0, extrema by value > 0.0.
+        Flood vs ebb is determined by:
+        1. Looking up the direction of the first extrema from wcdp1 data
+        2. Since flood and ebb alternate, all subsequent extrema alternate direction
+        """
+        if not eventsResponse:
+            return []
+
+        # Build a direction lookup: map eventDate -> direction_degrees
+        dir_lookup = {}
+        if directionData:
+            for d in directionData:
+                if isinstance(d, dict):
+                    dir_lookup[d['eventDate']] = d['value']
+
+        # Separate slacks and extrema, preserving order
+        extrema_indices = [i for i, e in enumerate(eventsResponse) if e['value'] > 0.0]
+
+        # Determine the direction of the first extrema and alternate from there
+        first_is_ebb = None
+        if extrema_indices and dir_lookup:
+            first_extrema = eventsResponse[extrema_indices[0]]
+            first_is_ebb = self.__isEbbFromDirection(first_extrema['eventDate'], dir_lookup)
+
+        # Label each extrema as ebb or flood (they alternate)
+        for idx_pos, event_idx in enumerate(extrema_indices):
+            if first_is_ebb is not None:
+                eventsResponse[event_idx]['_is_ebb'] = first_is_ebb if (idx_pos % 2 == 0) else (not first_is_ebb)
+            else:
+                eventsResponse[event_idx]['_is_ebb'] = None
+
+        slacks = []
+        n = len(eventsResponse)
+
+        for i, event in enumerate(eventsResponse):
+            if event['value'] != 0.0:
+                continue
+
+            s = Slack()
+            s.moonPhase = moonPhase
+            s.time = self._parseTime(event['eventDate'])
+
+            # Find previous extrema
+            prevExtrema = None
+            for j in range(i - 1, -1, -1):
+                if eventsResponse[j]['value'] > 0.0:
+                    prevExtrema = eventsResponse[j]
+                    break
+
+            # Find next extrema
+            nextExtrema = None
+            for j in range(i + 1, n):
+                if eventsResponse[j]['value'] > 0.0:
+                    nextExtrema = eventsResponse[j]
+                    break
+
+            if not prevExtrema or not nextExtrema:
+                continue
+
+            # Determine slack before ebb from direction labels
+            next_is_ebb = nextExtrema.get('_is_ebb')
+            prev_is_ebb = prevExtrema.get('_is_ebb')
+
+            if next_is_ebb is not None:
+                s.slackBeforeEbb = next_is_ebb
+            elif prev_is_ebb is not None:
+                # If we know the previous direction, the next must be the opposite
+                s.slackBeforeEbb = not prev_is_ebb
+            else:
+                # No direction data available — skip this slack
+                continue
+
+            if s.slackBeforeEbb:
+                s.floodSpeed = prevExtrema['value']
+                s.maxFloodTime = self._parseTime(prevExtrema['eventDate'])
+                s.ebbSpeed = -nextExtrema['value']
+                s.maxEbbTime = self._parseTime(nextExtrema['eventDate'])
+            else:
+                s.ebbSpeed = -prevExtrema['value']
+                s.maxEbbTime = self._parseTime(prevExtrema['eventDate'])
+                s.floodSpeed = nextExtrema['value']
+                s.maxFloodTime = self._parseTime(nextExtrema['eventDate'])
+
+            # Add sunrise/sunset data
+            sunData = sun(self._astralCity.observer, date=s.time, tzinfo=timezone('US/Pacific'))
+            s.sunriseTime = sunData['sunrise'].replace(tzinfo=None)
+            s.sunsetTime = sunData['sunset'].replace(tzinfo=None)
+
+            slacks.append(s)
+
+        return slacks
+
+    @staticmethod
+    def __isEbbFromDirection(eventDate, dir_lookup):
+        """
+        Determine if an extrema is ebb based on direction data.
+
+        Uses the closest direction data point to the extrema time.
+        Convention: directions near 180° (south-ish, range 90-270) are ebb,
+        directions near 0°/360° (north-ish, outside 90-270) are flood.
+
+        This follows the Canadian convention where flood flows inland (northward
+        through narrows) and ebb flows seaward (southward).
+
+        Returns True for ebb, False for flood, None if no direction data available.
+        """
+        if not dir_lookup:
+            return None
+
+        # Parse the event time
+        event_time = dt.strptime(eventDate, "%Y-%m-%dT%H:%M:%SZ")
+
+        # Find the closest direction data point by time
+        best_dir = None
+        best_delta = None
+        for dir_date_str, dir_val in dir_lookup.items():
+            dir_time = dt.strptime(dir_date_str, "%Y-%m-%dT%H:%M:%SZ")
+            delta = abs((event_time - dir_time).total_seconds())
+            if best_delta is None or delta < best_delta:
+                best_delta = delta
+                best_dir = dir_val
+
+        if best_dir is None:
+            return None
+
+        # Direction convention: 90-270 degrees = ebb (seaward/southward)
+        # 0-90 or 270-360 = flood (inland/northward)
+        return 90 <= best_dir <= 270
 
     def _getSlacksOnDay(self, day, time_filter):
         """Get slacks from cache for the specified day, applying time filter."""
