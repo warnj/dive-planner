@@ -49,13 +49,14 @@ def main():
     # STATIONS.append('Sekiu')
     # STATIONS.append('Crescent Bay')
     # STATIONS.append('Ayock Point')
+    # STATIONS.append('Whitney Point, Dabob Bay')
     # STATIONS.append('La Push (Quillayute River)')
     # STATIONS.append('James Island (La Push)')
-    # STATIONS.append('Destruction Island')
+    STATIONS.append('Destruction Island')
     # STATIONS.append('Des Moines')
-    # args.START = dt(2025, 6, 19)
-    args.START = dt.now()
-    args.DAYS_IN_FUTURE = 3
+    args.START = dt(2026, 5, 23)
+    # args.START = dt.now()
+    args.DAYS_IN_FUTURE = 2
     # ------------------------------------------------------------------------------------------------------------------
 
     # Get tides for each station

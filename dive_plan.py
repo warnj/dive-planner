@@ -228,7 +228,7 @@ def main():
     if not SITES:
         SITES = []  # Consider all sites
         # SITES = append(SITES, 'Nakwakto')
-        SITES = append(SITES, 'Browning Pass')
+        # SITES = append(SITES, 'Browning Pass')
         # SITES = append(SITES, 'Weynton Pass')
         # SITES = append(SITES, 'Plumper Pass')
         # SITES = append(SITES, 'Kelsey Bay')
@@ -249,6 +249,7 @@ def main():
         # SITES = append(SITES, 'Second Narrows Vancouver')
 
         # SITES = append(SITES, 'Sekiu')
+        # SITES = append(SITES, 'Sekiu Tides')
         # SITES = append(SITES, 'Third Beach Pinnacle')
         # SITES = append(SITES, 'Hoko Reef')
         # SITES = append(SITES, 'Salt Creek NOAA')
@@ -260,6 +261,7 @@ def main():
         # SITES = append(SITES, 'Lime Kiln Discovery')
         # SITES = append(SITES, 'Lime Kiln Haro')
         # SITES = append(SITES, 'Lime Kiln Admiralty')
+        SITES = append(SITES, 'Eagle Point')
         # SITES = append(SITES, 'Peavine Pass')
         # SITES = append(SITES, 'Goose Island')
         # SITES = append(SITES, 'Kings Point')
@@ -304,13 +306,15 @@ def main():
         # dt(2022, 11, 13),
     ]
 
-    args.START = dt(2023, 9, 23)
+    # args.START = dt(2025, 6, 21)
+    # args.START = dt(2023, 5, 28)
+    args.START = dt(2026, 4, 24)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
-    # args.IGNORE_MAX_SPEED = True
+    args.DAYS_IN_FUTURE = 3
+    args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    args.TIME_FILTER = 'all'          # All slacks regardless of time
-    # args.TIME_FILTER = 'day'          # Only daytime slacks (sunrise to sunset)
+    # args.TIME_FILTER = 'all'          # All slacks regardless of time
+    args.TIME_FILTER = 'day'          # Only daytime slacks (sunrise to sunset)
     # args.TIME_FILTER = 'night'        # Only nighttime slacks (sunset to sunrise)
     # args.TIME_FILTER = 'early_night'  # Only early night slacks (45min after sunset to 11pm)
     # args.SORT = True

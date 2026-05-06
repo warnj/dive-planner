@@ -106,7 +106,15 @@ def parse_uddf(file_path: str) -> Optional[dict]:
 
         # --- Extract General Dive Information ---
         location_elem = root.find('.//uddf:divesite//uddf:location', ns)
-        dive_data['Location'] = location_elem.text if location_elem is not None else 'N/A'
+        site_name_elem = root.find('.//uddf:divesite//uddf:name', ns)
+        location = location_elem.text if location_elem is not None else 'N/A'
+        site_name = site_name_elem.text if site_name_elem is not None else None
+        if site_name and location != 'N/A':
+            dive_data['Location'] = f"{location} - {site_name}"
+        elif site_name:
+            dive_data['Location'] = site_name
+        else:
+            dive_data['Location'] = location
 
         # --- Extract Water Temperature ---
         temp_elements = dive_element.findall('.//uddf:waypoint/uddf:temperature', ns)
@@ -179,28 +187,42 @@ if __name__ == "__main__":
                 'date', 'start time', 'location', 'surface interval',
                 'max depth (ft)', 'avg depth (ft)', 'dive time (min)', '', 'min temp (F)', 'avg temp (F)'
             ]
+
+            all_dive_stats = []
+            for full_path in uddf_files_to_process:
+                dive_stats = parse_uddf(full_path)
+                if dive_stats:
+                    all_dive_stats.append(dive_stats)
+                else:
+                    print(f"    -> Warning: Could not parse, skipping file: {os.path.basename(full_path)}")
+
+            def sort_key(d):
+                date = d.get('Date', '')
+                time_str = d.get('Start Time', '0:00')
+                parts = time_str.split(':')
+                time_minutes = int(parts[0]) * 60 + int(parts[1]) if len(parts) == 2 else 0
+                return (date, time_minutes)
+
+            all_dive_stats.sort(key=sort_key)
+
             with open(output_csv_file, 'w', newline='', encoding='utf-8') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow(headers)
 
-                for full_path in uddf_files_to_process:
-                    dive_stats = parse_uddf(full_path)
-                    if dive_stats:
-                        row = [
-                            dive_stats.get('Date', ''),
-                            dive_stats.get('Start Time', ''),
-                            dive_stats.get('Location', ''),
-                            dive_stats.get('Surface Interval', ''),
-                            dive_stats.get('Max Depth (ft)', ''),
-                            dive_stats.get('Average Depth (ft)', ''),
-                            dive_stats.get('Dive Time (min)', ''),
-                            '',
-                            dive_stats.get('Water Temp (F)', ''),
-                            dive_stats.get('Average Temp (F)', ''),
-                        ]
-                        writer.writerow(row)
-                    else:
-                        print(f"    -> Warning: Could not parse, skipping file: {os.path.basename(full_path)}")
+                for dive_stats in all_dive_stats:
+                    row = [
+                        dive_stats.get('Date', ''),
+                        dive_stats.get('Start Time', ''),
+                        dive_stats.get('Location', ''),
+                        dive_stats.get('Surface Interval', ''),
+                        dive_stats.get('Max Depth (ft)', ''),
+                        dive_stats.get('Average Depth (ft)', ''),
+                        dive_stats.get('Dive Time (min)', ''),
+                        '',
+                        dive_stats.get('Water Temp (F)', ''),
+                        dive_stats.get('Average Temp (F)', ''),
+                    ]
+                    writer.writerow(row)
 
             print(f"\nSuccessfully created '{output_csv_file}' with data from {len(uddf_files_to_process)} dive logs.")
 
