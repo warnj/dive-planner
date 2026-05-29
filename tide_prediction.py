@@ -52,7 +52,7 @@ def main():
     # STATIONS.append('Whitney Point, Dabob Bay')
     # STATIONS.append('La Push (Quillayute River)')
     # STATIONS.append('James Island (La Push)')
-    STATIONS.append('Destruction Island')
+    # STATIONS.append('Destruction Island')
     # STATIONS.append('Des Moines')
     args.START = dt(2026, 5, 23)
     # args.START = dt.now()

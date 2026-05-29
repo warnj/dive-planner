@@ -1135,7 +1135,7 @@ class XTideDockerInterpreter(Interpreter):
         try:
             lines = self._run_xtide_for_day(day)
         except Exception as e:
-            print('Error running XTide via Docker: {}'.format(repr(e)))
+            # print('Error running XTide via Docker: {}'.format(repr(e)))
             return []
         events = self._parse_xtide_events(lines)
         if not events:

@@ -261,7 +261,7 @@ def main():
         # SITES = append(SITES, 'Lime Kiln Discovery')
         # SITES = append(SITES, 'Lime Kiln Haro')
         # SITES = append(SITES, 'Lime Kiln Admiralty')
-        SITES = append(SITES, 'Eagle Point')
+        # SITES = append(SITES, 'Eagle Point')
         # SITES = append(SITES, 'Peavine Pass')
         # SITES = append(SITES, 'Goose Island')
         # SITES = append(SITES, 'Kings Point')
@@ -269,9 +269,9 @@ def main():
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
-        # SITES = append(SITES, 'Skyline Wall')
+        SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
-        # SITES = append(SITES, 'Deception Pass')
+        SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
@@ -308,9 +308,9 @@ def main():
 
     # args.START = dt(2025, 6, 21)
     # args.START = dt(2023, 5, 28)
-    args.START = dt(2026, 4, 24)
+    args.START = dt(2026, 6, 6)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 3
+    args.DAYS_IN_FUTURE = 2
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     # args.TIME_FILTER = 'all'          # All slacks regardless of time
@@ -414,9 +414,9 @@ def main():
             if not canDive:
                 print('\tNot diveable on {}'.format(dt.strftime(day, intp.DATEFMT)))
 
-        for interpreter, label in interpreters:
-            if hasattr(interpreter, 'numAPICalls') and interpreter.numAPICalls > 0:
-                print(f'{label} API calls: {interpreter.numAPICalls}')
+        # for interpreter, label in interpreters:
+        #     if hasattr(interpreter, 'numAPICalls') and interpreter.numAPICalls > 0:
+        #         print(f'{label} API calls: {interpreter.numAPICalls}')
 
 if __name__ == '__main__':
     main()
