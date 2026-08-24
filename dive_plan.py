@@ -251,7 +251,7 @@ def main():
         # SITES = append(SITES, 'Sekiu')
         # SITES = append(SITES, 'Sekiu Tides')
         # SITES = append(SITES, 'Third Beach Pinnacle')
-        # SITES = append(SITES, 'Hoko Reef')
+        SITES = append(SITES, 'Hoko Reef')
         # SITES = append(SITES, 'Salt Creek NOAA')
         # SITES = append(SITES, 'Salt Creek NOAA Shallow')
         # SITES = append(SITES, 'Salt Creek XTide')
@@ -269,9 +269,9 @@ def main():
         # SITES = append(SITES, 'Green Point')
         # SITES = append(SITES, 'Skyline Wall Rosario')
         # SITES = append(SITES, 'Skyline Wall Allan Pass')
-        SITES = append(SITES, 'Skyline Wall')
+        # SITES = append(SITES, 'Skyline Wall')
         # SITES = append(SITES, 'Sares Head')
-        SITES = append(SITES, 'Deception Pass')
+        # SITES = append(SITES, 'Deception Pass')
         # SITES = append(SITES, 'Keystone Jetty')
         # SITES = append(SITES, 'Possession Point')
         # SITES = append(SITES, 'Mukilteo')
@@ -308,13 +308,13 @@ def main():
 
     # args.START = dt(2025, 6, 21)
     # args.START = dt(2023, 5, 28)
-    args.START = dt(2026, 6, 6)
+    args.START = dt(2026, 8, 21)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 2
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    # args.TIME_FILTER = 'all'          # All slacks regardless of time
-    args.TIME_FILTER = 'day'          # Only daytime slacks (sunrise to sunset)
+    args.TIME_FILTER = 'all'          # All slacks regardless of time
+    # args.TIME_FILTER = 'day'          # Only daytime slacks (sunrise to sunset)
     # args.TIME_FILTER = 'night'        # Only nighttime slacks (sunset to sunrise)
     # args.TIME_FILTER = 'early_night'  # Only early night slacks (45min after sunset to 11pm)
     # args.SORT = True

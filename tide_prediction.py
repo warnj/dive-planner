@@ -53,10 +53,10 @@ def main():
     # STATIONS.append('La Push (Quillayute River)')
     # STATIONS.append('James Island (La Push)')
     # STATIONS.append('Destruction Island')
-    # STATIONS.append('Des Moines')
-    args.START = dt(2026, 5, 23)
+    STATIONS.append('Des Moines')
+    args.START = dt(2026, 7, 8)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 2
+    args.DAYS_IN_FUTURE = 0
     # ------------------------------------------------------------------------------------------------------------------
 
     # Get tides for each station
