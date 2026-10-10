@@ -251,7 +251,7 @@ def main():
         # SITES = append(SITES, 'Sekiu')
         # SITES = append(SITES, 'Sekiu Tides')
         # SITES = append(SITES, 'Third Beach Pinnacle')
-        SITES = append(SITES, 'Hoko Reef')
+        # SITES = append(SITES, 'Hoko Reef')
         # SITES = append(SITES, 'Salt Creek NOAA')
         # SITES = append(SITES, 'Salt Creek NOAA Shallow')
         # SITES = append(SITES, 'Salt Creek XTide')
@@ -310,7 +310,7 @@ def main():
     # args.START = dt(2023, 5, 28)
     args.START = dt(2026, 8, 21)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 2
+    args.DAYS_IN_FUTURE = 0
     args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
     args.TIME_FILTER = 'all'          # All slacks regardless of time

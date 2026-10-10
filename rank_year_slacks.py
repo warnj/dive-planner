@@ -44,7 +44,7 @@ def getInterpreter(station, use_xtide_docker, use_noaa):
 
 def main():
     # ---------------------------------- CONFIGURABLE PARAMETERS ------------------------------------------------------
-    # SITE = 'Whiskey Point'
+    SITE = 'Whiskey Point'
     # SITE = 'Boat Pass'
     # SITE = 'Gabriola Pass'
     # SITE = 'Dodd Narrows'
@@ -55,16 +55,16 @@ def main():
     # SITE = 'Deadman Island'
     # SITE = 'Lime Kiln Haro'
     # SITE = 'Salt Creek NOAA'
-    SITE = 'Keystone Jetty'
+    # SITE = 'Keystone Jetty'
     # SITE = 'Day Island Wall'
     # SITE = 'Sechelt Rapids'
     # SITE = 'Nakwakto'
     USE_XTIDE_DOCKER = False
     USE_NOAA = True
-    TIME_FILTER = intp.TIME_FILTER_EARLY_NIGHT
+    TIME_FILTER = intp.TIME_FILTER_DAY
     DAYS_IN_FUTURE = 365
-    START_DATE = dt(2026, 3, 1)
-    INCLUDE_WORKDAYS = False
+    START_DATE = dt(2027, 1, 1)
+    INCLUDE_WORKDAYS = True
     INCLUDE_FRIDAYS = True
     # -----------------------------------------------------------------------------------------------------------------
 
