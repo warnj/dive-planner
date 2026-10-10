@@ -311,10 +311,10 @@ def main():
     args.START = dt(2026, 8, 21)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
-    args.IGNORE_MAX_SPEED = True
+    # args.IGNORE_MAX_SPEED = True
     args.INCLUDE_WORKDAYS = True
-    args.TIME_FILTER = 'all'          # All slacks regardless of time
-    # args.TIME_FILTER = 'day'          # Only daytime slacks (sunrise to sunset)
+    # args.TIME_FILTER = 'all'          # All slacks regardless of time
+    args.TIME_FILTER = 'day'          # Only daytime slacks (sunrise to sunset)
     # args.TIME_FILTER = 'night'        # Only nighttime slacks (sunset to sunrise)
     # args.TIME_FILTER = 'early_night'  # Only early night slacks (45min after sunset to 11pm)
     # args.SORT = True
