@@ -629,6 +629,12 @@
       "name": "Brentwood Bay",
       "coords": "48.578, -123.467",
       "ca_code": "07280"
+    },
+    {
+      "name": "Point Atkinson",
+      "coords": "49.3375, -123.253583",
+      "ca_id": "5cebf1de3d0f4a073c4bb94c",
+      "ca_code": "07795"
     }
   ],
 

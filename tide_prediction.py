@@ -40,6 +40,7 @@ def main():
     # STATIONS.append('Northwest Bay')
     # STATIONS.append('Nanaimo')
     # STATIONS.append('Brentwood Bay')
+    STATIONS.append('Point Atkinson')
 
     # STATIONS.append('Burrows Bay')
     # STATIONS.append('Bowman Bay')
@@ -53,10 +54,10 @@ def main():
     # STATIONS.append('La Push (Quillayute River)')
     # STATIONS.append('James Island (La Push)')
     # STATIONS.append('Destruction Island')
-    STATIONS.append('Des Moines')
-    args.START = dt(2026, 7, 8)
+    # STATIONS.append('Des Moines')
+    args.START = dt(2026, 10, 23)
     # args.START = dt.now()
-    args.DAYS_IN_FUTURE = 0
+    args.DAYS_IN_FUTURE = 3
     # ------------------------------------------------------------------------------------------------------------------
 
     # Get tides for each station

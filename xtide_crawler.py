@@ -5,6 +5,8 @@ Allows you to provide GPS coordinates of a dive site and returns a sorted list o
 import urllib.request
 from bs4 import BeautifulSoup
 import re, sys
+import json
+import os
 import geopy.distance
 
 FILE_NAME = "current_stations_new.txt"
@@ -68,6 +70,28 @@ def find_closest_stations(dive_site_coords, nearest):
     for i in range(nearest):
         print("Station: {} is {:.2f}mi away".format(sites[all_coords[i]], geopy.distance.geodesic(dive_site_coords, all_coords[i]).mi))
 
+# print info about nearest Canadian tide/current stations to the given gps coordinates
+def find_closest_canadian_stations(dive_site_coords, nearest=10):
+    json_path = os.path.join(os.path.dirname(__file__), "canada_stations.json")
+    with open(json_path, "r") as f:
+        stations = json.load(f)
+
+    nearest_stations = sorted(
+        [
+            (
+                station,
+                geopy.distance.geodesic(
+                    dive_site_coords, (station["latitude"], station["longitude"])
+                ).mi,
+            )
+            for station in stations
+        ],
+        key=lambda item: item[1],
+    )[:nearest]
+
+    for station, distance in nearest_stations:
+        print("Station: {} is {:.2f}mi away".format(station["officialName"], distance))
+
 def main():
     # download_stations()
 
@@ -78,7 +102,9 @@ def main():
 
     # find_closest_stations((48.425859, -122.675265), 10)
     # find_closest_stations((50.592204, -126.800397), 10)
-    find_closest_stations((48.589046, -122.814515), 10)
+    # find_closest_stations((48.589046, -122.814515), 10)
+
+    find_closest_canadian_stations((49.375865, -123.294040), 10)
 
 if __name__ == "__main__":
     main()
