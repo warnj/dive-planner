@@ -245,6 +245,7 @@ def main():
         # SITES = append(SITES, 'Ten Mile Point Discovery')
         # SITES = append(SITES, 'Sechelt Rapids')
         # SITES = append(SITES, 'Ogden Breakwater')
+        SITES = append(SITES, 'Lighthouse Point')
         # SITES = append(SITES, 'First Narrows Vancouver')
         # SITES = append(SITES, 'Second Narrows Vancouver')
 
@@ -308,7 +309,7 @@ def main():
 
     # args.START = dt(2025, 6, 21)
     # args.START = dt(2023, 5, 28)
-    args.START = dt(2026, 8, 21)
+    args.START = dt(2026, 10, 23)
     # args.START = dt.now()
     args.DAYS_IN_FUTURE = 0
     # args.IGNORE_MAX_SPEED = True

@@ -1503,6 +1503,20 @@
       "diveable_off_slack": false
     },
     {
+      "name": "Lighthouse Point",
+      "data": "First Narrows, British Columbia Current",
+      "slack_before_flood": 0,
+      "slack_before_ebb": 0,
+      "max_flood": 4,
+      "max_ebb": 4,
+      "max_total_speed": 5,
+      "dive_duration": 90,
+      "surface_swim_time": 30,
+      "diveable_before_flood": true,
+      "diveable_before_ebb": false,
+      "diveable_off_slack": false
+    },
+    {
       "name": "First Narrows Vancouver",
       "data": "First Narrows, British Columbia Current",
       "slack_before_flood": 0,

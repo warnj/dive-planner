@@ -47,7 +47,7 @@ def main():
     SITE = 'Whiskey Point'
     # SITE = 'Boat Pass'
     # SITE = 'Gabriola Pass'
-    # SITE = 'Dodd Narrows'
+    SITE = 'Dodd Narrows'
     # SITE = 'Skyline Wall'
     # SITE = 'Deception Pass'
     # SITE = 'Goose Island'

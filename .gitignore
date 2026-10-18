@@ -1,5 +1,6 @@
 .DS_Store
 .idea/
+.vscode/
 credentials.json
 token.json
 dive_log.csv
